@@ -1,5 +1,5 @@
 
-$(document).on("pagecreate", "#myPage", function() {
+$(document).on("pagecreate", "#vocabulary", function() {
     $("#autocomplete").on("filterablebeforefilter", function (e, data) {
         console.log('TEST');
         var $ul = $(this),
@@ -7,17 +7,13 @@ $(document).on("pagecreate", "#myPage", function() {
         value = $input.val(),
         html = "";
         $ul.html("");
-        if (value && value.length > 2) {
+        if (value && value.length > 1) {
             $ul.html("<li><div class='ui-loader'><span class='ui-icon ui-icon-loading'></span></div></li>");
             $ul.listview("refresh");
-            $.ajax({
-                url: "http://gd.geobytes.com/AutoCompleteCity",
-                dataType: "jsonp",
-                crossDomain: true,
-                data: {
-                    q: $input.val()
-                }
-            })
+	    var url = base_url
+		+ '/translations/autocomplete/string/vocabulary/ICT_sq/'
+		+ $input.val();
+	    http_request(url)
 		.then(function (response) {
                     $.each(response, function (i, val) {
 			html += "<li>" + val + "</li>";
