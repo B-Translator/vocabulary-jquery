@@ -1,21 +1,38 @@
 <!doctype html>
 <html>
 <head>
-    <title>My Page</title>
+    <title>Fjalori ICT</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="shortcut icon" href="favicon.png" type="image/png" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
     <script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
     <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+    <script src="http_request.js"></script>
+    <script src="api-config.js"></script>
+
+    <!-- application custom style and JS code -->
+    <link rel="stylesheet" href="app.css">
+    <script src="app.js"></script>
 </head>
 <body>
-    <div data-role="page">
+    <div data-role="page" id="vocabulary">
  
         <div data-role="header">
-            <h1>My Title</h1>
+            <h1>Fjalori ICT</h1>
         </div><!-- /header -->
  
-        <div data-role="content">
-            <p>Hello world</p>
+        <div data-role="main" class="ui-content">
+
+	  <form class="ui-filterable">
+	    <input id="autocomplete-input" data-type="search" placeholder="Gjej një fjalë...">
+	  </form>
+	  <ul id="autocomplete" data-role="listview" data-inset="true" data-filter="true" data-input="#autocomplete-input"></ul>
+
         </div><!-- /content -->
  
         <div data-role="footer">
