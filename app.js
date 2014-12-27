@@ -1,7 +1,7 @@
 
 $(document).on("pagecreate", "#vocabulary", function() {
+
     $("#autocomplete").on("filterablebeforefilter", function (e, data) {
-        console.log('TEST');
         var $ul = $(this),
         $input = $(data.input),
         value = $input.val(),
@@ -16,12 +16,23 @@ $(document).on("pagecreate", "#vocabulary", function() {
 	    http_request(url)
 		.then(function (response) {
                     $.each(response, function (i, val) {
-			html += "<li>" + val + "</li>";
+			html += '<li><a href="#" class="term">' + val + '</a></li>';
                     });
                     $ul.html(html);
+
+		    $(".term").click(function (event) {
+			var term = $(this).html();
+			$('#autocomplete-input')[0].value = term;
+			$ul.html('');
+			$ul.listview("refresh");
+			$ul.trigger("updatelayout");
+		    });
+
                     $ul.listview("refresh");
                     $ul.trigger("updatelayout");
 		});
         }
     });
+
+
 });
