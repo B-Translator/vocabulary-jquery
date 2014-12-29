@@ -70,4 +70,11 @@ var select_term = function (event) {
 	.html('')
 	.listview('refresh')
 	.trigger('updatelayout');
+
+    //$.getScript('sha1.js');
+    var sguid = Sha1.hash(term + 'vocabulary');
+    var url = base_url + '/public/btr/translations/' + sguid + '?lng=sq';
+    http_request(url).then(function (result) {
+	console.log(result.string.translations);
+    });
 }
