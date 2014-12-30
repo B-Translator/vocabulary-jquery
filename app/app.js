@@ -22,6 +22,12 @@ var display_suggestions_list = function (event, data) {
     if (!search_term) { return; }
     if (search_term.length < 2) { return; }
 
+    // Empty the list of translations.
+    $('#translations')
+	.html('')
+	.listview('refresh')
+	.trigger('updatelayout');
+
     // Display a temporary loading icon.
     var loading = '<li><div class="ui-loader"><span class="ui-icon ui-icon-loading"></span></div></li> ';
     $('#suggestions')
