@@ -71,10 +71,39 @@ var select_term = function (event) {
 	.listview('refresh')
 	.trigger('updatelayout');
 
-    //$.getScript('sha1.js');
+    // Get the string details of the selected term
+    // and display the list of existing translations.
+    //$.getScript('js/sha1.js');
     var sguid = Sha1.hash(term + 'vocabulary');
     var url = base_url + '/public/btr/translations/' + sguid + '?lng=sq';
-    http_request(url).then(function (result) {
-	console.log(result.string.translations);
+    http_request(url).then(build_translations_list);
+}
+
+/**
+ * Build and display a list of the existing translations for the
+ * selected term.
+ */
+var build_translations_list = function (result) {
+    var translations = result.string.translations;
+    //console.log(translations);  return;  //debug
+
+    // Build the HTML code for the list of translations.
+    var html_list = '';
+    $.each(translations, function (i, trans) {
+	html_list += '\n\
+            <li>\n\
+	      <a href="#">\n\
+		<strong>' + trans.translation + '</strong><br/>\n\
+		<p>by ' + trans.author + ' on ' + trans.time + '</p>\n\
+		<span class="ui-li-count">' + trans.count + '</span>\n\
+	      </a>\n\
+            </li>\n\
+         ';
     });
+
+    // Display it.
+    $('#translations')
+	.html(html_list)
+	.listview('refresh')
+	.trigger('updatelayout');
 }
