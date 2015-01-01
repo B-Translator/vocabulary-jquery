@@ -28,16 +28,9 @@ var display_suggestions_list = function (event, data) {
 	.listview('refresh')
 	.trigger('updatelayout');
 
-    // Display a temporary loading icon.
-    var loading = '<li><div class="ui-loader"><span class="ui-icon ui-icon-loading"></span></div></li> ';
-    $('#suggestions')
-	.html(loading)
-	.listview('refresh');
-
     // Retrieve a suggestions list from the server and display them.
     var path = '/translations/autocomplete/string/vocabulary/ICT_sq/';
-    var autocomplete_url = base_url + path + search_term
-    http_request(autocomplete_url)
+    http_request(path + search_term)
 	.then(build_suggestions_list);
 }
 
@@ -81,8 +74,8 @@ var select_term = function (event) {
     // and display the list of existing translations.
     //$.getScript('js/sha1.js');
     var sguid = Sha1.hash(term + 'vocabulary');
-    var url = base_url + '/public/btr/translations/' + sguid + '?lng=sq';
-    http_request(url).then(build_translations_list);
+    http_request('/public/btr/translations/' + sguid + '?lng=sq')
+	.then(build_translations_list);
 }
 
 /**
