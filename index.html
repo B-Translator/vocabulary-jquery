@@ -20,6 +20,7 @@
 
     <!-- Misc JS functions and libraries -->
     <script src="js/sha1.js"></script>
+    <script src="js/mustache.min.js"></script>
     <script src="js/jquery.timeago.js"></script>
 
     <!-- B-Translator API -->
@@ -45,9 +46,30 @@
 	  </form>
 	  <ul id="suggestions" data-role="listview" data-inset="true" data-filter="true" data-input="#search-term"></ul>
 
+	  <!-- mustache template for suggestions -->
+	  <script id="tmpl-suggestions" type="x-tmpl-mustache">
+	    {{#terms}}
+	    <li><a href="#" class="term">{{.}}</a></li>
+	    {{/terms}}
+	  </script>
+
 	  <!-- list of available translations for the selected term -->
 	  <ul id="translations" data-role="listview" data-inset="true" data-count-theme="b" data-icon="false" data-split-icon="edit"></ul>
 
+	  <!-- mustache template for translations -->
+	  <script id="tmpl-translations" type="x-tmpl-mustache">
+	    {{#translations}}
+            <li>
+	      <a href="#">
+		<strong>{{translation}}</strong><br/>
+		<p>By <strong>{{author}}</strong> ({{time}})</p>
+		<span class="ui-li-count">{{vote_nr}}</span>
+	      </a>
+            </li>
+	    {{/translations}}
+	  </script>
+
+	  <!-- buttons -->
 	  <a href="#" id="next" class="ui-btn ui-corner-all ui-shadow ui-mini ui-btn-inline ui-icon-carat-r ui-nodisc-icon ui-alt-icon ui-btn-icon-right">Next</a>
 
         </div><!-- /content -->
