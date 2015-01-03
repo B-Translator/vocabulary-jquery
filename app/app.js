@@ -32,8 +32,7 @@ var get_random_term = function (check) {
 	},
     })
 	.then(function (result) {
-	    console.log(check);
-	    console.log(result);  //debug
+	    //console.log(check); console.log(result);  //debug
 
 	    // Check that the search box is empty.
 	    if (check &&  $('#search-term')[0].value != '')  { return; }
@@ -129,7 +128,7 @@ var build_translations_list = function (result) {
             <li>\n\
 	      <a href="#">\n\
 		<strong>' + trans.translation + '</strong><br/>\n\
-		<p>by ' + trans.author + ' on ' + trans.time + '</p>\n\
+		<p>By <strong>' + trans.author + '</strong> (' + $.timeago(trans.time) + ')</p>\n\
 		<span class="ui-li-count">' + trans.count + '</span>\n\
 	      </a>\n\
             </li>\n\
