@@ -72,15 +72,18 @@ var display_suggestions_list = function (event, data) {
  * When a term is clicked it should be selected.
  */
 var build_suggestions_list = function(term_list) {
-    // Build the HTML code for the list of terms.
-    var html_list = '';
+    //console.log(term_list);  //debug
+
+    // Get the data for the list of suggestions.
+    var data = { terms: [] };
     $.each(term_list, function (id, term) {
-	html_list += '<li><a href="#" class="term">' + term + '</a></li>';
+	data.terms.push(term);
     });
 
-    // Display it.
+    // Render and display the template of suggestions.
+    var tmpl = $('#tmpl-suggestions').html();
     $('#suggestions')
-	.html(html_list)
+	.html(Mustache.render(tmpl, data))
 	.listview('refresh')
 	.trigger('updatelayout');
 
@@ -116,28 +119,26 @@ var select_term = function (event) {
  * selected term.
  */
 var build_translations_list = function (result) {
+    //console.log(result.string);  return;  //debug
+
     // Set the selected term on the search box.
     $('#search-term')[0].value = result.string.string;
 
-    // Build the HTML code for the list of translations.
-    var translations = result.string.translations;
-    //console.log(translations);  return;  //debug
-    var html_list = '';
-    $.each(translations, function (i, trans) {
-	html_list += '\n\
-            <li>\n\
-	      <a href="#">\n\
-		<strong>' + trans.translation + '</strong><br/>\n\
-		<p>By <strong>' + trans.author + '</strong> (' + $.timeago(trans.time) + ')</p>\n\
-		<span class="ui-li-count">' + trans.count + '</span>\n\
-	      </a>\n\
-            </li>\n\
-         ';
+    // Get the data for the list of translations.
+    var data = { translations: [] };
+    $.each(result.string.translations, function (i, trans) {
+	data.translations.push({
+	    translation: trans.translation,
+	    author: trans.author,
+	    time: $.timeago(trans.time),
+	    vote_nr: trans.count,
+	});
     });
 
-    // Display it.
+    // Render and display the template of translations.
+    var tmpl = $('#tmpl-translations').html();
     $('#translations')
-	.html(html_list)
+	.html(Mustache.render(tmpl, data))
 	.listview('refresh')
 	.trigger('updatelayout');
 }
