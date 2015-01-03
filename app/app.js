@@ -9,7 +9,41 @@ $(document).on('pagecreate', '#vocabulary', function() {
     // 'filterablebeforefilter' from the list of suggestions.
     $('#suggestions').on('filterablebeforefilter', display_suggestions_list);
 
+    // When the button 'Next' is clicked, get and display a random term.
+    $('#next').on('click', function (event) {
+	get_random_term();
+    });
+
+    // Get and display a random term from the vocabulary.
+    get_random_term(true);
+
 });
+
+/**
+ * Get and display a random term from the vocabulary.
+ */
+var get_random_term = function (check) {
+    var check = check || false;
+    http_request('/public/btr/translations/get_random_sguid', {
+	method: 'POST',
+	data: {
+	    target: 'next',
+	    scope: 'vocabulary/ICT_sq',
+	},
+    })
+	.then(function (result) {
+	    console.log(check);
+	    console.log(result);  //debug
+
+	    // Check that the search box is empty.
+	    if (check &&  $('#search-term')[0].value != '')  { return; }
+
+	    // Get and display the translations of the string.
+	    var sguid = result.sguid;
+	    http_request('/public/btr/translations/' + sguid + '?lng=sq')
+		.then(build_translations_list);
+	});
+}
 
 /**
  * This function is called when the user starts to type a term on the
@@ -83,10 +117,12 @@ var select_term = function (event) {
  * selected term.
  */
 var build_translations_list = function (result) {
-    var translations = result.string.translations;
-    //console.log(translations);  return;  //debug
+    // Set the selected term on the search box.
+    $('#search-term')[0].value = result.string.string;
 
     // Build the HTML code for the list of translations.
+    var translations = result.string.translations;
+    //console.log(translations);  return;  //debug
     var html_list = '';
     $.each(translations, function (i, trans) {
 	html_list += '\n\
