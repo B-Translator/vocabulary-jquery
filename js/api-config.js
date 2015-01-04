@@ -14,19 +14,19 @@ var http_request = function(url, settings) {
 
     // Before sending the request display a loading icon.
     settings.beforeSend = function() {
-	$.mobile.loading('show');
+        $.mobile.loading('show');
         return true;
     };
 
     // Make the request and handle some common cases.
     var request = make_http_request(base_url + url, settings);
     request.always(function(){
-	// Hide the loading icon.
-	$.mobile.loading('hide');
+        // Hide the loading icon.
+        $.mobile.loading('hide');
     });
     request.fail(function(jqXHR, textStatus, errorThrown) {
         alert(textStatus);
-	console.log(errorThrown);
+        console.log(errorThrown);
     });
 
     return request;

@@ -51,16 +51,16 @@ var http_request = function(url, settings) {
         async: settings.async,
     };
     if (settings.beforeSend) {
-	ajax_params.beforeSend = settings.beforeSend;
+        ajax_params.beforeSend = settings.beforeSend;
     };
 
     // The parameters processData and contentType
     // need to be set to false when uploading files.
     if (settings.processData === false) {
-	ajax_params.processData = false;
+        ajax_params.processData = false;
     };
     if (settings.contentType === false) {
-	ajax_params.contentType = false;
+        ajax_params.contentType = false;
     };
 
     // Make the request and return the result.
