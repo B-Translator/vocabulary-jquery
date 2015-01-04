@@ -122,7 +122,12 @@ var build_translations_list = function (result) {
     //console.log(result.string);  return;  //debug
 
     // Set the selected term on the search box.
-    $('#search-term')[0].value = result.string.string;
+    var term = result.string.string;
+    $('#search-term')[0].value = term;
+
+    // Set the link for the details.
+    var url = 'https://l10n.org.al/vocabulary/ICT_sq/' + term;
+    $('#details').attr('href', url);
 
     // Get the data for the list of translations.
     var data = { translations: [] };
