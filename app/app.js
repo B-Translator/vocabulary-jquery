@@ -19,6 +19,11 @@ $(document).on('pagecreate', '#vocabulary', function() {
 
 });
 
+// Remove a popup after it has been closed.
+$(document).on('popupafterclose', '.ui-popup', function() {
+    $(this).remove();
+});
+
 /**
  * Get and display a random term from the vocabulary.
  */
@@ -133,6 +138,7 @@ var build_translations_list = function (result) {
     var data = { translations: [] };
     $.each(result.string.translations, function (i, trans) {
         data.translations.push({
+            id : trans.tguid,
             translation: trans.translation,
             author: trans.author,
             time: $.timeago(trans.time),
@@ -146,4 +152,44 @@ var build_translations_list = function (result) {
         .html(Mustache.render(tmpl, data))
         .listview('refresh')
         .trigger('updatelayout');
+
+    // Store the votes for each translation.
+    $.each(result.string.translations, function (i, trans) {
+        var $li = $('li#' + trans.tguid);
+        $li.data('votes', trans.votes);
+    });
+
+    // When a translation from the list is clicked,
+    // display a popup with its details.
+    $('.translation').on('click', display_translation_popup);
+}
+
+/**
+ * When a translation from the list is clicked, display
+ * a popup with the details of this translation.
+ */
+var display_translation_popup = function (event) {
+    // Get the data for the list of voters.
+    var data = {
+        nr : 0,
+        voters: [],
+    };
+    var votes = $(this).data('votes');
+    $.each(votes, function (user, vote) {
+        data.nr += 1;
+        data.voters.push({
+            name: vote.name,
+            time: $.timeago(vote.time),
+        });
+    });
+
+    // Render and display the template of translation details.
+    var tmpl = $('#tmpl-translation-details').html();
+    var popup_html = Mustache.render(tmpl, data);
+    $(popup_html)
+        .appendTo($.mobile.activePage)
+        .toolbar();
+    $("#translation-details")
+        .popup()           // init popup
+        .popup('open');    // open popup
 }
