@@ -11,12 +11,17 @@ $(document).on('pagecreate', '#vocabulary', function() {
 
     // When the button 'Next' is clicked, get and display a random term.
     $('#next').on('click', function (event) {
-	get_random_term();
+        get_random_term();
     });
 
     // Get and display a random term from the vocabulary.
     get_random_term(true);
 
+});
+
+// Remove a popup after it has been closed.
+$(document).on('popupafterclose', '.ui-popup', function() {
+    $(this).remove();
 });
 
 /**
@@ -25,24 +30,23 @@ $(document).on('pagecreate', '#vocabulary', function() {
 var get_random_term = function (check) {
     var check = check || false;
     http_request('/public/btr/translations/get_random_sguid', {
-	method: 'POST',
-	data: {
-	    target: 'next',
-	    scope: 'vocabulary/ICT_sq',
-	},
+        method: 'POST',
+        data: {
+            target: 'next',
+            scope: 'vocabulary/ICT_sq',
+        },
     })
-	.then(function (result) {
-	    console.log(check);
-	    console.log(result);  //debug
+        .then(function (result) {
+            //console.log(check); console.log(result);  //debug
 
-	    // Check that the search box is empty.
-	    if (check &&  $('#search-term')[0].value != '')  { return; }
+            // Check that the search box is empty.
+            if (check &&  $('#search-term')[0].value != '')  { return; }
 
-	    // Get and display the translations of the string.
-	    var sguid = result.sguid;
-	    http_request('/public/btr/translations/' + sguid + '?lng=sq')
-		.then(build_translations_list);
-	});
+            // Get and display the translations of the string.
+            var sguid = result.sguid;
+            http_request('/public/btr/translations/' + sguid + '?lng=sq')
+                .then(build_translations_list);
+        });
 }
 
 /**
@@ -58,14 +62,14 @@ var display_suggestions_list = function (event, data) {
 
     // Empty the list of translations.
     $('#translations')
-	.html('')
-	.listview('refresh')
-	.trigger('updatelayout');
+        .html('')
+        .listview('refresh')
+        .trigger('updatelayout');
 
     // Retrieve a suggestions list from the server and display them.
     var path = '/translations/autocomplete/string/vocabulary/ICT_sq/';
     http_request(path + search_term)
-	.then(build_suggestions_list);
+        .then(build_suggestions_list);
 }
 
 /**
@@ -73,17 +77,20 @@ var display_suggestions_list = function (event, data) {
  * When a term is clicked it should be selected.
  */
 var build_suggestions_list = function(term_list) {
-    // Build the HTML code for the list of terms.
-    var html_list = '';
+    //console.log(term_list);  //debug
+
+    // Get the data for the list of suggestions.
+    var data = { terms: [] };
     $.each(term_list, function (id, term) {
-	html_list += '<li><a href="#" class="term">' + term + '</a></li>';
+        data.terms.push(term);
     });
 
-    // Display it.
+    // Render and display the template of suggestions.
+    var tmpl = $('#tmpl-suggestions').html();
     $('#suggestions')
-	.html(html_list)
-	.listview('refresh')
-	.trigger('updatelayout');
+        .html(Mustache.render(tmpl, data))
+        .listview('refresh')
+        .trigger('updatelayout');
 
     // When a term from the list is clicked, select that term.
     $('.term').on('click', select_term);
@@ -100,16 +107,16 @@ var select_term = function (event) {
 
     // Empty the list of suggestions.
     $('#suggestions')
-	.html('')
-	.listview('refresh')
-	.trigger('updatelayout');
+        .html('')
+        .listview('refresh')
+        .trigger('updatelayout');
 
     // Get the string details of the selected term
     // and display the list of existing translations.
     //$.getScript('js/sha1.js');
     var sguid = Sha1.hash(term + 'vocabulary');
     http_request('/public/btr/translations/' + sguid + '?lng=sq')
-	.then(build_translations_list);
+        .then(build_translations_list);
 }
 
 /**
@@ -117,28 +124,72 @@ var select_term = function (event) {
  * selected term.
  */
 var build_translations_list = function (result) {
-    // Set the selected term on the search box.
-    $('#search-term')[0].value = result.string.string;
+    //console.log(result.string);  return;  //debug
 
-    // Build the HTML code for the list of translations.
-    var translations = result.string.translations;
-    //console.log(translations);  return;  //debug
-    var html_list = '';
-    $.each(translations, function (i, trans) {
-	html_list += '\n\
-            <li>\n\
-	      <a href="#">\n\
-		<strong>' + trans.translation + '</strong><br/>\n\
-		<p>by ' + trans.author + ' on ' + trans.time + '</p>\n\
-		<span class="ui-li-count">' + trans.count + '</span>\n\
-	      </a>\n\
-            </li>\n\
-         ';
+    // Set the selected term on the search box.
+    var term = result.string.string;
+    $('#search-term')[0].value = term;
+
+    // Set the link for the details.
+    var url = 'https://l10n.org.al/vocabulary/ICT_sq/' + term;
+    $('#details').attr('href', url);
+
+    // Get the data for the list of translations.
+    var data = { translations: [] };
+    $.each(result.string.translations, function (i, trans) {
+        data.translations.push({
+            id : trans.tguid,
+            translation: trans.translation,
+            author: trans.author,
+            time: $.timeago(trans.time),
+            vote_nr: trans.count,
+        });
     });
 
-    // Display it.
+    // Render and display the template of translations.
+    var tmpl = $('#tmpl-translations').html();
     $('#translations')
-	.html(html_list)
-	.listview('refresh')
-	.trigger('updatelayout');
+        .html(Mustache.render(tmpl, data))
+        .listview('refresh')
+        .trigger('updatelayout');
+
+    // Store the votes for each translation.
+    $.each(result.string.translations, function (i, trans) {
+        var $li = $('li#' + trans.tguid);
+        $li.data('votes', trans.votes);
+    });
+
+    // When a translation from the list is clicked,
+    // display a popup with its details.
+    $('.translation').on('click', display_translation_popup);
+}
+
+/**
+ * When a translation from the list is clicked, display
+ * a popup with the details of this translation.
+ */
+var display_translation_popup = function (event) {
+    // Get the data for the list of voters.
+    var data = {
+        nr : 0,
+        voters: [],
+    };
+    var votes = $(this).data('votes');
+    $.each(votes, function (user, vote) {
+        data.nr += 1;
+        data.voters.push({
+            name: vote.name,
+            time: $.timeago(vote.time),
+        });
+    });
+
+    // Render and display the template of translation details.
+    var tmpl = $('#tmpl-translation-details').html();
+    var popup_html = Mustache.render(tmpl, data);
+    $(popup_html)
+        .appendTo($.mobile.activePage)
+        .toolbar();
+    $("#translation-details")
+        .popup()           // init popup
+        .popup('open');    // open popup
 }
