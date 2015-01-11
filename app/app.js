@@ -5,6 +5,31 @@
  */
 $(document).on('pagecreate', '#vocabulary', function() {
 
+    var settings = {
+	    token_endpoint: '/oauth2/token',
+	    client_id: 'emberjs',
+	    client_secret: '123456',
+	    //username: 'user1',
+	    //password: 'pass1',
+	    scope: 'user_profile',
+        getPassword: function (callback) {
+            var username = prompt('Username', '');
+            var password = prompt('Password', '');
+            callback(username, password);
+        },
+    };
+    var oauth2Client = new OAuth2.Client(settings);
+    //console.log(oauth2);
+
+    oauth2Client
+        .eraseToken()
+        //.expireToken()
+        .getAccessToken()
+        .done(function (access_token) {
+	        console.log('Access Token: ' + access_token);
+        });
+    return;
+
     // Attach the function 'display_suggestions_list' to the event
     // 'filterablebeforefilter' from the list of suggestions.
     $('#suggestions').on('filterablebeforefilter', display_suggestions_list);
