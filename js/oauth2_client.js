@@ -210,12 +210,13 @@ OAuth2.Client = function (settings) {
 
     /** Make an http request to the token endpoint. */
     var _getToken = function (post_data) {
+	var client_key = btoa(_settings.client_id + ':' 
+			      + _settings.client_secret);  // base64_encode
         var request = http_request(_settings.token_endpoint, {
             method: 'POST',
             data: post_data,
             headers: {
-                'Authorization': 'Basic ' 
-                    + btoa(_settings.client_id + ':' + _settings.client_secret),  // base64_encode
+                'Authorization': 'Basic ' + client_key, 
             },
         });
         return request;
