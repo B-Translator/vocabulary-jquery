@@ -32,7 +32,7 @@ var oauth2 = new OAuth2.Client({
         console.log('Access Token: ' + access_token);
     },
 });
-oauth2.eraseToken();  //test
+//oauth2.eraseToken();  //test
 //oauth2.expireToken();  //test
 //oauth2.getAccessToken();
 
@@ -55,14 +55,19 @@ $(document).on('pagecreate', '#vocabulary', function() {
         get_random_term();
     });
 
+    // Remove a dynamic-popup after it has been closed.
+    $(document).on('popupafterclose', '.dynamic-popup', function() {
+        $(this).remove();
+    });
+
+    // Close the menu when an item is clicked.
+    $('#popupMenu li').on('click', function() {
+        $('#popupMenu').popup('close');
+    });
+
     // Get and display a random term from the vocabulary.
     get_random_term(true);
 
-});
-
-// Remove a popup after it has been closed.
-$(document).on('popupafterclose', '.dynamic-popup', function() {
-    $(this).remove();
 });
 
 /**
@@ -261,9 +266,20 @@ var vote_translation = function (tguid) {
             })
                 .done(function () {
                     console.log('Vote submitted successfully.');
+                    refresh_translation_list();
                 })
                 .fail(function () {
                     console.log('Vote submition failed.');
                 });
         });
+};
+
+/**
+ * Refresh the list of translations.
+ */
+var refresh_translation_list = function () {
+    var term = $('#search-term')[0].value;
+    var sguid = Sha1.hash(term + 'vocabulary');
+    var url = '/public/btr/translations/' + sguid + '?lng=sq';
+    http_request(url).then(build_translations_list);
 };
