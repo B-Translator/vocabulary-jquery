@@ -3,7 +3,6 @@
 var get_username_and_password = function (callback) {
     // Display the login template.
     var popup_html = $('#tmpl-login').html();
-    console.log(popup_html);  //debug
     $(popup_html)
         .appendTo($.mobile.activePage)
         .toolbar();
@@ -195,6 +194,7 @@ var build_translations_list = function (result) {
     // Store the votes for each translation.
     $.each(result.string.translations, function (i, trans) {
         var $li = $('li#' + trans.tguid);
+        $li.data('tguid', trans.tguid);
         $li.data('translation', trans.translation);
         $li.data('votes', trans.votes);
     });
@@ -234,4 +234,35 @@ var display_translation_popup = function (event) {
     $("#translation-details")
         .popup()           // init popup
         .popup('open');    // open popup
+
+    // When the 'Vote' button is clicked,
+    // send a vote for this translation.
+    var tguid = $(this).data('tguid');
+    $('#vote').on('click', function (event) {
+        $("#translation-details").popup('close');
+        setTimeout(function () {
+            vote_translation(tguid);
+        }, 1000);
+    });
 }
+
+/**
+ * Send a vote for the translation with the given id.
+ */
+var vote_translation = function (tguid) {
+    console.log(tguid);  //debug
+    oauth2.getAccessToken().done(
+        function (access_token) {
+            http_request('/btr/translations/vote', {
+                method: 'POST',
+                data: { tguid: tguid },
+                headers: { 'Authorization': 'Bearer ' + access_token }
+            })
+                .done(function () {
+                    console.log('Vote submitted successfully.');
+                })
+                .fail(function () {
+                    console.log('Vote submition failed.');
+                });
+        });
+};
