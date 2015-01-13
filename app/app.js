@@ -1,23 +1,26 @@
 
 /** Get a username and password and pass them to the callback function. */
 var get_username_and_password = function (callback) {
-    // Display the login template.
-    var popup_html = $('#tmpl-login').html();
-    $(popup_html)
-        .appendTo($.mobile.activePage)
-        .toolbar();
-    $("#popup-login")
-        .popup()           // init popup
-        .popup('open');    // open popup
+    // Wait 1 sec so that any other popups are closed.
+    setTimeout(function () {
+        // Display the login template.
+        var popup_html = $('#tmpl-login').html();
+        $(popup_html)
+            .appendTo($.mobile.activePage)
+            .toolbar();
+        $("#popup-login")
+            .popup()           // init popup
+            .popup('open');    // open popup
 
-    // When the form is submitted, pass the username
-    // and password to the callback function.
-    $('#form-login').on('submit', function (event) {
-        var username = $('#username')[0].value;
-        var password = $('#password')[0].value;
-        callback(username, password);
-    });
-}
+        // When the form is submitted, pass the username
+        // and password to the callback function.
+        $('#form-login').on('submit', function (event) {
+            var username = $('#username')[0].value;
+            var password = $('#password')[0].value;
+            callback(username, password);
+        });
+    }, 1000);
+};
 
 var oauth2 = new OAuth2.Client({
     token_endpoint: '/oauth2/token',
@@ -240,9 +243,7 @@ var display_translation_popup = function (event) {
     var tguid = $(this).data('tguid');
     $('#vote').on('click', function (event) {
         $("#translation-details").popup('close');
-        setTimeout(function () {
-            vote_translation(tguid);
-        }, 1000);
+        vote_translation(tguid);
     });
 }
 
