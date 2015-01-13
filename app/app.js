@@ -14,9 +14,9 @@ var get_username_and_password = function (callback) {
     // When the form is submitted, pass the username
     // and password to the callback function.
     $('#form-login').on('submit', function (event) {
-	var username = $('#username')[0].value;
-	var password = $('#password')[0].value;
-	callback(username, password);
+        var username = $('#username')[0].value;
+        var password = $('#password')[0].value;
+        callback(username, password);
     });
 }
 
@@ -27,7 +27,7 @@ var oauth2 = new OAuth2.Client({
     scope: 'user_profile',
     getPassword: get_username_and_password,
     done: function (access_token) {
-	console.log('Access Token: ' + access_token);
+        console.log('Access Token: ' + access_token);
     },
 });
 oauth2.eraseToken();  //test
@@ -41,7 +41,7 @@ oauth2.eraseToken();  //test
 $(document).on('pagecreate', '#vocabulary', function() {
     // When the login button is clicked, get an oauth2 access token. 
     $('#login').on('click', function (event) {
-	oauth2.getAccessToken();
+        oauth2.getAccessToken();
     });
 
     // Attach the function 'display_suggestions_list' to the event
@@ -211,13 +211,13 @@ var build_translations_list = function (result) {
 var display_translation_popup = function (event) {
     // Get the data for the list of voters.
     var data = {
-	translation: $(this).data('translation'),
+        translation: $(this).data('translation'),
         nr : 0,
         voters: [],
     };
     var votes = $(this).data('votes');
     $.each(votes, function (user, vote) {
-	if (!vote.name) return;
+        if (!vote.name) return;
         data.nr += 1;
         data.voters.push({
             name: vote.name,
