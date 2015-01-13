@@ -59,7 +59,7 @@ $(document).on('pagecreate', '#vocabulary', function() {
 });
 
 // Remove a popup after it has been closed.
-$(document).on('popupafterclose', '.ui-popup', function() {
+$(document).on('popupafterclose', '.dynamic-popup', function() {
     $(this).remove();
 });
 
