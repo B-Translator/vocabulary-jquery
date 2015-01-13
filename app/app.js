@@ -195,6 +195,7 @@ var build_translations_list = function (result) {
     // Store the votes for each translation.
     $.each(result.string.translations, function (i, trans) {
         var $li = $('li#' + trans.tguid);
+        $li.data('translation', trans.translation);
         $li.data('votes', trans.votes);
     });
 
@@ -210,11 +211,13 @@ var build_translations_list = function (result) {
 var display_translation_popup = function (event) {
     // Get the data for the list of voters.
     var data = {
+	translation: $(this).data('translation'),
         nr : 0,
         voters: [],
     };
     var votes = $(this).data('votes');
     $.each(votes, function (user, vote) {
+	if (!vote.name) return;
         data.nr += 1;
         data.voters.push({
             name: vote.name,
