@@ -1,9 +1,48 @@
 
+/** Get a username and password and pass them to the callback function. */
+var get_username_and_password = function (callback) {
+    // Display the login template.
+    var popup_html = $('#tmpl-login').html();
+    console.log(popup_html);  //debug
+    $(popup_html)
+        .appendTo($.mobile.activePage)
+        .toolbar();
+    $("#popup-login")
+        .popup()           // init popup
+        .popup('open');    // open popup
+
+    // When the form is submitted, pass the username
+    // and password to the callback function.
+    $('#form-login').on('submit', function (event) {
+	var username = $('#username')[0].value;
+	var password = $('#password')[0].value;
+	callback(username, password);
+    });
+}
+
+var oauth2 = new OAuth2.Client({
+    token_endpoint: '/oauth2/token',
+    client_id: 'emberjs',
+    client_secret: '123456',
+    scope: 'user_profile',
+    getPassword: get_username_and_password,
+    done: function (access_token) {
+	console.log('Access Token: ' + access_token);
+    },
+});
+oauth2.eraseToken();  //test
+//oauth2.expireToken();  //test
+//oauth2.getAccessToken();
+
 /**
  * When the page with id 'vocabulary' is created,
  * do the things that are listed in the function.
  */
 $(document).on('pagecreate', '#vocabulary', function() {
+    // When the login button is clicked, get an oauth2 access token. 
+    $('#login').on('click', function (event) {
+	oauth2.getAccessToken();
+    });
 
     // Attach the function 'display_suggestions_list' to the event
     // 'filterablebeforefilter' from the list of suggestions.
@@ -20,7 +59,7 @@ $(document).on('pagecreate', '#vocabulary', function() {
 });
 
 // Remove a popup after it has been closed.
-$(document).on('popupafterclose', '.ui-popup', function() {
+$(document).on('popupafterclose', '.dynamic-popup', function() {
     $(this).remove();
 });
 

@@ -2,7 +2,8 @@
 /**
  * Base URL of the server that offers the API.
  */
-var base_url = 'https://btranslator.org';
+//var base_url = 'https://btranslator.org';
+var base_url = 'http://dev.btranslator.org';
 
 /**
  * Extend the function http_request().
@@ -25,8 +26,7 @@ var http_request = function(url, settings) {
         $.mobile.loading('hide');
     });
     request.fail(function(jqXHR, textStatus, errorThrown) {
-        alert(textStatus);
-        console.log(errorThrown);
+        console.log('Error: ' + jqXHR.responseJSON.error + ': ' + jqXHR.responseJSON.error_description);
     });
 
     return request;
