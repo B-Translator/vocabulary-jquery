@@ -5,6 +5,16 @@
 var base_url = 'https://btranslator.org';
 
 /**
+ * Settings for oauth2 authentication.
+ */
+var oauth2_settings = {
+    token_endpoint: '/oauth2/token',
+    client_id: 'vocabulary-jquery-ict-sq',
+    client_secret: 'Wadek9kAwgoovnepecOal8',
+    scope: 'user_profile',
+};
+
+/**
  * Extend the function http_request().
  */
 var make_http_request = http_request;

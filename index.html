@@ -25,8 +25,8 @@
 
     <!-- B-Translator API -->
     <script src="js/http_request.js"></script>
-    <script src="js/api-config.js"></script>
     <script src="js/oauth2_client.js"></script>
+    <script src="js/api-config.js"></script>
 
     <!-- application custom style and JS code -->
     <link rel="stylesheet" href="app/app.css">
@@ -41,31 +41,29 @@
       <div data-role="header" data-position="fixed">
         <h1>Fjalori ICT</h1>
 
-        <a href="#" id="next" class="ui-btn ui-btn-left ui-corner-all ui-icon-refresh ui-btn-icon-notext">Next</a>
+        <a href="#" id="next" class="ui-btn ui-btn-b ui-nodisc-icon ui-btn-left ui-icon-refresh ui-btn-icon-notext" style="border-radius: 5px;">Next</a>
 
-	<a href="#popupMenu" data-rel="popup" class="ui-btn ui-btn-right ui-corner-all ui-icon-bars ui-btn-icon-notext">Menu</a>
-	<div data-role="popup" id="popupMenu" data-theme="none" data-shadow="false">
-	  <div data-role="collapsibleset" data-transition="slidedown" data-theme="b" data-content-theme="a" data-collapsed-icon="carat-r" data-expanded-icon="carat-d" class="ui-nodisc-icon">
-	    <div data-role="collapsible" data-inset="false">
+        <a href="#popupMenu" data-rel="popup" class="ui-btn ui-btn-b ui-nodisc-icon ui-btn-right ui-icon-bars ui-btn-icon-notext" style="border-radius: 5px;">Menu</a>
+        <div data-role="popup" id="popupMenu" data-theme="none" data-shadow="false">
+          <div data-role="collapsibleset" data-transition="slidedown" data-theme="b" data-content-theme="a" data-collapsed-icon="carat-r" data-expanded-icon="carat-d" class="ui-nodisc-icon">
+            <div data-role="collapsible" data-inset="false">
               <h2>Actions</h2>
               <ul data-role="listview">
-		<li><a href="#" id="details" target="_blank" class="ui-btn ui-icon-grid ui-btn-icon-left">Details</a></li>
-		<li><a href="https://l10n.org.al/translations/search?lng=sq&origin=vocabulary&project=ICT_sq" target="_blank" class="ui-btn ui-icon-bullets ui-btn-icon-left">List</a></li>
-		<!--
-		<li><a href="#" id="login" class="ui-btn ui-icon-user ui-btn-icon-left">Login</a></li>
-		-->
+                <li><a href="#" id="details" target="_blank" class="ui-btn ui-icon-grid ui-btn-icon-left">Details</a></li>
+                <li><a href="https://l10n.org.al/translations/search?lng=sq&origin=vocabulary&project=ICT_sq" target="_blank" class="ui-btn ui-icon-bullets ui-btn-icon-left">List</a></li>
+                <li><a href="#" id="login" class="ui-btn ui-icon-user ui-btn-icon-left">Login</a></li>
               </ul>
             </div><!-- /collapsible -->
-	    <div data-role="collapsible" data-inset="false">
-	      <h2>Download</h2>
-	      <ul data-role="listview">
-		<li><a href="https://btranslator.org/translations/vocabulary/export/ICT_sq/txt1" class="ui-btn ui-icon-arrow-d ui-btn-icon-left">txt-1</a></li>
-		<li><a href="https://btranslator.org/translations/vocabulary/export/ICT_sq/txt2" class="ui-btn ui-icon-arrow-d ui-btn-icon-left">txt-2</a></li>
-		<li><a href="https://btranslator.org/translations/vocabulary/export/ICT_sq/org" class="ui-btn ui-icon-arrow-d ui-btn-icon-left">org</a></li>
-	      </ul>
-	    </div><!-- /collapsible -->
-	  </div><!-- /collapsible set -->
-	</div><!-- /popup -->
+            <div data-role="collapsible" data-inset="false">
+              <h2>Download</h2>
+              <ul data-role="listview">
+                <li><a href="https://btranslator.org/translations/vocabulary/export/ICT_sq/txt1" class="ui-btn ui-icon-arrow-d ui-btn-icon-left">txt-1</a></li>
+                <li><a href="https://btranslator.org/translations/vocabulary/export/ICT_sq/txt2" class="ui-btn ui-icon-arrow-d ui-btn-icon-left">txt-2</a></li>
+                <li><a href="https://btranslator.org/translations/vocabulary/export/ICT_sq/org" class="ui-btn ui-icon-arrow-d ui-btn-icon-left">org</a></li>
+              </ul>
+            </div><!-- /collapsible -->
+          </div><!-- /collapsible set -->
+        </div><!-- /popup -->
 
       </div><!-- /header -->
       
@@ -105,8 +103,9 @@
         <script id="tmpl-translation-details" type="x-tmpl-mustache">
           <div data-role="popup" id="translation-details" data-transition="slide" class="dynamic-popup">
             <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
-            <ul data-role="listview" data-inset="true" style="min-width:200px;">
-              <li><a href="#" id="vote" class="ui-btn ui-icon-action ui-nodisc-icon ui-alt-icon ui-btn-icon-left">Vote</a></li>
+            <ul data-role="listview" data-inset="true" style="min-width:250px;">
+              <li><strong>{{translation}}</strong></li>
+              <li><a href="#" id="vote" class="ui-btn ui-nodisc-icon ui-btn-b ui-icon-check ui-btn-icon-left">Vote</a></li>
               <li>
                 <div data-role="collapsible" data-inset="false" class="ui-mini">
                   <h4>Voters ({{nr}})</h4>
@@ -128,13 +127,16 @@
     <script id="tmpl-login" type="x-tmpl-mustache">
       <div data-role="popup" id="popup-login" data-theme="a" data-dismissible="false" class="ui-corner-all" class="dynamic-popup">
         <form id="form-login">
-          <div style="padding:10px 20px;">
+          <div style="padding: 0px 20px 10px 20px;">
             <h3>Please sign in</h3>
             <label for="username" class="ui-hidden-accessible">Username:</label>
             <input type="text" name="user" id="username" value="" placeholder="username" data-theme="a">
             <label for="password" class="ui-hidden-accessible">Password:</label>
             <input type="password" name="pass" id="password" value="" placeholder="password" data-theme="a">
-            <button type="submit" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-check">Sign in</button>
+            <div style="text-align: center;">
+              <button type="submit" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-nodisc-icon ui-icon-check">Sign in</button>
+              <a href="https://btranslator.org/user/register" target="_blank" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-nodisc-icon ui-icon-user">Sign up</a>
+            </div>
           </div>
         </form>
       </div>

@@ -1,38 +1,37 @@
 
 /** Get a username and password and pass them to the callback function. */
 var get_username_and_password = function (callback) {
-    // Display the login template.
-    var popup_html = $('#tmpl-login').html();
-    console.log(popup_html);  //debug
-    $(popup_html)
-        .appendTo($.mobile.activePage)
-        .toolbar();
-    $("#popup-login")
-        .popup()           // init popup
-        .popup('open');    // open popup
+    // Wait 1 sec so that any other popups are closed.
+    setTimeout(function () {
+        // Display the login template.
+        var popup_html = $('#tmpl-login').html();
+        $(popup_html)
+            .appendTo($.mobile.activePage)
+            .toolbar();
+        $("#popup-login")
+            .popup()           // init popup
+            .popup('open');    // open popup
 
-    // When the form is submitted, pass the username
-    // and password to the callback function.
-    $('#form-login').on('submit', function (event) {
-	var username = $('#username')[0].value;
-	var password = $('#password')[0].value;
-	callback(username, password);
-    });
-}
+        // When the form is submitted, pass the username
+        // and password to the callback function.
+        $('#form-login').on('submit', function (event) {
+            var username = $('#username')[0].value;
+            var password = $('#password')[0].value;
+            callback(username, password);
+        });
+    }, 1000);
+};
 
-var oauth2 = new OAuth2.Client({
-    token_endpoint: '/oauth2/token',
-    client_id: 'emberjs',
-    client_secret: '123456',
-    scope: 'user_profile',
-    getPassword: get_username_and_password,
-    done: function (access_token) {
-	console.log('Access Token: ' + access_token);
-    },
-});
-oauth2.eraseToken();  //test
+/**
+ * Create an oauth2 client that will get and manage an access_token.
+ */
+oauth2_settings.getPassword = get_username_and_password;
+oauth2_settings.done = function (access_token) {
+        console.log('Access Token: ' + access_token);
+    };
+var oauth2 = new OAuth2.Client(oauth2_settings);
+//oauth2.eraseToken();  //test
 //oauth2.expireToken();  //test
-//oauth2.getAccessToken();
 
 /**
  * When the page with id 'vocabulary' is created,
@@ -41,7 +40,7 @@ oauth2.eraseToken();  //test
 $(document).on('pagecreate', '#vocabulary', function() {
     // When the login button is clicked, get an oauth2 access token. 
     $('#login').on('click', function (event) {
-	oauth2.getAccessToken();
+        oauth2.getAccessToken();
     });
 
     // Attach the function 'display_suggestions_list' to the event
@@ -53,14 +52,19 @@ $(document).on('pagecreate', '#vocabulary', function() {
         get_random_term();
     });
 
+    // Remove a dynamic-popup after it has been closed.
+    $(document).on('popupafterclose', '.dynamic-popup', function() {
+        $(this).remove();
+    });
+
+    // Close the menu when an item is clicked.
+    $('#popupMenu li').on('click', function() {
+        $('#popupMenu').popup('close');
+    });
+
     // Get and display a random term from the vocabulary.
     get_random_term(true);
 
-});
-
-// Remove a popup after it has been closed.
-$(document).on('popupafterclose', '.dynamic-popup', function() {
-    $(this).remove();
 });
 
 /**
@@ -195,6 +199,8 @@ var build_translations_list = function (result) {
     // Store the votes for each translation.
     $.each(result.string.translations, function (i, trans) {
         var $li = $('li#' + trans.tguid);
+        $li.data('tguid', trans.tguid);
+        $li.data('translation', trans.translation);
         $li.data('votes', trans.votes);
     });
 
@@ -210,11 +216,13 @@ var build_translations_list = function (result) {
 var display_translation_popup = function (event) {
     // Get the data for the list of voters.
     var data = {
+        translation: $(this).data('translation'),
         nr : 0,
         voters: [],
     };
     var votes = $(this).data('votes');
     $.each(votes, function (user, vote) {
+        if (!vote.name) return;
         data.nr += 1;
         data.voters.push({
             name: vote.name,
@@ -231,4 +239,43 @@ var display_translation_popup = function (event) {
     $("#translation-details")
         .popup()           // init popup
         .popup('open');    // open popup
+
+    // When the 'Vote' button is clicked,
+    // send a vote for this translation.
+    var tguid = $(this).data('tguid');
+    $('#vote').on('click', function (event) {
+        $("#translation-details").popup('close');
+        vote_translation(tguid);
+    });
 }
+
+/**
+ * Send a vote for the translation with the given id.
+ */
+var vote_translation = function (tguid) {
+    oauth2.getAccessToken().done(
+        function (access_token) {
+            http_request('/btr/translations/vote', {
+                method: 'POST',
+                data: { tguid: tguid },
+                headers: { 'Authorization': 'Bearer ' + access_token }
+            })
+                .done(function () {
+                    console.log('Vote submitted successfully.');
+                    refresh_translation_list();
+                })
+                .fail(function () {
+                    console.log('Vote submition failed.');
+                });
+        });
+};
+
+/**
+ * Refresh the list of translations.
+ */
+var refresh_translation_list = function () {
+    var term = $('#search-term')[0].value;
+    var sguid = Sha1.hash(term + 'vocabulary');
+    var url = '/public/btr/translations/' + sguid + '?lng=sq';
+    http_request(url).then(build_translations_list);
+};
