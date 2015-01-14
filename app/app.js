@@ -22,19 +22,16 @@ var get_username_and_password = function (callback) {
     }, 1000);
 };
 
-var oauth2 = new OAuth2.Client({
-    token_endpoint: '/oauth2/token',
-    client_id: 'emberjs',
-    client_secret: '123456',
-    scope: 'user_profile',
-    getPassword: get_username_and_password,
-    done: function (access_token) {
+/**
+ * Create an oauth2 client that will get and manage an access_token.
+ */
+oauth2_settings.getPassword = get_username_and_password;
+oauth2_settings.done = function (access_token) {
         console.log('Access Token: ' + access_token);
-    },
-});
+    };
+var oauth2 = new OAuth2.Client(oauth2_settings);
 //oauth2.eraseToken();  //test
 //oauth2.expireToken();  //test
-//oauth2.getAccessToken();
 
 /**
  * When the page with id 'vocabulary' is created,
@@ -256,7 +253,6 @@ var display_translation_popup = function (event) {
  * Send a vote for the translation with the given id.
  */
 var vote_translation = function (tguid) {
-    console.log(tguid);  //debug
     oauth2.getAccessToken().done(
         function (access_token) {
             http_request('/btr/translations/vote', {
