@@ -8,6 +8,8 @@ var OAuth2 = {};
 OAuth2.Client = function (settings) {
     /** Settings of the client. */
     var _settings = {
+        app_id: 'app1',
+
         // OAuth2 settings
         token_endpoint: '/oauth2/token',
         client_id: 'client1',
@@ -58,12 +60,14 @@ OAuth2.Client = function (settings) {
         _token.expiration_time = now + _token.expires_in;
 
         // Save the class variable in local storage.
-        localStorage.setItem('vocabulary.token', JSON.stringify(_token));
+        var item = _settings.app_id + '.token.' + _settings.client_id; 
+        localStorage.setItem(item, JSON.stringify(_token));
     };
 
     /** Get token from local storage, if it exists. */
     var _loadToken = function() {
-        var str_value = localStorage.getItem('vocabulary.token');
+        var item = _settings.app_id + '.token.' + _settings.client_id; 
+        var str_value = localStorage.getItem(item);
         if (!str_value || str_value == 'undefined') {
             return _nullToken;
         }
@@ -210,8 +214,8 @@ OAuth2.Client = function (settings) {
 
     /** Make an http request to the token endpoint. */
     var _getToken = function (post_data) {
-	var client_key = btoa(_settings.client_id + ':' 
-			      + _settings.client_secret);  // base64_encode
+        var client_key = btoa(_settings.client_id + ':' 
+                              + _settings.client_secret);  // base64_encode
         var request = http_request(_settings.token_endpoint, {
             method: 'POST',
             data: post_data,
