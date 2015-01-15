@@ -1,4 +1,6 @@
 
+(function () {
+
 /** Get a username and password and pass them to the callback function. */
 var get_username_and_password = function (callback) {
     // Wait 1 sec so that any other popups are closed.
@@ -279,3 +281,5 @@ var refresh_translation_list = function () {
     var url = '/public/btr/translations/' + sguid + '?lng=sq';
     http_request(url).then(build_translations_list);
 };
+
+})();
