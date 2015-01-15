@@ -13,7 +13,7 @@ var $base_url = 'https://btranslator.org';
  */
 var $oauth2_settings = {
     app_id: $app_id,
-    token_endpoint: '/oauth2/token',
+    token_endpoint: $base_url + '/oauth2/token',
     client_id: 'vocabulary-jquery-ict-sq',
     client_secret: 'Wadek9kAwgoovnepecOal8',
     scope: 'user_profile',

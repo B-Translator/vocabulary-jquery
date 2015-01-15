@@ -60,14 +60,17 @@ OAuth2.Token = function (settings) {
         _token.expiration_time = now + _token.expires_in;
 
         // Save the class variable in local storage.
-        var item = _settings.app_id + '.token.' + _settings.client_id; 
-        localStorage.setItem(item, JSON.stringify(_token));
+        localStorage.setItem(_key(), JSON.stringify(_token));
+    };
+
+    /** Return the key for lcal storage. */
+    var _key = function () {
+        return (_settings.app_id + '.token.' + _settings.client_id);
     };
 
     /** Get token from local storage, if it exists. */
     var _load = function() {
-        var item = _settings.app_id + '.token.' + _settings.client_id; 
-        var str_value = localStorage.getItem(item);
+        var str_value = localStorage.getItem(_key());
         if (!str_value || str_value == 'undefined') {
             return _nullToken;
         }
@@ -114,7 +117,7 @@ OAuth2.Token = function (settings) {
 
     /** Erase the existing token. */
     this.erase = function () {
-        localStorage.removeItem('vocabulary.token');
+        localStorage.removeItem(_key());
         _token = _nullToken;
         return this;
     };
@@ -169,7 +172,6 @@ OAuth2.Token = function (settings) {
         _get({
             grant_type: 'refresh_token',
             refresh_token: _token.refresh_token,
-            scope: _settings.scope,
         })
             .fail(_getNew)
             .done(
@@ -197,7 +199,6 @@ OAuth2.Token = function (settings) {
             grant_type: 'password',
             username: username,
             password: password,
-            scope: _settings.scope,
         })
             .fail(_settings.fail)
             .done(
@@ -214,14 +215,18 @@ OAuth2.Token = function (settings) {
 
     /** Make an http request to the token endpoint. */
     var _get = function (post_data) {
+        if (_settings.scope) {
+            post_data.scope = _settings.scope;
+        };
         var client_key = btoa(_settings.client_id + ':' 
                               + _settings.client_secret);  // base64_encode
-        var request = http_request(_settings.token_endpoint, {
-            method: 'POST',
+        var request = $.ajax(_settings.token_endpoint, {
+            type: 'POST',
             data: post_data,
             headers: {
                 'Authorization': 'Basic ' + client_key, 
             },
+            //dataType: 'json',
         });
         return request;
     };
