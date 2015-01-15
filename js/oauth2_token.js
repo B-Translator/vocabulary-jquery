@@ -3,9 +3,9 @@
 var OAuth2 = {};
 
 /**
- * @class OAuth2.Client
+ * @class OAuth2.Token
  */
-OAuth2.Client = function (settings) {
+OAuth2.Token = function (settings) {
     /** Settings of the client. */
     var _settings = {
         app_id: 'app1',
@@ -51,7 +51,7 @@ OAuth2.Client = function (settings) {
     var _token = _nullToken;
 
     /** Set a new token and save it in local storage. */
-    var _saveToken = function(token) {
+    var _save = function(token) {
         // Set to the class variable '_token'.
         _token = token;
 
@@ -65,7 +65,7 @@ OAuth2.Client = function (settings) {
     };
 
     /** Get token from local storage, if it exists. */
-    var _loadToken = function() {
+    var _load = function() {
         var item = _settings.app_id + '.token.' + _settings.client_id; 
         var str_value = localStorage.getItem(item);
         if (!str_value || str_value == 'undefined') {
@@ -77,7 +77,7 @@ OAuth2.Client = function (settings) {
     /**
      * Set the function that will use the access token.
      * Can be used like this:
-     *   $oauth2.getAccessToken().done(function (access_token) { ... });
+     *   $token.get().done(function (access_token) { ... });
      */
     this.done = function (callback) {
         _settings.done = callback;
@@ -87,7 +87,7 @@ OAuth2.Client = function (settings) {
     /**
      * Set the function that will be called on failure.
      * Can be chained like this:
-     *   $oauth2.getAccessToken().done( ... ).fail( ... );
+     *   $token.get().done( ... ).fail( ... );
      */
     this.fail = function (callback) {
         _settings.fail = callback;
@@ -97,7 +97,7 @@ OAuth2.Client = function (settings) {
     /**
      * Set the function that will be called for getting
      * the user password, when needed. Can be chained like this:
-     *   $oauth2.getPassword( ... ).getAccessToken().done( ... );
+     *   $token.getPassword( ... ).get().done( ... );
      */
     this.getPassword = function (callback) {
         _settings.getPassword = callback;
@@ -105,15 +105,15 @@ OAuth2.Client = function (settings) {
     };
 
     /** Expire the existing token. */
-    this.expireToken = function () {
-        var token = _loadToken();
+    this.expire = function () {
+        var token = _load();
         token.expires_in = 0;
-        _saveToken(token);
+        _save(token);
         return this;
     };
 
     /** Erase the existing token. */
-    this.eraseToken = function () {
+    this.erase = function () {
         localStorage.removeItem('vocabulary.token');
         _token = _nullToken;
         return this;
@@ -122,14 +122,14 @@ OAuth2.Client = function (settings) {
     /**
      * Get an access token and pass it to the callback function.
      * Returns the object itself, so that it can be chained like this:
-     *   $oauth2.getAccessToken().done( ... ).fail( ... );
+     *   $token.get().done( ... ).fail( ... );
      */
-    this.getAccessToken = function () {
+    this.get = function () {
         // If there is no token, try to get it from local store.
-        if (!_token.access_token)  _token = _loadToken();
+        if (!_token.access_token)  _token = _load();
 
         // If the current token is a valid one, use it.
-        if (_validToken()) {
+        if (_valid()) {
             setTimeout(function () {
                 _settings.done(_token.access_token);
             }, 10);
@@ -138,10 +138,10 @@ OAuth2.Client = function (settings) {
 
         // Otherwise try to get another one.
         if (_token.refresh_token) {
-            _refreshExistingToken();
+            _refreshExisting();
         }
         else {
-            _getNewToken();
+            _getNew();
         }
 
         return this;
@@ -149,7 +149,7 @@ OAuth2.Client = function (settings) {
 
 
     /** Return true if there is a valid token. */
-    var _validToken = function () {
+    var _valid = function () {
         // Check that we have an access_token.
         if (!_token)  return false;
         if (!_token.access_token)  return false;
@@ -164,36 +164,36 @@ OAuth2.Client = function (settings) {
     };
 
     /** Try to get a new token by using the refresh_token. */
-    var _refreshExistingToken = function () {
+    var _refreshExisting = function () {
         console.log('refresh_existing_token()'); //debug
-        _getToken({
+        _get({
             grant_type: 'refresh_token',
             refresh_token: _token.refresh_token,
             scope: _settings.scope,
         })
-            .fail(_getNewToken)
+            .fail(_getNew)
             .done(
                 function (response) {
-                    _saveToken(response);
+                    _save(response);
                     if (_token.access_token) {
                         _settings.done(_token.access_token);
                     }
                     else {
-                        _getNewToken();
+                        _getNew();
                     }
                 });
     };
 
     /** Get a new token from the oauth2 server. */
-    var _getNewToken = function (username, password) {
-        console.log('_getNewToken()'); //debug
+    var _getNew = function (username, password) {
+        console.log('_getNew()'); //debug
 
         if (!username || !password) {
-            _settings.getPassword(_getNewToken);
+            _settings.getPassword(_getNew);
             return;
         }
 
-        _getToken({
+        _get({
             grant_type: 'password',
             username: username,
             password: password,
@@ -202,7 +202,7 @@ OAuth2.Client = function (settings) {
             .fail(_settings.fail)
             .done(
                 function (response) {
-                    _saveToken(response);
+                    _save(response);
                     if (_token.access_token) {
                         _settings.done(_token.access_token);
                     }
@@ -213,7 +213,7 @@ OAuth2.Client = function (settings) {
     };
 
     /** Make an http request to the token endpoint. */
-    var _getToken = function (post_data) {
+    var _get = function (post_data) {
         var client_key = btoa(_settings.client_id + ':' 
                               + _settings.client_secret);  // base64_encode
         var request = http_request(_settings.token_endpoint, {

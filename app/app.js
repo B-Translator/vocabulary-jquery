@@ -29,9 +29,9 @@ $oauth2_settings.getPassword = get_username_and_password;
 $oauth2_settings.done = function (access_token) {
         console.log('Access Token: ' + access_token);
     };
-var $oauth2 = new OAuth2.Client($oauth2_settings);
-//$oauth2.eraseToken();  //test
-//$oauth2.expireToken();  //test
+var $token = new OAuth2.Token($oauth2_settings);
+//$token.erase();  //test
+//$token.expire();  //test
 
 /**
  * When the page with id 'vocabulary' is created,
@@ -40,7 +40,7 @@ var $oauth2 = new OAuth2.Client($oauth2_settings);
 $(document).on('pagecreate', '#vocabulary', function() {
     // When the login button is clicked, get an oauth2 access token. 
     $('#login').on('click', function (event) {
-        $oauth2.getAccessToken();
+        $token.get();
     });
 
     // Attach the function 'display_suggestions_list' to the event
@@ -253,7 +253,7 @@ var display_translation_popup = function (event) {
  * Send a vote for the translation with the given id.
  */
 var vote_translation = function (tguid) {
-    $oauth2.getAccessToken().done(
+    $token.get().done(
         function (access_token) {
             http_request('/btr/translations/vote', {
                 method: 'POST',
