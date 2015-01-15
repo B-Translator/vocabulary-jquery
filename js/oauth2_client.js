@@ -73,7 +73,7 @@ OAuth2.Client = function (settings) {
     /**
      * Set the function that will use the access token.
      * Can be used like this:
-     *   oauth2.getAccessToken().done(function (access_token) { ... });
+     *   $oauth2.getAccessToken().done(function (access_token) { ... });
      */
     this.done = function (callback) {
         _settings.done = callback;
@@ -83,7 +83,7 @@ OAuth2.Client = function (settings) {
     /**
      * Set the function that will be called on failure.
      * Can be chained like this:
-     *   oauth2.getAccessToken().done( ... ).fail( ... );
+     *   $oauth2.getAccessToken().done( ... ).fail( ... );
      */
     this.fail = function (callback) {
         _settings.fail = callback;
@@ -93,7 +93,7 @@ OAuth2.Client = function (settings) {
     /**
      * Set the function that will be called for getting
      * the user password, when needed. Can be chained like this:
-     *   oauth2.getPassword( ... ).getAccessToken().done( ... );
+     *   $oauth2.getPassword( ... ).getAccessToken().done( ... );
      */
     this.getPassword = function (callback) {
         _settings.getPassword = callback;
@@ -118,7 +118,7 @@ OAuth2.Client = function (settings) {
     /**
      * Get an access token and pass it to the callback function.
      * Returns the object itself, so that it can be chained like this:
-     *   oauth2.getAccessToken().done( ... ).fail( ... );
+     *   $oauth2.getAccessToken().done( ... ).fail( ... );
      */
     this.getAccessToken = function () {
         // If there is no token, try to get it from local store.
