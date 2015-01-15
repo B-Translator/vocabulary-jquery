@@ -1,33 +1,44 @@
 
 (function () {
 
-    /** Get a username and password and pass them to the callback function. */
-    var get_username_and_password = function (callback) {
-        // Wait 1 sec so that any other popups are closed.
-        setTimeout(function () {
-            // Display the login template.
-            var popup_html = $('#tmpl-login').html();
-            $(popup_html)
-                .appendTo($.mobile.activePage)
-                .toolbar();
-            $("#popup-login")
-                .popup()           // init popup
-                .popup('open');    // open popup
+    /**
+     * Create an object that will manage the state of the user.
+     */
+    var $user = {
+	name: null,
 
-            // When the form is submitted, pass the username
-            // and password to the callback function.
-            $('#form-login').on('submit', function (event) {
-                var username = $('#username')[0].value;
-                var password = $('#password')[0].value;
-                callback(username, password);
-            });
-        }, 1000);
+	/**
+	 * Get a username and password and pass them
+	 * to the given callback function.
+	 */
+	getPassword: function (callback) {
+            // Wait 1 sec so that any other popups are closed.
+            setTimeout(function () {
+		// Display the login template.
+		var popup_html = $('#tmpl-login').html();
+		$(popup_html)
+                    .appendTo($.mobile.activePage)
+                    .toolbar();
+		$("#popup-login")
+                    .popup()           // init popup
+                    .popup('open');    // open popup
+
+		// When the form is submitted, pass the username
+		// and password to the callback function.
+		$('#form-login').on('submit', function (event) {
+                    var username = $('#username')[0].value;
+                    var password = $('#password')[0].value;
+                    callback(username, password);
+		});
+            }, 1000);
+	},
     };
 
+
     /**
-     * Create an oauth2 client that will get and manage an access_token.
+     * Create an object that will get and manage an access_token.
      */
-    $oauth2_settings.getPassword = get_username_and_password;
+    $oauth2_settings.getPassword = $user.getPassword;
     $oauth2_settings.done = function (access_token) {
         console.log('Access Token: ' + access_token);
     };
