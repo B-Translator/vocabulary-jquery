@@ -2,3 +2,30 @@
 .ui-filter-inset {
     margin-top: 0;
 }
+
+.ui-footer {
+    margin-bottom: 20px;
+}
+.message {
+    margin: 0px;
+    padding: 7px;
+    border-top: 1px solid #ffffff;
+    border-bottom: 1px solid #cccccc;
+    text-align: center;
+}
+
+.status {
+    background-color: #ddffdd;
+    color: #00dd00;
+}
+
+.error {
+    background-color: #ffdddd;
+    color: #dd0000;
+}
+
+.warning {
+    background-color: #ffffdd;
+    color: #cccc00;
+}
+

@@ -1,37 +1,74 @@
 
-(function () {
+var $app = (function () {
+
+    /**
+     * Display status and error messages.
+     * 
+     * @param msg {string}
+     *   The message to be displayed.
+     * @param type {string}
+     *     The type of the message: status|error|warning
+     * @params time {number}
+     *     The time in seconds to display the message.
+     */
+    var message = function (msg, type, time) {
+        // Set some default values, if params are missing.
+        type = type || 'info';
+        time = time || 3;
+
+        // Create and add the message element.
+        var $el = $('<p class="message ' + type + '">' + msg + '</p>');
+        $('#messages').append($el).hide().fadeIn(500);
+
+        // After some seconds remove this message.
+        setTimeout(function () {
+            $el.fadeOut(500, function () {
+                $(this).remove();
+            });
+        }, time * 1000);
+
+        // If the message is clicked, remove it.
+        $('.message').on('click', function (event) {
+            $(this).fadeOut(100, function () {
+                $(this).remove();
+            });
+        });
+    };
+
 
     /**
      * Create an object that will manage the state of the user.
      */
     var $user = {
-	name: null,
+        /** The username of the currently signed-in user. */
+        name: null,
 
-	/**
-	 * Get a username and password and pass them
-	 * to the given callback function.
-	 */
-	getPassword: function (callback) {
+        /**
+         * Get a username and password and pass them
+         * to the given callback function.
+         */
+        getPassword: function (callback) {
             // Wait 1 sec so that any other popups are closed.
             setTimeout(function () {
-		// Display the login template.
-		var popup_html = $('#tmpl-login').html();
-		$(popup_html)
+                // Display the login template.
+                var popup_html = $('#tmpl-login').html();
+                $(popup_html)
                     .appendTo($.mobile.activePage)
                     .toolbar();
-		$("#popup-login")
+                $("#popup-login")
                     .popup()           // init popup
                     .popup('open');    // open popup
 
-		// When the form is submitted, pass the username
-		// and password to the callback function.
-		$('#form-login').on('submit', function (event) {
+                // When the form is submitted, pass the username
+                // and password to the callback function.
+                $('#form-login').on('submit', function (event) {
                     var username = $('#username')[0].value;
                     var password = $('#password')[0].value;
+                    this.user = username;
                     callback(username, password);
-		});
+                });
             }, 1000);
-	},
+        },
     };
 
 
@@ -77,7 +114,6 @@
 
         // Get and display a random term from the vocabulary.
         get_random_term(true);
-
     });
 
     /**
@@ -274,11 +310,11 @@
                     headers: { 'Authorization': 'Bearer ' + access_token }
                 })
                     .done(function () {
-                        console.log('Vote submitted successfully.');
+                        message('Vote submitted successfully.');
                         refresh_translation_list();
                     })
                     .fail(function () {
-                        console.log('Vote submition failed.');
+                        message('Vote submition failed.', 'error');
                     });
             });
     };
