@@ -122,6 +122,21 @@ OAuth2.Token = function (settings) {
         return this;
     };
 
+    /** Return true if there is a valid token. */
+    this.isValid = function () {
+        // Check that we have an access_token.
+        if (!_token)  return false;
+        if (!_token.access_token)  return false;
+
+        // Check that the token has not expired.
+        if (!_token.expiration_time)  return false;
+        var now = Math.round(new Date().getTime()/1000.0);
+        if (_token.expiration_time < now + 5)  return false;
+
+        // All checks passed successfully.
+        return true;
+    };
+
     /**
      * Get an access token and pass it to the callback function.
      * Returns the object itself, so that it can be chained like this:
@@ -132,7 +147,7 @@ OAuth2.Token = function (settings) {
         if (!_token.access_token)  _token = _load();
 
         // If the current token is a valid one, use it.
-        if (_valid()) {
+        if (this.isValid()) {
             setTimeout(function () {
                 _settings.done(_token.access_token);
             }, 10);
@@ -148,22 +163,6 @@ OAuth2.Token = function (settings) {
         }
 
         return this;
-    };
-
-
-    /** Return true if there is a valid token. */
-    var _valid = function () {
-        // Check that we have an access_token.
-        if (!_token)  return false;
-        if (!_token.access_token)  return false;
-
-        // Check that the token has not expired.
-        if (!_token.expiration_time)  return false;
-        var now = Math.round(new Date().getTime()/1000.0);
-        if (_token.expiration_time < now + 5)  return false;
-
-        // All checks passed successfully.
-        return true;
     };
 
     /** Try to get a new token by using the refresh_token. */
@@ -226,7 +225,6 @@ OAuth2.Token = function (settings) {
             headers: {
                 'Authorization': 'Basic ' + client_key, 
             },
-            //dataType: 'json',
         });
         return request;
     };
