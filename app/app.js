@@ -13,11 +13,11 @@ var $app = (function () {
      */
     var message = function (msg, type, time) {
         // Set some default values, if params are missing.
-        type = type || 'info';
+        type = type || 'status';
         time = time || 3;
 
         // Create and add the message element.
-        var $el = $('<p class="message ' + type + '">' + msg + '</p>');
+        var $el = $('<p class="message ' + type + ' ui-mini">' + msg + '</p>');
         $('#messages').append($el).hide().fadeIn(500);
 
         // After some seconds remove this message.
