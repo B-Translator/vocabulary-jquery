@@ -8,6 +8,18 @@ var User = function () {
     /** The username of the currently signed-in user. */
     this.name = null;
 
+    /** Set the name of the user and display it on the status. */
+    var _setName = function (name) {
+        if (name) {
+            that.name = name;
+            $('#status').html(name).show();
+        }
+        else {
+            that.name = null;
+            $('#status').html('').hide();
+        }
+    };
+
     /**
      * Get a username and password and pass them
      * to the given callback function.
@@ -29,24 +41,24 @@ var User = function () {
             $('#form-login').on('submit', function (event) {
                 var username = $('#username')[0].value;
                 var password = $('#password')[0].value;
-                that.name = username;
+                _setName(username);
                 callback(username, password);
                 $('#popup-login').popup('close');
-                //return false;
             });
         }, 1000);
     };
 
     this.token = new OAuth2.Token($oauth2_settings);
     this.token.getPassword(_getPassword);
-    //$this.token.erase();  //test
-    //$this.token.expire();  //test
+    //this.token.erase();  //test
+    //this.token.expire();  //test
 
     /** Return true if the cuurrent user is signed-in. */
     this.isLoged = function () {
         return this.name;
     };
 
+    /** Function to login. */
     this.login = function () {
         if (this.isLoged())  return;
         this.token.get().done(function ()  {
@@ -54,34 +66,35 @@ var User = function () {
         });
     };
 
+    /** Function to logout. */
     this.logout = function () {
-        this.name = null;
+        _setName(null);
         this.token.erase();
         setTimeout(function () {
             location.reload();
         }, 100);
     };
 
-    // Check that the current token is still valid and update the user name.
-    this.check = function () {
+    // Check the current token and update the user name.
+    var _update = function () {
         var access_token = that.token.access_token();
         if (!access_token) {
-            that.name = null;
+            _setName(null);
             return;
         }
         // Verify the current access_token.
         $.ajax($base_url + '/oauth2/tokens/' + access_token)
             .done(function (response) {
-                that.name = response.user_id;
+                _setName(response.user_id);
             })
             .fail(function () {
-                that.name = null;
+                _setName(null);
             });
     };
     
-    // Check that the user is still logged-in every few minutes. 
-    this.check();
-    setInterval(this.check, 10*1000);
-
+    $(document).on('pagecreate', '#vocabulary', function() {
+        // Check the current token and update the status every few minutes. 
+        _update();  setInterval(_update, 2*60*1000);  // check every 2 minutes
+    });
 };
 var $user = new User();
