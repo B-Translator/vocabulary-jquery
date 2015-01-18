@@ -47,43 +47,36 @@ var User = function () {
         return this.name;
     };
 
-    var _reload = function () {
-        //window.location.href = '/';
-	var href = location.href;
-	href = href.replace(/\?.*/, '');
-	href = href.replace(/#.*/, '');
-        location.href = href;
-        location.reload();
-    };
-
     this.login = function () {
         if (this.isLoged())  return;
         this.token.get().done(function ()  {
-	    _reload();
+            location.reload();
         });
     };
 
     this.logout = function () {
         this.name = null;
         this.token.erase();
-	_reload();
+        setTimeout(function () {
+            location.reload();
+        }, 100);
     };
 
     // Check that the current token is still valid and update the user name.
     this.check = function () {
-	var access_token = that.token.access_token();
-	if (!access_token) {
+        var access_token = that.token.access_token();
+        if (!access_token) {
             that.name = null;
             return;
-	}
+        }
         // Verify the current access_token.
         $.ajax($base_url + '/oauth2/tokens/' + access_token)
             .done(function (response) {
-		that.name = response.user_id;
+                that.name = response.user_id;
             })
             .fail(function () {
-		that.name = null;
-	    });
+                that.name = null;
+            });
     };
     
     // Check that the user is still logged-in every few minutes. 

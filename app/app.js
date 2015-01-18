@@ -55,12 +55,12 @@ var $app = (function () {
 
         // Remove a dynamic-popup after it has been closed.
         $(document).on('popupafterclose', '.dynamic-popup', function() {
-            setTimeout($(this).remove(), 1000);
+            $(this).remove();
         });
 
         // Close the menu when an item is clicked.
         $('#popupMenu li').on('click', function() {
-            setTimeout($('#popupMenu').popup('close'), 100);
+            $('#popupMenu').popup('close');
         });
 
         // Get and display a random term from the vocabulary.
@@ -82,11 +82,11 @@ var $app = (function () {
             }
         });
 
-        $('#login').on('click', function (event) {
+        $('#login').on('click', function () {
             $user.login();
         });
 
-        $('#logout').on('click', function (event) {
+        $('#logout').on('click', function () {
             $user.logout();
         });
     };
