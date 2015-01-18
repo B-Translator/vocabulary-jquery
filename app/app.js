@@ -37,62 +37,10 @@ var $app = (function () {
 
 
     /**
-     * Create an object that will manage the state of the user.
-     */
-    var $user = {
-        /** The username of the currently signed-in user. */
-        name: null,
-
-        /**
-         * Get a username and password and pass them
-         * to the given callback function.
-         */
-        getPassword: function (callback) {
-            // Wait 1 sec so that any other popups are closed.
-            setTimeout(function () {
-                // Display the login template.
-                var popup_html = $('#tmpl-login').html();
-                $(popup_html)
-                    .appendTo($.mobile.activePage)
-                    .toolbar();
-                $("#popup-login")
-                    .popup()           // init popup
-                    .popup('open');    // open popup
-
-                // When the form is submitted, pass the username
-                // and password to the callback function.
-                $('#form-login').on('submit', function (event) {
-                    var username = $('#username')[0].value;
-                    var password = $('#password')[0].value;
-                    this.user = username;
-                    callback(username, password);
-                });
-            }, 1000);
-        },
-    };
-
-
-    /**
-     * Create an object that will get and manage an access_token.
-     */
-    $oauth2_settings.getPassword = $user.getPassword;
-    $oauth2_settings.done = function (access_token) {
-        console.log('Access Token: ' + access_token);
-    };
-    var $token = new OAuth2.Token($oauth2_settings);
-    //$token.erase();  //test
-    //$token.expire();  //test
-
-    /**
      * When the page with id 'vocabulary' is created,
      * do the things that are listed in the function.
      */
     $(document).on('pagecreate', '#vocabulary', function() {
-        // When the login button is clicked, get an oauth2 access token. 
-        $('#login').on('click', function (event) {
-            $token.get();
-        });
-
         // Attach the function 'display_suggestions_list' to the event
         // 'filterablebeforefilter' from the list of suggestions.
         $('#suggestions').on('filterablebeforefilter', display_suggestions_list);
@@ -102,19 +50,46 @@ var $app = (function () {
             get_random_term();
         });
 
+        // Setup login/logout menu items.
+        login_setup();
+
         // Remove a dynamic-popup after it has been closed.
         $(document).on('popupafterclose', '.dynamic-popup', function() {
-            $(this).remove();
+            setTimeout($(this).remove(), 1000);
         });
 
         // Close the menu when an item is clicked.
         $('#popupMenu li').on('click', function() {
-            $('#popupMenu').popup('close');
+            setTimeout($('#popupMenu').popup('close'), 100);
         });
 
         // Get and display a random term from the vocabulary.
         get_random_term(true);
     });
+
+    /**
+     * Setup login/logout menu items.
+     */
+    var login_setup = function () {
+        $('#menuButton').on('click', function() {
+            if ($user.isLoged()) {
+                $('#login').hide();
+                $('#logout').show();
+            }
+            else {
+                $('#login').show();
+                $('#logout').hide();
+            }
+        });
+
+        $('#login').on('click', function (event) {
+            $user.login();
+        });
+
+        $('#logout').on('click', function (event) {
+            $user.logout();
+        });
+    };
 
     /**
      * Get and display a random term from the vocabulary.
@@ -235,6 +210,7 @@ var $app = (function () {
                 author: trans.author,
                 time: $.timeago(trans.time),
                 vote_nr: trans.count,
+                voted: trans.votes.hasOwnProperty($user.name) ? ' voted' : '',
             });
         });
 
@@ -302,20 +278,25 @@ var $app = (function () {
      * Send a vote for the translation with the given id.
      */
     var vote_translation = function (tguid) {
-        $token.get().done(
-            function (access_token) {
-                http_request('/btr/translations/vote', {
-                    method: 'POST',
-                    data: { tguid: tguid },
-                    headers: { 'Authorization': 'Bearer ' + access_token }
-                })
-                    .done(function () {
-                        message('Vote submitted successfully.');
-                        refresh_translation_list();
-                    })
-                    .fail(function () {
-                        message('Vote submition failed.', 'error');
-                    });
+        var access_token = $user.token.access_token();
+        if (!access_token) {
+            $user.token.get().done(function () {
+                vote_translation(tguid);
+            });
+            return;
+        }
+
+        http_request('/btr/translations/vote', {
+            method: 'POST',
+            data: { tguid: tguid },
+            headers: { 'Authorization': 'Bearer ' + access_token }
+        })
+            .done(function () {
+                message('Vote submitted successfully.');
+                refresh_translation_list();
+            })
+            .fail(function () {
+                message('Vote submition failed.', 'error');
             });
     };
 

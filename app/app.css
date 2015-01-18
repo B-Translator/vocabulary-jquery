@@ -7,6 +7,10 @@
     margin-bottom: 20px;
 }
 
+.voted .ui-li-count {
+    background-color: #00dd00
+}
+
 #messages {
     margin: 0px;
     padding: 0px;
