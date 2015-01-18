@@ -40,7 +40,12 @@ var http_request = function(url, settings) {
         $.mobile.loading('hide');
     });
     request.fail(function(jqXHR, textStatus, errorThrown) {
-        console.log('Error: ' + jqXHR.responseJSON.error + ': ' + jqXHR.responseJSON.error_description);
+	if (jqXHR.responseJSON && jqXHR.responseJSON.error) {
+            console.log('Error: ' + jqXHR.responseJSON.error + ': ' + jqXHR.responseJSON.error_description);
+	}
+	else {
+	    console.log(textStatus);
+	}
     });
 
     return request;
