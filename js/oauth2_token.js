@@ -24,9 +24,7 @@ OAuth2.Token = function (settings) {
         },
 
         // Function to call after getting an access token.
-        done: function(access_token) {
-            console.log('Access token: ' + access_token);
-        },
+        done: function() {},
 
         // Function to call when getting an access token fails.
         fail: function(jqXHR, textStatus, errorThrown ) {
@@ -77,10 +75,13 @@ OAuth2.Token = function (settings) {
         return JSON.parse(str_value);
     };
 
+    // Try to load it when a token object is constructed.
+    _token = _load();
+
     /**
      * Set the function that will use the access token.
      * Can be used like this:
-     *   $token.get().done(function (access_token) { ... });
+     *   $token.get().done(function () { ... });
      */
     this.done = function (callback) {
         _settings.done = callback;
@@ -99,8 +100,7 @@ OAuth2.Token = function (settings) {
 
     /**
      * Set the function that will be called for getting
-     * the user password, when needed. Can be chained like this:
-     *   $token.getPassword( ... ).get().done( ... );
+     * the user password, when needed.
      */
     this.getPassword = function (callback) {
         _settings.getPassword = callback;
@@ -122,8 +122,13 @@ OAuth2.Token = function (settings) {
         return this;
     };
 
+    /** Return the current access_token. */
+    this.access_token = function () {
+	return (_isValid() ? _token.access_token : null);
+    };
+
     /** Return true if there is a valid token. */
-    this.isValid = function () {
+    var _isValid = function () {
         // Check that we have an access_token.
         if (!_token)  return false;
         if (!_token.access_token)  return false;
@@ -143,18 +148,6 @@ OAuth2.Token = function (settings) {
      *   $token.get().done( ... ).fail( ... );
      */
     this.get = function () {
-        // If there is no token, try to get it from local store.
-        if (!_token.access_token)  _token = _load();
-
-        // If the current token is a valid one, use it.
-        if (this.isValid()) {
-            setTimeout(function () {
-                _settings.done(_token.access_token);
-            }, 10);
-            return this;
-        }
-
-        // Otherwise try to get another one.
         if (_token.refresh_token) {
             _refreshExisting();
         }
@@ -177,7 +170,7 @@ OAuth2.Token = function (settings) {
                 function (response) {
                     _save(response);
                     if (_token.access_token) {
-                        _settings.done(_token.access_token);
+                        _settings.done();
                     }
                     else {
                         _getNew();
@@ -204,7 +197,7 @@ OAuth2.Token = function (settings) {
                 function (response) {
                     _save(response);
                     if (_token.access_token) {
-                        _settings.done(_token.access_token);
+                        _settings.done();
                     }
                     else {
                         _settings.fail(this);
