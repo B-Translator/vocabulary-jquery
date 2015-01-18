@@ -14,22 +14,22 @@ var $app = (function () {
     var message = function (msg, type, time) {
         // Set some default values, if params are missing.
         type = type || 'status';
-        time = time || 3;
+        time = time || 5;
 
         // Create and add the message element.
         var $el = $('<p class="message ' + type + ' ui-mini">' + msg + '</p>');
-        $('#messages').append($el).hide().fadeIn(500);
+        $('#messages').append($el).hide().slideToggle('slow');
 
         // After some seconds remove this message.
         setTimeout(function () {
-            $el.fadeOut(500, function () {
+            $el.slideToggle('slow', function () {
                 $(this).remove();
             });
         }, time * 1000);
 
         // If the message is clicked, remove it.
         $('.message').on('click', function (event) {
-            $(this).fadeOut(100, function () {
+            $(this).slideToggle('fast', function () {
                 $(this).remove();
             });
         });
