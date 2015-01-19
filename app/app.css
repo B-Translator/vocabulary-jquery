@@ -7,9 +7,17 @@
     margin-bottom: 20px;
 }
 
+#popupMenu {
+    min-width: 120px;
+}
+
 .voted .ui-li-count {
     background-color: #00aa00;
     border-color: #00aa00;
+}
+
+.user {
+    color: #000099;
 }
 
 #messages {

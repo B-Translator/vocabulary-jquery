@@ -2,41 +2,6 @@
 var $app = (function () {
 
     /**
-     * Display status and error messages.
-     * 
-     * @param msg {string}
-     *   The message to be displayed.
-     * @param type {string}
-     *     The type of the message: status|error|warning
-     * @params time {number}
-     *     The time in seconds to display the message.
-     */
-    var message = function (msg, type, time) {
-        // Set some default values, if params are missing.
-        type = type || 'status';
-        time = time || 5;
-
-        // Create and add the message element.
-        var $el = $('<p class="message ' + type + ' ui-mini">' + msg + '</p>');
-        $('#messages').append($el).hide().slideToggle('slow');
-
-        // After some seconds remove this message.
-        setTimeout(function () {
-            $el.slideToggle('slow', function () {
-                $(this).remove();
-            });
-        }, time * 1000);
-
-        // If the message is clicked, remove it.
-        $('.message').on('click', function (event) {
-            $(this).slideToggle('fast', function () {
-                $(this).remove();
-            });
-        });
-    };
-
-
-    /**
      * When the page with id 'vocabulary' is created,
      * do the things that are listed in the function.
      */
@@ -50,17 +15,12 @@ var $app = (function () {
             get_random_term();
         });
 
-        // Setup login/logout menu items.
-        login_setup();
+        // Setup menu items.
+        menu_setup();
 
         // Remove a dynamic-popup after it has been closed.
         $(document).on('popupafterclose', '.dynamic-popup', function() {
             $(this).remove();
-        });
-
-        // Close the menu when an item is clicked.
-        $('#popupMenu li').on('click', function() {
-            $('#popupMenu').popup('close');
         });
 
         // Get and display a random term from the vocabulary.
@@ -68,9 +28,14 @@ var $app = (function () {
     });
 
     /**
-     * Setup login/logout menu items.
+     * Setup menu items.
      */
-    var login_setup = function () {
+    var menu_setup = function () {
+        // Close the menu when an item is clicked.
+        $('#popupMenu li').on('click', function() {
+            $('#popupMenu').popup('close');
+        });
+
         $('#menuButton').on('click', function() {
             if ($user.isLoged()) {
                 $('#login').hide();
@@ -249,8 +214,12 @@ var $app = (function () {
         $.each(votes, function (user, vote) {
             if (!vote.name) return;
             data.nr += 1;
+            var voter_name = vote.name;
+            if (voter_name == $user.name) {
+                voter_name = '<span class="user">' + voter_name + '</span>';
+            }
             data.voters.push({
-                name: vote.name,
+                name: voter_name,
                 time: $.timeago(vote.time),
             });
         });
@@ -308,6 +277,40 @@ var $app = (function () {
         var sguid = Sha1.hash(term + 'vocabulary');
         var url = '/public/btr/translations/' + sguid + '?lng=sq';
         http_request(url).then(build_translations_list);
+    };
+
+    /**
+     * Display status and error messages.
+     * 
+     * @param msg {string}
+     *   The message to be displayed.
+     * @param type {string}
+     *     The type of the message: status|error|warning
+     * @params time {number}
+     *     The time in seconds to display the message.
+     */
+    var message = function (msg, type, time) {
+        // Set some default values, if params are missing.
+        type = type || 'status';
+        time = time || 5;
+
+        // Create and add the message element.
+        var $el = $('<p class="message ' + type + ' ui-mini">' + msg + '</p>');
+        $('#messages').append($el).hide().slideToggle('slow');
+
+        // After some seconds remove this message.
+        setTimeout(function () {
+            $el.slideToggle('slow', function () {
+                $(this).remove();
+            });
+        }, time * 1000);
+
+        // If the message is clicked, remove it.
+        $('.message').on('click', function (event) {
+            $(this).slideToggle('fast', function () {
+                $(this).remove();
+            });
+        });
     };
 
 })();
