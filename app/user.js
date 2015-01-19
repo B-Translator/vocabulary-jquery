@@ -1,6 +1,6 @@
 
 /**
- * Create an object that will manage the user and its state.
+ * Create an object to manage the user and its state.
  */
 var User = function () {
     var that = this;
@@ -10,13 +10,12 @@ var User = function () {
 
     /** Set the name of the user and display it on the status. */
     var _setName = function (name) {
+        that.name = name;
         if (name) {
-            that.name = name;
-            $('#status').html(name).show();
+            $('#status-line').html('<strong>' + name + '</strong>').show();
         }
         else {
-            that.name = null;
-            $('#status').html('').hide();
+            $('#status-line').hide().html('');
         }
     };
 
@@ -58,38 +57,48 @@ var User = function () {
         return this.name;
     };
 
+    /** Reload the page. */
+    var _reload = function () {
+        location.href = location.href.replace(/(\?|#).*/, '');
+        location.reload();
+    };
+
     /** Function to login. */
     this.login = function () {
         if (this.isLoged())  return;
-        this.token.get().done(function ()  {
-            location.reload();
-        });
+        this.token.get().done(_reload);
     };
 
     /** Function to logout. */
     this.logout = function () {
         _setName(null);
         this.token.erase();
-        setTimeout(function () {
-            location.reload();
-        }, 100);
+        setTimeout(_reload, 100);
     };
 
     // Check the current token and update the user name.
     var _update = function () {
-        var access_token = that.token.access_token();
-        if (!access_token) {
+        // Try to refresh the token using refresh_token.
+        var _refresh = function () {
+            _setName(null);
+            that.token.get(false).done(_update);
+        };
+
+        if (!that.token) {
             _setName(null);
             return;
         }
-        // Verify the current access_token.
-        $.ajax($base_url + '/oauth2/tokens/' + access_token)
-            .done(function (response) {
-                _setName(response.user_id);
-            })
-            .fail(function () {
-                _setName(null);
-            });
+        var access_token = that.token.access_token();
+        if (!access_token) {
+            _refresh();
+        }
+        else {
+            $.ajax($base_url + '/oauth2/tokens/' + access_token)
+                .fail(_refresh)
+                .done(function (response) {
+                    _setName(response.user_id);
+                });
+        }
     };
     
     $(document).on('pagecreate', '#vocabulary', function() {

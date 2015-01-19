@@ -8,11 +8,13 @@
 }
 
 .voted .ui-li-count {
-    background-color: #00dd00
+    background-color: #00aa00;
+    border-color: #00aa00;
 }
 
 #messages {
     margin: 0px;
+    margin-bottom: 20px;
     padding: 0px;
     border: none;
     background: none;
@@ -44,7 +46,7 @@
     border-color: #eed3d7;
 }
 
-#status {
+#status-line {
     position: fixed;
     left: 0px;
     bottom: 0px;
@@ -52,5 +54,5 @@
     width: 100%;
     background: #eeeeee;
     text-align: center;
-    color: #000088;
+    color: #000099;
 }
