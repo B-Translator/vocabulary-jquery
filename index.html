@@ -32,11 +32,12 @@
 
     <!-- B-Translator API -->
     <script src="js/http_request.js"></script>
-    <script src="js/oauth2_client.js"></script>
-    <script src="js/api-config.js"></script>
+    <script src="js/oauth2_token.js"></script>
 
     <!-- application custom style and JS code -->
     <link rel="stylesheet" href="app/app.css">
+    <script src="app/config.js"></script>
+    <script src="app/user.js"></script>
     <script src="app/app.js"></script>
   </head>
   <body>
@@ -50,7 +51,7 @@
 
         <a href="#" id="next" class="ui-btn ui-btn-b ui-nodisc-icon ui-btn-left ui-icon-refresh ui-btn-icon-notext" style="border-radius: 5px;">Next</a>
 
-        <a href="#popupMenu" data-rel="popup" class="ui-btn ui-btn-b ui-nodisc-icon ui-btn-right ui-icon-bars ui-btn-icon-notext" style="border-radius: 5px;">Menu</a>
+        <a href="#popupMenu" id="menuButton" data-rel="popup" class="ui-btn ui-btn-b ui-nodisc-icon ui-btn-right ui-icon-bars ui-btn-icon-notext" style="border-radius: 5px;">Menu</a>
         <div data-role="popup" id="popupMenu" data-theme="none" data-shadow="false">
           <div data-role="collapsibleset" data-transition="slidedown" data-theme="b" data-content-theme="a" data-collapsed-icon="carat-r" data-expanded-icon="carat-d" class="ui-nodisc-icon">
             <div data-role="collapsible" data-inset="false">
@@ -59,6 +60,7 @@
                 <li><a href="#" id="details" target="_blank" class="ui-btn ui-icon-grid ui-btn-icon-left">Details</a></li>
                 <li><a href="https://l10n.org.al/translations/search?lng=sq&origin=vocabulary&project=ICT_sq" target="_blank" class="ui-btn ui-icon-bullets ui-btn-icon-left">List</a></li>
                 <li><a href="#" id="login" class="ui-btn ui-icon-user ui-btn-icon-left">Login</a></li>
+                <li><a href="#" id="logout" class="ui-btn ui-icon-user ui-btn-icon-left">Logout</a></li>
               </ul>
             </div><!-- /collapsible -->
             <div data-role="collapsible" data-inset="false">
@@ -96,7 +98,7 @@
         <!-- mustache template for translations -->
         <script id="tmpl-translations" type="x-tmpl-mustache">
           {{#translations}}
-          <li id="{{id}}" class="translation">
+          <li id="{{id}}" class="translation{{voted}}">
             <a href="#" data-rel="popup">
               <strong>{{translation}}</strong><br/>
               <p>By <strong>{{author}}</strong> ({{time}})</p>
@@ -118,7 +120,7 @@
                   <h4>Voters ({{nr}})</h4>
                   <ul data-role="listview">
                     {{#voters}}
-                    <li>{{name}} ({{time}})</li>
+                    <li>{{{name}}} <span style="font-weight: normal;">({{time}})</span></li>
                     {{/voters}}
                   </ul>
                 </div>
@@ -128,11 +130,16 @@
         </script>
 
       </div><!-- /content -->
+
+      <!-- messages -->
+      <div data-role="footer" id="messages" data-position="fixed"></div>
+      <div id="status-line"></div>
     </div><!-- /page -->
 
     <!-- template for the login popup -->
     <script id="tmpl-login" type="x-tmpl-mustache">
       <div data-role="popup" id="popup-login" data-theme="a" data-dismissible="false" class="ui-corner-all" class="dynamic-popup">
+        <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
         <form id="form-login">
           <div style="padding: 0px 20px 10px 20px;">
             <h3>Please sign in</h3>
