@@ -124,7 +124,7 @@ OAuth2.Token = function (settings) {
 
     /** Return the current access_token. */
     this.access_token = function () {
-	return (_isValid() ? _token.access_token : null);
+        return (_isValid() ? _token.access_token : null);
     };
 
     /** Return true if there is a valid token. */
@@ -144,28 +144,40 @@ OAuth2.Token = function (settings) {
 
     /**
      * Get an access token and pass it to the callback function.
+     *
+     * @param get_new {boolean}
+     *     If true, it will also try to get a new token when refreshing fails.
+     *
      * Returns the object itself, so that it can be chained like this:
      *   $token.get().done( ... ).fail( ... );
      */
-    this.get = function () {
+    this.get = function (get_new) {
+        var get_new = (get_new !== false);
         if (_token.refresh_token) {
-            _refreshExisting();
+            _refreshExisting(get_new);
         }
         else {
-            _getNew();
+            if (get_new) _getNew();
         }
 
         return this;
     };
 
-    /** Try to get a new token by using the refresh_token. */
-    var _refreshExisting = function () {
-        console.log('refresh_existing_token()'); //debug
+    /**
+     * Try to get a new token by using the refresh_token.
+     *
+     * @param get_new {boolean}
+     *     If true, it will also try to get a new token when refreshing fails.
+     */
+    var _refreshExisting = function (get_new) {
+        //console.log('refresh_existing_token()'); //debug
         _get({
             grant_type: 'refresh_token',
             refresh_token: _token.refresh_token,
         })
-            .fail(_getNew)
+            .fail(function () {
+                if (get_new) _getNew();
+            })
             .done(
                 function (response) {
                     _save(response);
@@ -173,14 +185,14 @@ OAuth2.Token = function (settings) {
                         _settings.done();
                     }
                     else {
-                        _getNew();
+                        if (get_new) _getNew();
                     }
                 });
     };
 
     /** Get a new token from the oauth2 server. */
     var _getNew = function (username, password) {
-        console.log('_getNew()'); //debug
+        //console.log('_getNew()'); //debug
 
         if (!username || !password) {
             _settings.getPassword(_getNew);
