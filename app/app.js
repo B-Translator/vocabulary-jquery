@@ -184,7 +184,11 @@ var $app = (function () {
         $('#translations')
             .html(Mustache.render(tmpl, data))
             .listview('refresh')
+            .trigger('create')
             .trigger('updatelayout');
+
+        // Store the string id (we need it when submitting a new translation).
+        $('#new-translation').data('sguid', result.string.sguid);
 
         // Store the votes for each translation.
         $.each(result.string.translations, function (i, trans) {
@@ -197,6 +201,10 @@ var $app = (function () {
         // When a translation from the list is clicked,
         // display a popup with its details.
         $('.translation').on('click', display_translation_popup);
+
+        // Sending a new translation to the server.
+        $('#new-translation-form').on('submit', send_new_translation);
+        $('#send-new-translation').on('click', send_new_translation);
     }
 
     /**
@@ -261,11 +269,11 @@ var $app = (function () {
             headers: { 'Authorization': 'Bearer ' + access_token }
         })
             .done(function () {
-                message('Vote submitted successfully.');
+                message('Vote submitted.');
                 refresh_translation_list();
             })
             .fail(function () {
-                message('Vote submition failed.', 'error');
+                message('Could not submit vote.', 'error');
             });
     };
 
@@ -311,6 +319,48 @@ var $app = (function () {
                 $(this).remove();
             });
         });
+    };
+
+    /**
+     * Send a new translation to the server.
+     * Return 'false' so that the form submission fails.
+     */
+    var send_new_translation = function () {
+        var new_translation = $('#new-translation')[0].value;
+        if (!new_translation)  return false;
+
+        // Get the access_token.
+        var access_token = $user.token.access_token();
+        if (!access_token) {
+            $user.token.get().done(send_new_translation);
+            return false;
+        }
+
+        // Submit the translation.
+        http_request('/btr/translations/add', {
+            method: 'POST',
+            data: {
+                sguid: $('#new-translation').data('sguid'),
+                lng: 'sq',
+                translation: new_translation,
+            },
+            headers: {
+                'Authorization': 'Bearer ' + access_token ,
+            }
+        })
+            .done(function () {
+                message('Translation saved.');
+                refresh_translation_list();
+            })
+            .fail(function () {
+                message('Could not save translation.', 'error');
+            });
+
+        // Clear the input box.
+        $('#new-translation')[0].value = '';
+
+        // Return 'false' so that form submission fails.
+        return false;
     };
 
 })();
