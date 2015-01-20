@@ -109,7 +109,17 @@ var $app = (function () {
      * When a term is clicked it should be selected.
      */
     var build_suggestions_list = function(term_list) {
-        //console.log(term_list);  //debug
+        // Get the numbers of terms
+        var count = Object.keys(term_list).length;
+
+        // If there is only one term in the list
+        // just display it, don't build the suggestion list.
+        if (count == 1) {
+            for (var term in term_list) {
+                display_term(term);
+                return;
+            };
+        }
 
         // Get the data for the list of suggestions.
         var data = { terms: [] };
@@ -125,27 +135,23 @@ var $app = (function () {
             .trigger('updatelayout');
 
         // When a term from the list is clicked, select that term.
-        $('.term').on('click', select_term);
+        $('.term').on('click', function () {
+            var term = $(this).html();
+            display_term(term);
+        });
     }
 
     /**
-     * This function is called when a term from the suggestions list is
-     * selected (clicked).
+     * Retrive and display the translations for the given term.
      */
-    var select_term = function (event) {
-        // Set the selected term to the search input.
-        var term = $(this).html();
+    var display_term = function (term) {
         $('#search-term')[0].value = term;
 
         // Empty the list of suggestions.
-        $('#suggestions')
-            .html('')
-            .listview('refresh')
-            .trigger('updatelayout');
+        $('#suggestions').html('').listview('refresh').trigger('updatelayout');
 
         // Get the string details of the selected term
         // and display the list of existing translations.
-        //$.getScript('js/sha1.js');
         var sguid = Sha1.hash(term + 'vocabulary');
         http_request('/public/btr/translations/' + sguid + '?lng=sq')
             .then(build_translations_list);
