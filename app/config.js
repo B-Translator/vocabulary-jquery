@@ -18,35 +18,3 @@ var $oauth2_settings = {
     client_secret: 'Wadek9kAwgoovnepecOal8',
     scope: 'user_profile',
 };
-
-/**
- * Extend the function http_request().
- */
-var make_http_request = http_request;
-var http_request = function(url, settings) {
-    // If parameter settings is not given, assign a default value.
-    var settings = settings || {};
-
-    // Before sending the request display a loading icon.
-    settings.beforeSend = function() {
-        $.mobile.loading('show');
-        return true;
-    };
-
-    // Make the request and handle some common cases.
-    var request = make_http_request($base_url + url, settings);
-    request.always(function(){
-        // Hide the loading icon.
-        $.mobile.loading('hide');
-    });
-    request.fail(function(jqXHR, textStatus, errorThrown) {
-	if (jqXHR.responseJSON && jqXHR.responseJSON.error) {
-            console.log('Error: ' + jqXHR.responseJSON.error + ': ' + jqXHR.responseJSON.error_description);
-	}
-	else {
-	    console.log(textStatus);
-	}
-    });
-
-    return request;
-}

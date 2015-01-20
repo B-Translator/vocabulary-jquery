@@ -268,12 +268,15 @@ var $app = (function () {
             data: { tguid: tguid },
             headers: { 'Authorization': 'Bearer ' + access_token }
         })
-            .done(function () {
-                message('Vote submitted.');
+            .done(function (result) {
+                console.log(result);
+                if (result.messages.length) {
+                    display_service_messages(result.messages);
+                }
+                else {
+                    message('Vote saved.');
+                }
                 refresh_translation_list();
-            })
-            .fail(function () {
-                message('Could not submit vote.', 'error');
             });
     };
 
@@ -285,6 +288,68 @@ var $app = (function () {
         var sguid = Sha1.hash(term + 'vocabulary');
         var url = '/public/btr/translations/' + sguid + '?lng=sq';
         http_request(url).then(build_translations_list);
+    };
+
+    /**
+     * Send a new translation to the server.
+     * Return 'false' so that the form submission fails.
+     */
+    var send_new_translation = function () {
+        var new_translation = $('#new-translation')[0].value;
+        if (!new_translation)  return false;
+
+        // Get the access_token.
+        var access_token = $user.token.access_token();
+        if (!access_token) {
+            $user.token.get().done(send_new_translation);
+            return false;
+        }
+
+        // Submit the translation.
+        http_request('/btr/translations/add', {
+            method: 'POST',
+            data: {
+                sguid: $('#new-translation').data('sguid'),
+                lng: 'sq',
+                translation: new_translation,
+            },
+            headers: {
+                'Authorization': 'Bearer ' + access_token ,
+            }
+        })
+            .done(function () {
+                if (result.messages.length) {
+                    display_service_messages(result.messages);
+                }
+                else {
+                    message('Translation saved.');
+                }
+                refresh_translation_list();
+            });
+
+        // Clear the input box.
+        $('#new-translation')[0].value = '';
+
+        // Return 'false' so that form submission fails.
+        return false;
+    };
+
+    /**
+     * Display the messages that are returned from the service.
+     * 
+     * @param arr_messages {array}
+     *     Array of notification messages; each notification message
+     *     is an array of a message and a type, where type can be one of
+     *     'status', 'warning', 'error'.
+     */
+    var display_service_messages = function (arr_messages) {
+        if (!arr_messages.length)  return;
+        for (var i in arr_messages) {
+            var message = messages[i]
+            var msg = message[0];
+            var type = message[1];
+            message(msg, type);
+        }
     };
 
     /**
@@ -322,45 +387,42 @@ var $app = (function () {
     };
 
     /**
-     * Send a new translation to the server.
-     * Return 'false' so that the form submission fails.
+     * Extend the function http_request().
      */
-    var send_new_translation = function () {
-        var new_translation = $('#new-translation')[0].value;
-        if (!new_translation)  return false;
+    var http_request = function(url, settings) {
+        // If parameter settings is not given, assign a default value.
+        var settings = settings || {};
 
-        // Get the access_token.
-        var access_token = $user.token.access_token();
-        if (!access_token) {
-            $user.token.get().done(send_new_translation);
-            return false;
-        }
+        // Before sending the request display a loading icon.
+        settings.beforeSend = function() {
+            $.mobile.loading('show');
+            return true;
+        };
 
-        // Submit the translation.
-        http_request('/btr/translations/add', {
-            method: 'POST',
-            data: {
-                sguid: $('#new-translation').data('sguid'),
-                lng: 'sq',
-                translation: new_translation,
-            },
-            headers: {
-                'Authorization': 'Bearer ' + access_token ,
+        // Make the request and handle some common cases.
+        var request = window.http_request($base_url + url, settings);
+        request.always(function(){
+            // Hide the loading icon.
+            $.mobile.loading('hide');
+        });
+        request.fail(function(jqXHR, errorThrown, textStatus) {
+            //console.log(jqXHR);  //debug
+            //console.log(textStatus);  //debug
+            //console.log(errorThrown);  //debug
+            if (jqXHR.responseJSON) {
+                if (jqXHR.responseJSON.error) {
+                    message(jqXHR.responseJSON.error + ': ' + jqXHR.responseJSON.error_description, 'error');
+                }
+                else {
+                    message(jqXHR.responseJSON[0], 'error');
+                }
             }
-        })
-            .done(function () {
-                message('Translation saved.');
-                refresh_translation_list();
-            })
-            .fail(function () {
-                message('Could not save translation.', 'error');
-            });
+            else {
+                message(textStatus, 'error');
+            }
+        });
 
-        // Clear the input box.
-        $('#new-translation')[0].value = '';
-
-        // Return 'false' so that form submission fails.
-        return false;
-    };
+        return request;
+    }
 
 })();
