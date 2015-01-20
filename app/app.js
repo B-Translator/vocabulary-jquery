@@ -75,9 +75,7 @@ var $app = (function () {
                 if (check &&  $('#search-term')[0].value != '')  { return; }
 
                 // Get and display the translations of the string.
-                var sguid = result.sguid;
-                http_request('/public/btr/translations/' + sguid + '?lng=sq')
-                    .then(build_translations_list);
+                display_translations(result.sguid);
             });
     }
 
@@ -136,6 +134,10 @@ var $app = (function () {
 
         // When a term from the list is clicked, select that term.
         $('.term').on('click', function () {
+            // Empty the list of suggestions.
+            $('#suggestions').html('')
+                .listview('refresh').trigger('updatelayout');
+
             var term = $(this).html();
             display_term(term);
         });
@@ -145,74 +147,70 @@ var $app = (function () {
      * Retrive and display the translations for the given term.
      */
     var display_term = function (term) {
+        // Update the search input box.
         $('#search-term')[0].value = term;
 
-        // Empty the list of suggestions.
-        $('#suggestions').html('').listview('refresh').trigger('updatelayout');
-
-        // Get the string details of the selected term
-        // and display the list of existing translations.
+        // Get and display the list of translations.
         var sguid = Sha1.hash(term + 'vocabulary');
-        http_request('/public/btr/translations/' + sguid + '?lng=sq')
-            .then(build_translations_list);
+        display_translations(sguid);
     }
 
     /**
-     * Build and display a list of the existing translations for the
-     * selected term.
+     * Get the translations of the given sguid and display them.
      */
-    var build_translations_list = function (result) {
-        //console.log(result.string);  return;  //debug
+    var display_translations = function (sguid) {
+        var url = '/public/btr/translations/' + sguid + '?lng=sq';
+        http_request(url).then(function (result) {
+            //console.log(result.string);  return;  //debug
 
-        // Set the selected term on the search box.
-        var term = result.string.string;
-        $('#search-term')[0].value = term;
+            // Set the selected term on the search box.
+            var term = result.string.string;
+            $('#search-term')[0].value = term;
 
-        // Set the link for the details.
-        var url = 'https://l10n.org.al/vocabulary/ICT_sq/' + term;
-        $('#details').attr('href', url);
+            // Set the link for the details.
+            var url = 'https://l10n.org.al/vocabulary/ICT_sq/' + term;
+            $('#details').attr('href', url);
 
-        // Get the data for the list of translations.
-        var data = { translations: [] };
-        $.each(result.string.translations, function (i, trans) {
-            data.translations.push({
-                id : trans.tguid,
-                translation: trans.translation,
-                author: trans.author,
-                time: $.timeago(trans.time),
-                vote_nr: trans.count,
-                voted: trans.votes.hasOwnProperty($user.name) ? ' voted' : '',
+            // Get the data for the list of translations.
+            var data = { translations: [] };
+            $.each(result.string.translations, function (i, trans) {
+                data.translations.push({
+                    id : trans.tguid,
+                    translation: trans.translation,
+                    author: trans.author,
+                    time: $.timeago(trans.time),
+                    vote_nr: trans.count,
+                    voted: trans.votes.hasOwnProperty($user.name) ? ' voted' : '',
+                });
             });
+
+            // Render and display the template of translations.
+            var tmpl = $('#tmpl-translations').html();
+            $('#translations').html(Mustache.render(tmpl, data))
+                .listview('refresh').trigger('create').trigger('updatelayout');
+
+            // Store the string id (we need it when submitting
+            //a new translation).
+            $('#new-translation').data('sguid', result.string.sguid);
+
+            // Store the votes for each translation.
+            $.each(result.string.translations, function (i, trans) {
+                var $li = $('li#' + trans.tguid);
+                $li.data('tguid', trans.tguid);
+                $li.data('translation', trans.translation);
+                $li.data('votes', trans.votes);
+            });
+
+            // When a translation from the list is clicked,
+            // display a popup with its details.
+            $('.translation').on('click', display_translation_popup);
+
+            // Sending a new translation to the server.
+            $('#new-translation-form').on('submit', send_new_translation);
+            $('#send-new-translation').on('click', send_new_translation);
         });
-
-        // Render and display the template of translations.
-        var tmpl = $('#tmpl-translations').html();
-        $('#translations')
-            .html(Mustache.render(tmpl, data))
-            .listview('refresh')
-            .trigger('create')
-            .trigger('updatelayout');
-
-        // Store the string id (we need it when submitting a new translation).
-        $('#new-translation').data('sguid', result.string.sguid);
-
-        // Store the votes for each translation.
-        $.each(result.string.translations, function (i, trans) {
-            var $li = $('li#' + trans.tguid);
-            $li.data('tguid', trans.tguid);
-            $li.data('translation', trans.translation);
-            $li.data('votes', trans.votes);
-        });
-
-        // When a translation from the list is clicked,
-        // display a popup with its details.
-        $('.translation').on('click', display_translation_popup);
-
-        // Sending a new translation to the server.
-        $('#new-translation-form').on('submit', send_new_translation);
-        $('#send-new-translation').on('click', send_new_translation);
-    }
-
+    };
+    
     /**
      * When a translation from the list is clicked, display
      * a popup with the details of this translation.
@@ -282,18 +280,11 @@ var $app = (function () {
                 else {
                     message('Vote saved.');
                 }
-                refresh_translation_list();
-            });
-    };
 
-    /**
-     * Refresh the list of translations.
-     */
-    var refresh_translation_list = function () {
-        var term = $('#search-term')[0].value;
-        var sguid = Sha1.hash(term + 'vocabulary');
-        var url = '/public/btr/translations/' + sguid + '?lng=sq';
-        http_request(url).then(build_translations_list);
+                // Refresh the list of translations.
+                var term = $('#search-term')[0].value;
+                display_term(term);
+            });
     };
 
     /**
