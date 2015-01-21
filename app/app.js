@@ -18,6 +18,9 @@ var $app = (function () {
         // Setup menu items.
         menu_setup();
 
+        // Add a new term when the button is clicked.
+        $('#add-new-term').on('click', add_new_term);
+
         // Remove a dynamic-popup after it has been closed.
         $(document).on('popupafterclose', '.dynamic-popup', function() {
             $(this).remove();
@@ -56,6 +59,37 @@ var $app = (function () {
         });
     };
 
+    var add_new_term = function () {
+        var term = $('#search-term')[0].value;
+        if (!term)  return false;
+
+        // Get the access_token.
+        var access_token = $user.token.access_token();
+        if (!access_token) {
+            $user.token.get().done(add_new_term);
+            return false;
+        }
+
+        // Add the new term.
+        http_request('/btr/project/add_string', {
+            method: 'POST',
+            data: {
+                origin: 'vocabulary',
+                project: 'ICT_sq',
+                string: term,
+                context: 'vocabulary',
+                notify: true,
+            },
+            headers: {
+                'Authorization': 'Bearer ' + access_token,
+            }
+        })
+            .done(function (result) {
+                display_translations(result.sguid);
+                message('New term added.');
+            });
+    };
+
     /**
      * Get and display a random term from the vocabulary.
      */
@@ -90,25 +124,27 @@ var $app = (function () {
         if (!search_term) { return; }
         if (search_term.length < 2) { return; }
 
-        // Empty the list of translations.
-        $('#translations')
-            .html('')
-            .listview('refresh')
-            .trigger('updatelayout');
-
         // Retrieve a suggestions list from the server and display them.
         var path = '/translations/autocomplete/string/vocabulary/ICT_sq/';
         http_request(path + search_term)
-            .then(build_suggestions_list);
+            .then(display_suggestions);
     }
 
     /**
      * Build and display a list of the terms suggested from the server.
      * When a term is clicked it should be selected.
      */
-    var build_suggestions_list = function(term_list) {
+    var display_suggestions = function(term_list) {
         // Get the numbers of terms
         var count = Object.keys(term_list).length;
+
+        // If the list is empty, add the current term as a new term.
+        if (count == 0) {
+            hide_suggestions();
+            hide_translations();
+            $('#add-new-term').show();
+            return;
+        }
 
         // If there is only one term in the list
         // just display it, don't build the suggestion list.
@@ -119,6 +155,10 @@ var $app = (function () {
             };
         }
 
+        // Hide translations and the add button.
+        hide_translations();
+        $('#add-new-term').hide();
+
         // Get the data for the list of suggestions.
         var data = { terms: [] };
         $.each(term_list, function (id, term) {
@@ -127,22 +167,33 @@ var $app = (function () {
 
         // Render and display the template of suggestions.
         var tmpl = $('#tmpl-suggestions').html();
-        $('#suggestions')
-            .html(Mustache.render(tmpl, data))
-            .listview('refresh')
-            .trigger('updatelayout');
+        $('#suggestions').html(Mustache.render(tmpl, data))
+            .listview('refresh').trigger('updatelayout');
 
         // When a term from the list is clicked, select that term.
         $('.term').on('click', function () {
-            // Empty the list of suggestions.
-            $('#suggestions').html('')
-                .listview('refresh').trigger('updatelayout');
-
+            // Display the selected term.
             var term = $(this).html();
             display_term(term);
         });
     }
 
+    /** Hide the list of suggestions. */
+    var hide_suggestions = function () {
+        $('#suggestions')
+            .html('')
+            .listview('refresh')
+            .trigger('updatelayout');
+    };
+
+    /** Hide the list of translations. */
+    var hide_translations = function () {
+        $('#translations')
+            .html('')
+            .listview('refresh')
+            .trigger('updatelayout');
+    };
+    
     /**
      * Retrive and display the translations for the given term.
      */
@@ -159,6 +210,10 @@ var $app = (function () {
      * Get the translations of the given sguid and display them.
      */
     var display_translations = function (sguid) {
+        // Hide the list of suggestions and the button that adds a new term.
+        hide_suggestions();
+        $('#add-new-term').hide();
+
         var url = '/public/btr/translations/' + sguid + '?lng=sq';
         http_request(url).then(function (result) {
             //console.log(result.string);  return;  //debug
@@ -219,6 +274,7 @@ var $app = (function () {
         // Get the data for the list of voters.
         var data = {
             translation: $(this).data('translation'),
+            is_admin: ($.inArray('btranslator-admin', $user.permissions) > -1),
             nr : 0,
             voters: [],
         };
@@ -246,12 +302,21 @@ var $app = (function () {
             .popup()           // init popup
             .popup('open');    // open popup
 
+        // Get the id of the translation.
+        var tguid = $(this).data('tguid');
+
         // When the 'Vote' button is clicked,
         // send a vote for this translation.
-        var tguid = $(this).data('tguid');
-        $('#vote').on('click', function (event) {
+        $('#vote').on('click', function () {
             $("#translation-details").popup('close');
             vote_translation(tguid);
+        });
+
+        // When the 'Delete' button is clicked,
+        // delete this translation.
+        $('#delete').on('click', function (event) {
+            $("#translation-details").popup('close');
+            delete_translation(tguid);
         });
     }
 
@@ -288,6 +353,30 @@ var $app = (function () {
     };
 
     /**
+     * Delete the translation with the given id.
+     */
+    var delete_translation = function (tguid) {
+        var access_token = $user.token.access_token();
+        if (!access_token) {
+            $user.token.get().done(function () {
+                delete_translation(tguid);
+            });
+            return;
+        }
+
+        http_request('/btr/project/del_string', {
+            method: 'POST',
+            data: { tguid: tguid },
+            headers: { 'Authorization': 'Bearer ' + access_token }
+        })
+            .done(function (result) {
+                // Refresh the list of translations.
+                var term = $('#search-term')[0].value;
+                display_term(term);
+            });
+    };
+
+    /**
      * Send a new translation to the server.
      * Return 'false' so that the form submission fails.
      */
@@ -311,17 +400,20 @@ var $app = (function () {
                 translation: new_translation,
             },
             headers: {
-                'Authorization': 'Bearer ' + access_token ,
+                'Authorization': 'Bearer ' + access_token,
             }
         })
-            .done(function () {
+            .done(function (result) {
                 if (result.messages.length) {
                     display_service_messages(result.messages);
                 }
                 else {
                     message('Translation saved.');
                 }
-                refresh_translation_list();
+
+                // Refresh the list of translations.
+                var term = $('#search-term')[0].value;
+                display_term(term);
             });
 
         // Clear the input box.
