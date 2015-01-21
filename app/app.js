@@ -75,9 +75,7 @@ var $app = (function () {
                 if (check &&  $('#search-term')[0].value != '')  { return; }
 
                 // Get and display the translations of the string.
-                var sguid = result.sguid;
-                http_request('/public/btr/translations/' + sguid + '?lng=sq')
-                    .then(build_translations_list);
+                display_translations(result.sguid);
             });
     }
 
@@ -109,7 +107,17 @@ var $app = (function () {
      * When a term is clicked it should be selected.
      */
     var build_suggestions_list = function(term_list) {
-        //console.log(term_list);  //debug
+        // Get the numbers of terms
+        var count = Object.keys(term_list).length;
+
+        // If there is only one term in the list
+        // just display it, don't build the suggestion list.
+        if (count == 1) {
+            for (var term in term_list) {
+                display_term(term);
+                return;
+            };
+        }
 
         // Get the data for the list of suggestions.
         var data = { terms: [] };
@@ -125,88 +133,84 @@ var $app = (function () {
             .trigger('updatelayout');
 
         // When a term from the list is clicked, select that term.
-        $('.term').on('click', select_term);
+        $('.term').on('click', function () {
+            // Empty the list of suggestions.
+            $('#suggestions').html('')
+                .listview('refresh').trigger('updatelayout');
+
+            var term = $(this).html();
+            display_term(term);
+        });
     }
 
     /**
-     * This function is called when a term from the suggestions list is
-     * selected (clicked).
+     * Retrive and display the translations for the given term.
      */
-    var select_term = function (event) {
-        // Set the selected term to the search input.
-        var term = $(this).html();
+    var display_term = function (term) {
+        // Update the search input box.
         $('#search-term')[0].value = term;
 
-        // Empty the list of suggestions.
-        $('#suggestions')
-            .html('')
-            .listview('refresh')
-            .trigger('updatelayout');
-
-        // Get the string details of the selected term
-        // and display the list of existing translations.
-        //$.getScript('js/sha1.js');
+        // Get and display the list of translations.
         var sguid = Sha1.hash(term + 'vocabulary');
-        http_request('/public/btr/translations/' + sguid + '?lng=sq')
-            .then(build_translations_list);
+        display_translations(sguid);
     }
 
     /**
-     * Build and display a list of the existing translations for the
-     * selected term.
+     * Get the translations of the given sguid and display them.
      */
-    var build_translations_list = function (result) {
-        //console.log(result.string);  return;  //debug
+    var display_translations = function (sguid) {
+        var url = '/public/btr/translations/' + sguid + '?lng=sq';
+        http_request(url).then(function (result) {
+            //console.log(result.string);  return;  //debug
 
-        // Set the selected term on the search box.
-        var term = result.string.string;
-        $('#search-term')[0].value = term;
+            // Set the selected term on the search box.
+            var term = result.string.string;
+            $('#search-term')[0].value = term;
 
-        // Set the link for the details.
-        var url = 'https://l10n.org.al/vocabulary/ICT_sq/' + term;
-        $('#details').attr('href', url);
+            // Set the link for the details.
+            var url = 'https://l10n.org.al/vocabulary/ICT_sq/' + term;
+            $('#details').attr('href', url);
 
-        // Get the data for the list of translations.
-        var data = { translations: [] };
-        $.each(result.string.translations, function (i, trans) {
-            data.translations.push({
-                id : trans.tguid,
-                translation: trans.translation,
-                author: trans.author,
-                time: $.timeago(trans.time),
-                vote_nr: trans.count,
-                voted: trans.votes.hasOwnProperty($user.name) ? ' voted' : '',
+            // Get the data for the list of translations.
+            var data = { translations: [] };
+            $.each(result.string.translations, function (i, trans) {
+                data.translations.push({
+                    id : trans.tguid,
+                    translation: trans.translation,
+                    author: trans.author,
+                    time: $.timeago(trans.time),
+                    vote_nr: trans.count,
+                    voted: trans.votes.hasOwnProperty($user.name) ? ' voted' : '',
+                });
             });
+
+            // Render and display the template of translations.
+            var tmpl = $('#tmpl-translations').html();
+            $('#translations').html(Mustache.render(tmpl, data))
+                .listview('refresh').trigger('create').trigger('updatelayout');
+
+            // Store the string id (we need it when submitting
+            //a new translation).
+            $('#new-translation').data('sguid', result.string.sguid);
+
+            // Store the votes for each translation.
+            $.each(result.string.translations, function (i, trans) {
+                var $li = $('li#' + trans.tguid);
+                $li.data('tguid', trans.tguid);
+                $li.data('translation', trans.translation);
+                $li.data('votes', trans.votes);
+            });
+
+            // When a translation from the list is clicked,
+            // display a popup with its details.
+            $('.translation').on('click', display_translation_popup);
+
+            // Sending a new translation to the server.
+            $('#new-translation-form').on('submit', send_new_translation);
+            $('#send-new-translation').on('click', send_new_translation);
         });
-
-        // Render and display the template of translations.
-        var tmpl = $('#tmpl-translations').html();
-        $('#translations')
-            .html(Mustache.render(tmpl, data))
-            .listview('refresh')
-            .trigger('create')
-            .trigger('updatelayout');
-
-        // Store the string id (we need it when submitting a new translation).
-        $('#new-translation').data('sguid', result.string.sguid);
-
-        // Store the votes for each translation.
-        $.each(result.string.translations, function (i, trans) {
-            var $li = $('li#' + trans.tguid);
-            $li.data('tguid', trans.tguid);
-            $li.data('translation', trans.translation);
-            $li.data('votes', trans.votes);
-        });
-
-        // When a translation from the list is clicked,
-        // display a popup with its details.
-        $('.translation').on('click', display_translation_popup);
-
-        // Sending a new translation to the server.
-        $('#new-translation-form').on('submit', send_new_translation);
-        $('#send-new-translation').on('click', send_new_translation);
-    }
-
+    };
+    
     /**
      * When a translation from the list is clicked, display
      * a popup with the details of this translation.
@@ -268,23 +272,81 @@ var $app = (function () {
             data: { tguid: tguid },
             headers: { 'Authorization': 'Bearer ' + access_token }
         })
-            .done(function () {
-                message('Vote submitted.');
-                refresh_translation_list();
-            })
-            .fail(function () {
-                message('Could not submit vote.', 'error');
+            .done(function (result) {
+                console.log(result);
+                if (result.messages.length) {
+                    display_service_messages(result.messages);
+                }
+                else {
+                    message('Vote saved.');
+                }
+
+                // Refresh the list of translations.
+                var term = $('#search-term')[0].value;
+                display_term(term);
             });
     };
 
     /**
-     * Refresh the list of translations.
+     * Send a new translation to the server.
+     * Return 'false' so that the form submission fails.
      */
-    var refresh_translation_list = function () {
-        var term = $('#search-term')[0].value;
-        var sguid = Sha1.hash(term + 'vocabulary');
-        var url = '/public/btr/translations/' + sguid + '?lng=sq';
-        http_request(url).then(build_translations_list);
+    var send_new_translation = function () {
+        var new_translation = $('#new-translation')[0].value;
+        if (!new_translation)  return false;
+
+        // Get the access_token.
+        var access_token = $user.token.access_token();
+        if (!access_token) {
+            $user.token.get().done(send_new_translation);
+            return false;
+        }
+
+        // Submit the translation.
+        http_request('/btr/translations/add', {
+            method: 'POST',
+            data: {
+                sguid: $('#new-translation').data('sguid'),
+                lng: 'sq',
+                translation: new_translation,
+            },
+            headers: {
+                'Authorization': 'Bearer ' + access_token ,
+            }
+        })
+            .done(function () {
+                if (result.messages.length) {
+                    display_service_messages(result.messages);
+                }
+                else {
+                    message('Translation saved.');
+                }
+                refresh_translation_list();
+            });
+
+        // Clear the input box.
+        $('#new-translation')[0].value = '';
+
+        // Return 'false' so that form submission fails.
+        return false;
+    };
+
+    /**
+     * Display the messages that are returned from the service.
+     * 
+     * @param arr_messages {array}
+     *     Array of notification messages; each notification message
+     *     is an array of a message and a type, where type can be one of
+     *     'status', 'warning', 'error'.
+     */
+    var display_service_messages = function (arr_messages) {
+        if (!arr_messages.length)  return;
+        for (var i in arr_messages) {
+            var message = messages[i]
+            var msg = message[0];
+            var type = message[1];
+            message(msg, type);
+        }
     };
 
     /**
@@ -322,45 +384,42 @@ var $app = (function () {
     };
 
     /**
-     * Send a new translation to the server.
-     * Return 'false' so that the form submission fails.
+     * Extend the function http_request().
      */
-    var send_new_translation = function () {
-        var new_translation = $('#new-translation')[0].value;
-        if (!new_translation)  return false;
+    var http_request = function(url, settings) {
+        // If parameter settings is not given, assign a default value.
+        var settings = settings || {};
 
-        // Get the access_token.
-        var access_token = $user.token.access_token();
-        if (!access_token) {
-            $user.token.get().done(send_new_translation);
-            return false;
-        }
+        // Before sending the request display a loading icon.
+        settings.beforeSend = function() {
+            $.mobile.loading('show');
+            return true;
+        };
 
-        // Submit the translation.
-        http_request('/btr/translations/add', {
-            method: 'POST',
-            data: {
-                sguid: $('#new-translation').data('sguid'),
-                lng: 'sq',
-                translation: new_translation,
-            },
-            headers: {
-                'Authorization': 'Bearer ' + access_token ,
+        // Make the request and handle some common cases.
+        var request = window.http_request($base_url + url, settings);
+        request.always(function(){
+            // Hide the loading icon.
+            $.mobile.loading('hide');
+        });
+        request.fail(function(jqXHR, errorThrown, textStatus) {
+            //console.log(jqXHR);  //debug
+            //console.log(textStatus);  //debug
+            //console.log(errorThrown);  //debug
+            if (jqXHR.responseJSON) {
+                if (jqXHR.responseJSON.error) {
+                    message(jqXHR.responseJSON.error + ': ' + jqXHR.responseJSON.error_description, 'error');
+                }
+                else {
+                    message(jqXHR.responseJSON[0], 'error');
+                }
             }
-        })
-            .done(function () {
-                message('Translation saved.');
-                refresh_translation_list();
-            })
-            .fail(function () {
-                message('Could not save translation.', 'error');
-            });
+            else {
+                message(textStatus, 'error');
+            }
+        });
 
-        // Clear the input box.
-        $('#new-translation')[0].value = '';
-
-        // Return 'false' so that form submission fails.
-        return false;
-    };
+        return request;
+    }
 
 })();
