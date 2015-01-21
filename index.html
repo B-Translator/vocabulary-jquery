@@ -75,7 +75,7 @@
         <!-- search button with autocomplete list -->
         <form class="ui-filterable">
           <input id="search-term" data-type="search" placeholder="Gjej një fjalë...">
-	  <a href="#" id="add-new-term" class="ui-nodisc-icon ui-btn ui-corner-all ui-btn-b ui-icon-plus ui-btn-icon-left ui-btn-inline" style="display: none;">Add New Term</a>
+          <a href="#" id="add-new-term" class="ui-nodisc-icon ui-btn ui-corner-all ui-btn-b ui-icon-plus ui-btn-icon-left ui-btn-inline" style="display: none;">Add New Term</a>
         </form>
         <ul id="suggestions" data-role="listview" data-inset="true" data-filter="true" data-input="#search-term"></ul>
 
@@ -101,13 +101,13 @@
           </li>
           {{/translations}}
 
-	  <!-- add a new translation -->
-	  <li>
+          <!-- add a new translation -->
+          <li>
             <a href="#" style="padding-top: 5px; padding-bottom: 5px;">
-	      <form id="new-translation-form">
-		<input type="text" id="new-translation" value="" placeholder="New translation">
-	      </form>
-	    </a>
+              <form id="new-translation-form">
+                <input type="text" id="new-translation" value="" placeholder="New translation">
+              </form>
+            </a>
             <a href="#" id="send-new-translation" class="ui-btn ui-alt-icon ui-icon-plus ui-nodisc-icon ui-btn-icon-notext">Send</a>
           </li>
         </script>
@@ -118,7 +118,14 @@
             <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
             <ul data-role="listview" data-inset="true" style="min-width:250px;">
               <li><strong>{{translation}}</strong></li>
-              <li><a href="#" id="vote" class="ui-btn ui-nodisc-icon ui-btn-b ui-icon-check ui-btn-icon-left">Vote</a></li>
+              <li style="padding: 0px;">
+                <div style="text-align: center;">
+                  <a href="#" id="vote" class="ui-btn ui-corner-all ui-nodisc-icon ui-btn-b ui-icon-check ui-btn-icon-left">Vote</a>
+                  {{#is_admin}}
+                  <a href="#" id="delete" class="ui-btn ui-corner-all ui-nodisc-icon ui-btn-b ui-icon-delete ui-btn-icon-left">Delete</a>
+                  {{/is_admin}}
+                </div>
+              </li>
               <li>
                 <div data-role="collapsible" data-inset="false" class="ui-mini">
                   <h4>Voters ({{nr}})</h4>

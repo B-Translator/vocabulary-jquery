@@ -76,6 +76,9 @@ var User = function () {
         setTimeout(_reload, 100);
     };
 
+    // User permissions.
+    this.permissions = [];
+
     // Check the current token and update the user name.
     var _update = function () {
         // Try to refresh the token using refresh_token.
@@ -97,6 +100,16 @@ var User = function () {
                 .fail(_refresh)
                 .done(function (response) {
                     _setName(response.user_id);
+                    http_request($base_url + '/oauth2/user/profile', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': 'Bearer ' + access_token,
+                        },
+                    })
+                        .done(function (response) {
+                            //console.log(response.permissions);  //debug
+                            that.permissions = response.permissions;
+                        });
                 });
         }
     };

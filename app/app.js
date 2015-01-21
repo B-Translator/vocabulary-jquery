@@ -274,6 +274,7 @@ var $app = (function () {
         // Get the data for the list of voters.
         var data = {
             translation: $(this).data('translation'),
+            is_admin: ($.inArray('btranslator-admin', $user.permissions) > -1),
             nr : 0,
             voters: [],
         };
@@ -301,12 +302,21 @@ var $app = (function () {
             .popup()           // init popup
             .popup('open');    // open popup
 
+        // Get the id of the translation.
+        var tguid = $(this).data('tguid');
+
         // When the 'Vote' button is clicked,
         // send a vote for this translation.
-        var tguid = $(this).data('tguid');
-        $('#vote').on('click', function (event) {
+        $('#vote').on('click', function () {
             $("#translation-details").popup('close');
             vote_translation(tguid);
+        });
+
+        // When the 'Delete' button is clicked,
+        // delete this translation.
+        $('#delete').on('click', function (event) {
+            $("#translation-details").popup('close');
+            delete_translation(tguid);
         });
     }
 
@@ -336,6 +346,30 @@ var $app = (function () {
                     message('Vote saved.');
                 }
 
+                // Refresh the list of translations.
+                var term = $('#search-term')[0].value;
+                display_term(term);
+            });
+    };
+
+    /**
+     * Delete the translation with the given id.
+     */
+    var delete_translation = function (tguid) {
+        var access_token = $user.token.access_token();
+        if (!access_token) {
+            $user.token.get().done(function () {
+                delete_translation(tguid);
+            });
+            return;
+        }
+
+        http_request('/btr/project/del_string', {
+            method: 'POST',
+            data: { tguid: tguid },
+            headers: { 'Authorization': 'Bearer ' + access_token }
+        })
+            .done(function (result) {
                 // Refresh the list of translations.
                 var term = $('#search-term')[0].value;
                 display_term(term);
