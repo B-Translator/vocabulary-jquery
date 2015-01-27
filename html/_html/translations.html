@@ -1,0 +1,26 @@
+
+<!-- list of available translations for the selected term -->
+<ul id="translations" data-role="listview" data-inset="true" data-count-theme="b" data-icon="false" data-split-icon="edit"></ul>
+
+<!-- mustache template for translations -->
+<script id="tmpl-translations" type="x-tmpl-mustache">
+  {{#translations}}
+  <li id="{{id}}" class="translation{{voted}}">
+    <a href="#" data-rel="popup">
+      <strong>{{translation}}</strong><br/>
+      <p>By <strong>{{author}}</strong> ({{time}})</p>
+      <span class="ui-li-count">{{vote_nr}}</span>
+    </a>
+  </li>
+  {{/translations}}
+
+  <!-- add a new translation -->
+  <li>
+    <a href="#" style="padding-top: 5px; padding-bottom: 5px;">
+      <form id="new-translation-form">
+        <input type="text" id="new-translation" value="" placeholder="New translation">
+      </form>
+    </a>
+    <a href="#" id="send-new-translation" class="ui-btn ui-alt-icon ui-icon-plus ui-nodisc-icon ui-btn-icon-notext">Send</a>
+  </li>
+</script>
