@@ -1,0 +1,19 @@
+<!-- template for the login popup -->
+<script id="tmpl-login" type="x-tmpl-mustache">
+  <div data-role="popup" id="popup-login" data-theme="a" data-dismissible="false" class="ui-corner-all" class="dynamic-popup">
+    <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
+    <form id="form-login">
+      <div style="padding: 0px 20px 10px 20px;">
+        <h3>Please sign in</h3>
+        <label for="username" class="ui-hidden-accessible">Username:</label>
+        <input type="text" name="user" id="username" value="" placeholder="username" data-theme="a">
+        <label for="password" class="ui-hidden-accessible">Password:</label>
+        <input type="password" name="pass" id="password" value="" placeholder="password" data-theme="a">
+        <div style="text-align: center;">
+          <button type="submit" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-nodisc-icon ui-icon-check">Sign in</button>
+          <a href="https://btranslator.org/user/register" target="_blank" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-nodisc-icon ui-icon-user">Sign up</a>
+        </div>
+      </div>
+    </form>
+  </div>
+</script>

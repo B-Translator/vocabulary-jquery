@@ -14,56 +14,20 @@
 
         <a href="#" id="next" class="ui-btn ui-btn-b ui-nodisc-icon ui-btn-left ui-icon-refresh ui-btn-icon-notext" style="border-radius: 5px;">Next</a>
 
-        {% include _html/popup-menu.html %}
+        {% include _html/menu.html %}
 
       </div><!-- /header -->
       
       <!-- content -->
       <div data-role="main" class="ui-content">
 
-        <!-- search button with autocomplete list -->
-        <form class="ui-filterable">
-          <input id="search-term" data-type="search" placeholder="Gjej një fjalë...">
-          <a href="#" id="add-new-term" class="ui-nodisc-icon ui-btn ui-corner-all ui-btn-b ui-icon-plus ui-btn-icon-left ui-btn-inline" style="display: none;">Add New Term</a>
-        </form>
-        <ul id="suggestions" data-role="listview" data-inset="true" data-filter="true" data-input="#search-term"></ul>
+        {% include _html/search.html %}
 
-        <!-- mustache template for suggestions -->
-        <script id="tmpl-suggestions" type="x-tmpl-mustache">
-          {{#terms}}
-          <li><a href="#" class="term">{{.}}</a></li>
-          {{/terms}}
-        </script>
+        {% include _html/suggestions.html %}
 
         {% include _html/translations.html %}
 
-        <!-- mustache template for translation details popup -->
-        <script id="tmpl-translation-details" type="x-tmpl-mustache">
-          <div data-role="popup" id="translation-details" data-transition="slide" class="dynamic-popup">
-            <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
-            <ul data-role="listview" data-inset="true" style="min-width:250px;">
-              <li><strong>{{translation}}</strong></li>
-              <li style="padding: 0px;">
-                <div style="text-align: center;">
-                  <a href="#" id="vote" class="ui-btn ui-corner-all ui-nodisc-icon ui-btn-b ui-icon-check ui-btn-icon-left">Vote</a>
-                  {{#is_admin}}
-                  <a href="#" id="delete" class="ui-btn ui-corner-all ui-nodisc-icon ui-btn-b ui-icon-delete ui-btn-icon-left">Delete</a>
-                  {{/is_admin}}
-                </div>
-              </li>
-              <li>
-                <div data-role="collapsible" data-inset="false" class="ui-mini">
-                  <h4>Voters ({{nr}})</h4>
-                  <ul data-role="listview">
-                    {{#voters}}
-                    <li>{{{name}}} <span style="font-weight: normal;">({{time}})</span></li>
-                    {{/voters}}
-                  </ul>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </script>
+        {% include _html/translation_details.html %}
 
       </div><!-- /content -->
 
@@ -72,25 +36,7 @@
       <div id="status-line"></div>
     </div><!-- /page -->
 
-    <!-- template for the login popup -->
-    <script id="tmpl-login" type="x-tmpl-mustache">
-      <div data-role="popup" id="popup-login" data-theme="a" data-dismissible="false" class="ui-corner-all" class="dynamic-popup">
-        <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
-        <form id="form-login">
-          <div style="padding: 0px 20px 10px 20px;">
-            <h3>Please sign in</h3>
-            <label for="username" class="ui-hidden-accessible">Username:</label>
-            <input type="text" name="user" id="username" value="" placeholder="username" data-theme="a">
-            <label for="password" class="ui-hidden-accessible">Password:</label>
-            <input type="password" name="pass" id="password" value="" placeholder="password" data-theme="a">
-            <div style="text-align: center;">
-              <button type="submit" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-nodisc-icon ui-icon-check">Sign in</button>
-              <a href="https://btranslator.org/user/register" target="_blank" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-nodisc-icon ui-icon-user">Sign up</a>
-            </div>
-          </div>
-        </form>
-      </div>
-    </script>
+    {% include _html/login.html %}
 
   </body>
 </html>
