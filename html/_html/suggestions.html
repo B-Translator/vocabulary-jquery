@@ -1,0 +1,8 @@
+<ul id="suggestions" data-role="listview" data-inset="true" data-filter="true" data-input="#search-term"></ul>
+
+<!-- mustache template for suggestions -->
+<script id="tmpl-suggestions" type="x-tmpl-mustache">
+  {{#terms}}
+  <li><a href="#" class="term">{{.}}</a></li>
+  {{/terms}}
+</script>
