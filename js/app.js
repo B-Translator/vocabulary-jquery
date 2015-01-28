@@ -26,8 +26,9 @@ var $app = (function () {
             $(this).remove();
         });
 
-        // Get and display a random term from the vocabulary.
-        get_random_term(true);
+        // Display the term that is given after #, or any random term.
+        var term = window.location.hash.slice(1);
+        term ? display_term(term) : get_random_term(true);
     });
 
     /**

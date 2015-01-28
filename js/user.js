@@ -2,7 +2,7 @@
 /**
  * Create an object to manage the user and its state.
  */
-var User = function () {
+var $user = new (function () {
     var that = this;
 
     /** The username of the currently signed-in user. */
@@ -118,5 +118,4 @@ var User = function () {
         // Check the current token and update the status every few minutes. 
         _update();  setInterval(_update, 2*60*1000);  // check every 2 minutes
     });
-};
-var $user = new User();
+})();
