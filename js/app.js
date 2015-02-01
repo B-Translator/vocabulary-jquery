@@ -264,7 +264,28 @@ var $app = (function () {
             // Sending a new translation to the server.
             $('#new-translation-form').on('submit', send_new_translation);
             $('#send-new-translation').on('click', send_new_translation);
+
+            // Get the disqus comments for this term.
+            reload_disqus(sguid, term);
         });
+    };
+
+    var reload_disqus = function (sguid, term) {
+        //var term = $('#search-term')[0].value;
+        //var sguid = $('#new-translation').data('sguid');
+        if ($('.disqus-wrap').length == 1) {
+            $('.disqus-inactive').addClass('disqus-active').removeClass('disqus-inactive').attr('id','disqus_thread');
+        }
+        if (typeof(DISQUS) !== 'undefined'){
+            DISQUS.reset({
+                reload: true,
+                config: function () {
+                    this.page.identifier = 'translations/sq/' + sguid;
+                    this.page.url = 'http://fjalori.fs.al/#' + term;
+                    this.page.title = term;
+                }
+            });
+        }
     };
     
     /**
