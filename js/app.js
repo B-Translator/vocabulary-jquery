@@ -29,6 +29,9 @@ var $app = (function () {
         // Display the term that is given after #, or any random term.
         var term = window.location.hash.slice(1);
         term ? display_term(term) : get_random_term(true);
+
+        // Initialize Disqus.
+        init_disqus();
     });
 
     /**
@@ -58,6 +61,19 @@ var $app = (function () {
         $('#logout').on('click', function () {
             $user.logout();
         });
+    };
+
+    /**
+     *  Initialize Disqus.
+     */
+    var init_disqus = function () {
+        if (typeof(DISQUS) == 'undefined'){
+            (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'http://' + $disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        }
     };
 
     var add_new_term = function () {
@@ -504,9 +520,9 @@ var $app = (function () {
         // If parameter settings is not given, assign a default value.
         var settings = settings || {};
 
-	// Set some parameters of the ajax request.
-	settings.url = $base_url + url;
-	settings.dataType = 'json';
+        // Set some parameters of the ajax request.
+        settings.url = $base_url + url;
+        settings.dataType = 'json';
         // Before sending the request display a loading icon.
         settings.beforeSend = function() {
             $.mobile.loading('show');
