@@ -73,7 +73,7 @@ var $app = (function () {
 
         // Add the new term.
         http_request('/btr/project/add_string', {
-            method: 'POST',
+            type: 'POST',
             data: {
                 origin: 'vocabulary',
                 project: 'ICT_sq',
@@ -97,7 +97,7 @@ var $app = (function () {
     var get_random_term = function (check) {
         var check = check || false;
         http_request('/public/btr/translations/get_random_sguid', {
-            method: 'POST',
+            type: 'POST',
             data: {
                 target: 'next',
                 scope: 'vocabulary/ICT_sq',
@@ -355,7 +355,7 @@ var $app = (function () {
         }
 
         http_request('/btr/translations/vote', {
-            method: 'POST',
+            type: 'POST',
             data: { tguid: tguid },
             headers: { 'Authorization': 'Bearer ' + access_token }
         })
@@ -387,7 +387,7 @@ var $app = (function () {
         }
 
         http_request('/btr/project/del_string', {
-            method: 'POST',
+            type: 'POST',
             data: { tguid: tguid },
             headers: { 'Authorization': 'Bearer ' + access_token }
         })
@@ -415,7 +415,7 @@ var $app = (function () {
 
         // Submit the translation.
         http_request('/btr/translations/add', {
-            method: 'POST',
+            type: 'POST',
             data: {
                 sguid: $('#new-translation').data('sguid'),
                 lng: 'sq',
@@ -504,6 +504,9 @@ var $app = (function () {
         // If parameter settings is not given, assign a default value.
         var settings = settings || {};
 
+	// Set some parameters of the ajax request.
+	settings.url = $base_url + url;
+	settings.dataType = 'json';
         // Before sending the request display a loading icon.
         settings.beforeSend = function() {
             $.mobile.loading('show');
@@ -511,7 +514,7 @@ var $app = (function () {
         };
 
         // Make the request and handle some common cases.
-        var request = window.http_request($base_url + url, settings);
+        var request = $.ajax(settings);
         request.always(function(){
             // Hide the loading icon.
             $.mobile.loading('hide');
