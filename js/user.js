@@ -87,31 +87,38 @@ var $user = new (function () {
             that.token.get(false).done(_update);
         };
 
+        // Check that the given token is valid,
+        // then update the user name and user profile.
+        var _check_token = function (access_token) {
+            $.ajax($base_url + '/oauth2/tokens/' + access_token)
+                .fail(_refresh)
+                .done(function (response) {
+                    _setName(response.user_id);
+                    _get_user_profile(access_token);
+                });
+        }
+
+        // Get the user profile and save his permissions.
+        var _get_user_profile = function (access_token) {
+            $.ajax($base_url + '/oauth2/user/profile', {
+                type: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + access_token,
+                },
+                dataType: 'json',
+            })
+                .done(function (response) {
+                    that.permissions = response.permissions;
+                });
+        }
+
+        // The main code of _update() function.
         if (!that.token) {
             _setName(null);
             return;
         }
         var access_token = that.token.access_token();
-        if (!access_token) {
-            _refresh();
-        }
-        else {
-            $.ajax($base_url + '/oauth2/tokens/' + access_token)
-                .fail(_refresh)
-                .done(function (response) {
-                    _setName(response.user_id);
-                    http_request($base_url + '/oauth2/user/profile', {
-                        method: 'POST',
-                        headers: {
-                            'Authorization': 'Bearer ' + access_token,
-                        },
-                    })
-                        .done(function (response) {
-                            //console.log(response.permissions);  //debug
-                            that.permissions = response.permissions;
-                        });
-                });
-        }
+        access_token ? _check_token(access_token) : _refresh();
     };
     
     $(document).on('pagecreate', '#vocabulary', function() {
