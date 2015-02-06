@@ -54,6 +54,17 @@
     border-color: #eed3d7;
 }
 
+#picture {
+    position: fixed;
+    right: 0px;
+    bottom: 0px;
+    border: none;
+    border-radius: 48px;
+    height: 48px;
+    width: 48px;
+    z-index: 999;
+}
+
 #status-line {
     position: fixed;
     left: 0px;

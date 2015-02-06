@@ -16,6 +16,7 @@ var $user = new (function () {
         }
         else {
             $('#status-line').hide().html('');
+            $('#picture').hide().attr('src', '');
         }
     };
 
@@ -109,6 +110,9 @@ var $user = new (function () {
             })
                 .done(function (response) {
                     that.permissions = response.permissions;
+                    response.picture ?
+                        $('#picture').attr('src', response.picture.url).show() :
+                        $('#picture').hide();
                 });
         }
 
