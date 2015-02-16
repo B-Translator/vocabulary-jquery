@@ -376,7 +376,6 @@ var $app = (function () {
             headers: { 'Authorization': 'Bearer ' + access_token }
         })
             .done(function (result) {
-                console.log(result);
                 if (result.messages.length) {
                     display_service_messages(result.messages);
                 }
