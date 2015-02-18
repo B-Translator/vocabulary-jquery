@@ -1,6 +1,10 @@
 
 var $app = (function () {
 
+    $(document).ready(function () {
+        $( "body>[data-role='panel']" ).panel();
+    });
+
     /**
      * When the page with id 'vocabulary' is created,
      * do the things that are listed in the function.

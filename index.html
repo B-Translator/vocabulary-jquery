@@ -55,12 +55,14 @@
 <div data-role="popup" id="popupMenu" data-theme="none" data-shadow="false">
   <div data-role="collapsibleset" data-transition="slidedown" data-theme="b" data-content-theme="a" data-collapsed-icon="carat-r" data-expanded-icon="carat-d" class="ui-nodisc-icon">
     <div data-role="collapsible" data-inset="false" data-collapsed="false">
-      <h2>Actions</h2>
+      <h2>Menu</h2>
       <ul data-role="listview">
         <li><a href="#" id="details" target="_blank" class="ui-btn ui-icon-grid ui-btn-icon-left">Details</a></li>
         <li><a href="https://l10n.org.al/translations/search?lng=sq&origin=vocabulary&project=ICT_sq" target="_blank" class="ui-btn ui-icon-bullets ui-btn-icon-left">List</a></li>
         <li><a href="#" id="login" class="ui-btn ui-icon-user ui-btn-icon-left">Login</a></li>
         <li><a href="#" id="logout" class="ui-btn ui-icon-user ui-btn-icon-left">Logout</a></li>
+        <li><a href="#settings" class="ui-btn ui-icon-gear ui-btn-icon-left">Settings</a></li>
+        <li><a href="https://btranslator.org/contact/Fjalori-ICT/Hi" target="_blank" class="ui-btn ui-icon-action ui-btn-icon-left">Contact</a></li>
       </ul>
     </div><!-- /collapsible -->
     <div data-role="collapsible" data-inset="false">
@@ -191,6 +193,12 @@
     </form>
   </div>
 </script>
+
+
+    <div data-role="panel" id="settings" data-display="reveal" data-position-fixed="true">
+  <h3>Settings</h3>
+  <a href="#vocabulary" data-rel="close" class="ui-btn ui-shadow ui-corner-all ui-btn-a ui-icon-delete ui-btn-icon-left ui-btn-inline">Close</a>
+</div><!-- /panel -->
 
 
   </body>
