@@ -32,6 +32,81 @@ var _disqus = {
     },
 }
 
+    
+var _suggestions = {
+    /**
+     * This function is called when the user starts to type a term on the
+     * search-term input. It retrieves from the server a list of
+     * autocomplete suggestions and displays them under the search box.
+     */
+    list: function (event, data) {
+        // Get the search term typed so far.
+        var search_term = $(data.input).val();
+        if (!search_term) { return; }
+        if (search_term.length < 2) { return; }
+
+        // Retrieve a suggestions list from the server and display them.
+        var path = '/translations/autocomplete/string/vocabulary/ICT_sq/';
+        http_request(path + search_term).then(_suggestions.display);
+    },
+
+    /**
+     * Build and display a list of the terms suggested from the server.
+     * When a term is clicked it should be selected.
+     */
+    display: function(term_list) {
+        // Get the numbers of terms
+        var count = Object.keys(term_list).length;
+
+        // If the list is empty, add the current term as a new term.
+        if (count == 0) {
+            _suggestions.hide();
+            hide_translations();
+            $('#add-new-term').show();
+            return;
+        }
+
+        // If there is only one term in the list
+        // just display it, don't build the suggestion list.
+        if (count == 1) {
+            for (var term in term_list) {
+                display_term(term);
+                return;
+            };
+        }
+
+        // Hide translations and the add button.
+        hide_translations();
+        $('#add-new-term').hide();
+
+        // Get the data for the list of suggestions.
+        var data = { terms: [] };
+        $.each(term_list, function (id, term) {
+            data.terms.push(term);
+        });
+
+        // Render and display the template of suggestions.
+        var tmpl = $('#tmpl-suggestions').html();
+        $('#suggestions').html(Mustache.render(tmpl, data))
+            .listview('refresh').trigger('updatelayout');
+
+        // When a term from the list is clicked, select that term.
+        $('.term').on('click', function () {
+            // Display the selected term.
+            var term = $(this).html();
+            display_term(term);
+        });
+    },
+
+    /** Hide the list of suggestions. */
+    hide: function () {
+        $('#suggestions')
+            .html('')
+            .listview('refresh')
+            .trigger('updatelayout');
+    },
+}
+
 
     $(document).ready(function () {
         $( "body>[data-role='panel']" ).panel();
@@ -42,9 +117,9 @@ var _disqus = {
      * do the things that are listed in the function.
      */
     $(document).on('pagecreate', '#vocabulary', function() {
-        // Attach the function 'display_suggestions_list' to the event
+        // Attach the function '_suggestions.list' to the event
         // 'filterablebeforefilter' from the list of suggestions.
-        $('#suggestions').on('filterablebeforefilter', display_suggestions_list);
+        $('#suggestions').on('filterablebeforefilter', _suggestions.list);
 
         // When the button 'Next' is clicked, get and display a random term.
         $('#next').on('click', function (event) {
@@ -153,79 +228,6 @@ var _disqus = {
             });
     }
 
-    /**
-     * This function is called when the user starts to type a term on the
-     * search-term input. It retrieves from the server a list of
-     * autocomplete suggestions and displays them under the search box.
-     */
-    var display_suggestions_list = function (event, data) {
-        // Get the search term typed so far.
-        var search_term = $(data.input).val();
-        if (!search_term) { return; }
-        if (search_term.length < 2) { return; }
-
-        // Retrieve a suggestions list from the server and display them.
-        var path = '/translations/autocomplete/string/vocabulary/ICT_sq/';
-        http_request(path + search_term)
-            .then(display_suggestions);
-    }
-
-    /**
-     * Build and display a list of the terms suggested from the server.
-     * When a term is clicked it should be selected.
-     */
-    var display_suggestions = function(term_list) {
-        // Get the numbers of terms
-        var count = Object.keys(term_list).length;
-
-        // If the list is empty, add the current term as a new term.
-        if (count == 0) {
-            hide_suggestions();
-            hide_translations();
-            $('#add-new-term').show();
-            return;
-        }
-
-        // If there is only one term in the list
-        // just display it, don't build the suggestion list.
-        if (count == 1) {
-            for (var term in term_list) {
-                display_term(term);
-                return;
-            };
-        }
-
-        // Hide translations and the add button.
-        hide_translations();
-        $('#add-new-term').hide();
-
-        // Get the data for the list of suggestions.
-        var data = { terms: [] };
-        $.each(term_list, function (id, term) {
-            data.terms.push(term);
-        });
-
-        // Render and display the template of suggestions.
-        var tmpl = $('#tmpl-suggestions').html();
-        $('#suggestions').html(Mustache.render(tmpl, data))
-            .listview('refresh').trigger('updatelayout');
-
-        // When a term from the list is clicked, select that term.
-        $('.term').on('click', function () {
-            // Display the selected term.
-            var term = $(this).html();
-            display_term(term);
-        });
-    }
-
-    /** Hide the list of suggestions. */
-    var hide_suggestions = function () {
-        $('#suggestions')
-            .html('')
-            .listview('refresh')
-            .trigger('updatelayout');
-    };
-
     /** Hide the list of translations. */
     var hide_translations = function () {
         $('#translations')
@@ -251,7 +253,7 @@ var _disqus = {
      */
     var display_translations = function (sguid) {
         // Hide the list of suggestions and the button that adds a new term.
-        hide_suggestions();
+        _suggestions.hide();
         $('#add-new-term').hide();
 
         var url = '/public/btr/translations/' + sguid + '?lng=sq';
