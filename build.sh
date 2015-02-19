@@ -9,5 +9,5 @@
 tags build --root html/ --output .
 
 ### Generate JavaScript files.
-tags build --root js/_js/ --output js/ \
+tags build --root js/ --output . \
            --files '**/*.js' --force
