@@ -33,6 +33,76 @@ var _disqus = {
 }
 
     
+var _term = {
+    /** Display the given term. */
+    display: function (term) {
+        // Update the search input box.
+        $('#search-term')[0].value = term;
+
+        // Get and display the list of translations.
+        var sguid = Sha1.hash(term + 'vocabulary');
+        _translations.display(sguid);
+    },
+
+    /**
+     * Get and display a random term from the vocabulary.
+     *
+     * @param check {boolean}
+     *   Default is 'false'. If 'true', display the term
+     *   only if the search box is empty. 
+     */
+    get_random: function (check) {
+        var check = check || false;
+        http_request('/public/btr/translations/get_random_sguid', {
+            type: 'POST',
+            data: {
+                target: 'next',
+                scope: 'vocabulary/ICT_sq',
+            },
+        })
+            .then(function (result) {
+                // Check that the search box is empty.
+                if (check &&  $('#search-term')[0].value != '')  { return; }
+
+                // Get and display the translations of the string.
+                _translations.display(result.sguid);
+            });
+    },
+
+    /** Add a new term. */
+    add: function () {
+        var term = $('#search-term')[0].value;
+        if (!term)  return false;
+
+        // Get the access_token.
+        var access_token = $user.token.access_token();
+        if (!access_token) {
+            $user.token.get().done(add_new_term);
+            return false;
+        }
+
+        // Add the new term.
+        http_request('/btr/project/add_string', {
+            type: 'POST',
+            data: {
+                origin: 'vocabulary',
+                project: 'ICT_sq',
+                string: term,
+                context: 'vocabulary',
+                notify: true,
+            },
+            headers: {
+                'Authorization': 'Bearer ' + access_token,
+            }
+        })
+            .done(function (result) {
+                _translations.display(result.sguid);
+                message('New term added.');
+            });
+    },
+}
+
+    
 var _suggestions = {
     /**
      * This function is called when the user starts to type a term on the
@@ -70,7 +140,7 @@ var _suggestions = {
         // just display it, don't build the suggestion list.
         if (count == 1) {
             for (var term in term_list) {
-                display_term(term);
+                _term.display(term);
                 return;
             };
         }
@@ -94,7 +164,7 @@ var _suggestions = {
         $('.term').on('click', function () {
             // Display the selected term.
             var term = $(this).html();
-            display_term(term);
+            _term.display(term);
         });
     },
 
@@ -195,14 +265,14 @@ var _translations = {
 
         // When the button 'Next' is clicked, get and display a random term.
         $('#next').on('click', function (event) {
-            get_random_term();
+            _term.get_random();
         });
 
         // Setup menu items.
         menu_setup();
 
         // Add a new term when the button is clicked.
-        $('#add-new-term').on('click', add_new_term);
+        $('#add-new-term').on('click', _term.add);
 
         // Remove a dynamic-popup after it has been closed.
         $(document).on('popupafterclose', '.dynamic-popup', function() {
@@ -211,7 +281,7 @@ var _translations = {
 
         // Display the term that is given after #, or any random term.
         var term = window.location.hash.slice(1);
-        term ? display_term(term) : get_random_term(true);
+        term ? _term.display(term) : _term.get_random(true);
 
         // Initialize Disqus.
         _disqus.init($disqus_shortname);
@@ -245,73 +315,6 @@ var _translations = {
             $user.logout();
         });
     };
-
-    var add_new_term = function () {
-        var term = $('#search-term')[0].value;
-        if (!term)  return false;
-
-        // Get the access_token.
-        var access_token = $user.token.access_token();
-        if (!access_token) {
-            $user.token.get().done(add_new_term);
-            return false;
-        }
-
-        // Add the new term.
-        http_request('/btr/project/add_string', {
-            type: 'POST',
-            data: {
-                origin: 'vocabulary',
-                project: 'ICT_sq',
-                string: term,
-                context: 'vocabulary',
-                notify: true,
-            },
-            headers: {
-                'Authorization': 'Bearer ' + access_token,
-            }
-        })
-            .done(function (result) {
-                _translations.display(result.sguid);
-                message('New term added.');
-            });
-    };
-
-    /**
-     * Get and display a random term from the vocabulary.
-     */
-    var get_random_term = function (check) {
-        var check = check || false;
-        http_request('/public/btr/translations/get_random_sguid', {
-            type: 'POST',
-            data: {
-                target: 'next',
-                scope: 'vocabulary/ICT_sq',
-            },
-        })
-            .then(function (result) {
-                //console.log(check); console.log(result);  //debug
-
-                // Check that the search box is empty.
-                if (check &&  $('#search-term')[0].value != '')  { return; }
-
-                // Get and display the translations of the string.
-                _translations.display(result.sguid);
-            });
-    }
-
-    
-    /**
-     * Retrive and display the translations for the given term.
-     */
-    var display_term = function (term) {
-        // Update the search input box.
-        $('#search-term')[0].value = term;
-
-        // Get and display the list of translations.
-        var sguid = Sha1.hash(term + 'vocabulary');
-        _translations.display(sguid);
-    }
 
     /**
      * When a translation from the list is clicked, display
@@ -394,7 +397,7 @@ var _translations = {
 
                 // Refresh the list of translations.
                 var term = $('#search-term')[0].value;
-                display_term(term);
+                _term.display(term);
             });
     };
 
@@ -418,7 +421,7 @@ var _translations = {
             .done(function (result) {
                 // Refresh the list of translations.
                 var term = $('#search-term')[0].value;
-                display_term(term);
+                _term.display(term);
             });
     };
 
@@ -459,7 +462,7 @@ var _translations = {
 
                 // Refresh the list of translations.
                 var term = $('#search-term')[0].value;
-                display_term(term);
+                _term.display(term);
             });
 
         // Clear the input box.
