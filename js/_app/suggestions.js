@@ -27,7 +27,7 @@ var _suggestions = {
         // If the list is empty, add the current term as a new term.
         if (count == 0) {
             _suggestions.hide();
-            hide_translations();
+            _translations.hide();
             $('#add-new-term').show();
             return;
         }
@@ -42,7 +42,7 @@ var _suggestions = {
         }
 
         // Hide translations and the add button.
-        hide_translations();
+        _translations.hide();
         $('#add-new-term').hide();
 
         // Get the data for the list of suggestions.
