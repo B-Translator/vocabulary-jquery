@@ -2,6 +2,7 @@
 var $app = (function () {
 
     {% include _app/disqus.js %}
+    {% include _app/term.js %}
     {% include _app/suggestions.js %}
     {% include _app/translations.js %}
 
@@ -20,14 +21,14 @@ var $app = (function () {
 
         // When the button 'Next' is clicked, get and display a random term.
         $('#next').on('click', function (event) {
-            get_random_term();
+            _term.get_random();
         });
 
         // Setup menu items.
         menu_setup();
 
         // Add a new term when the button is clicked.
-        $('#add-new-term').on('click', add_new_term);
+        $('#add-new-term').on('click', _term.add);
 
         // Remove a dynamic-popup after it has been closed.
         $(document).on('popupafterclose', '.dynamic-popup', function() {
@@ -36,7 +37,7 @@ var $app = (function () {
 
         // Display the term that is given after #, or any random term.
         var term = window.location.hash.slice(1);
-        term ? display_term(term) : get_random_term(true);
+        term ? _term.display(term) : _term.get_random(true);
 
         // Initialize Disqus.
         _disqus.init($disqus_shortname);
@@ -70,73 +71,6 @@ var $app = (function () {
             $user.logout();
         });
     };
-
-    var add_new_term = function () {
-        var term = $('#search-term')[0].value;
-        if (!term)  return false;
-
-        // Get the access_token.
-        var access_token = $user.token.access_token();
-        if (!access_token) {
-            $user.token.get().done(add_new_term);
-            return false;
-        }
-
-        // Add the new term.
-        http_request('/btr/project/add_string', {
-            type: 'POST',
-            data: {
-                origin: 'vocabulary',
-                project: 'ICT_sq',
-                string: term,
-                context: 'vocabulary',
-                notify: true,
-            },
-            headers: {
-                'Authorization': 'Bearer ' + access_token,
-            }
-        })
-            .done(function (result) {
-                _translations.display(result.sguid);
-                message('New term added.');
-            });
-    };
-
-    /**
-     * Get and display a random term from the vocabulary.
-     */
-    var get_random_term = function (check) {
-        var check = check || false;
-        http_request('/public/btr/translations/get_random_sguid', {
-            type: 'POST',
-            data: {
-                target: 'next',
-                scope: 'vocabulary/ICT_sq',
-            },
-        })
-            .then(function (result) {
-                //console.log(check); console.log(result);  //debug
-
-                // Check that the search box is empty.
-                if (check &&  $('#search-term')[0].value != '')  { return; }
-
-                // Get and display the translations of the string.
-                _translations.display(result.sguid);
-            });
-    }
-
-    
-    /**
-     * Retrive and display the translations for the given term.
-     */
-    var display_term = function (term) {
-        // Update the search input box.
-        $('#search-term')[0].value = term;
-
-        // Get and display the list of translations.
-        var sguid = Sha1.hash(term + 'vocabulary');
-        _translations.display(sguid);
-    }
 
     /**
      * When a translation from the list is clicked, display
@@ -219,7 +153,7 @@ var $app = (function () {
 
                 // Refresh the list of translations.
                 var term = $('#search-term')[0].value;
-                display_term(term);
+                _term.display(term);
             });
     };
 
@@ -243,7 +177,7 @@ var $app = (function () {
             .done(function (result) {
                 // Refresh the list of translations.
                 var term = $('#search-term')[0].value;
-                display_term(term);
+                _term.display(term);
             });
     };
 
@@ -284,7 +218,7 @@ var $app = (function () {
 
                 // Refresh the list of translations.
                 var term = $('#search-term')[0].value;
-                display_term(term);
+                _term.display(term);
             });
 
         // Clear the input box.

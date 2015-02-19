@@ -36,7 +36,7 @@ var _suggestions = {
         // just display it, don't build the suggestion list.
         if (count == 1) {
             for (var term in term_list) {
-                display_term(term);
+                _term.display(term);
                 return;
             };
         }
@@ -60,7 +60,7 @@ var _suggestions = {
         $('.term').on('click', function () {
             // Display the selected term.
             var term = $(this).html();
-            display_term(term);
+            _term.display(term);
         });
     },
 
