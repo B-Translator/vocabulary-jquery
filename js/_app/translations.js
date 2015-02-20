@@ -58,11 +58,11 @@ var _translations = {
 
             // When a translation from the list is clicked,
             // display a popup with its details.
-            $('.translation').on('click', display_translation_popup);
+            $('.translation').on('click', _translation.display_popup);
 
             // Sending a new translation to the server.
-            $('#new-translation-form').on('submit', send_new_translation);
-            $('#send-new-translation').on('click', send_new_translation);
+            $('#new-translation-form').on('submit', _translation.submit);
+            $('#send-new-translation').on('click', _translation.submit);
 
             // Get the disqus comments for this term.
             _disqus.reload(sguid, term);
