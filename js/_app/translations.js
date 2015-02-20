@@ -68,4 +68,4 @@ var _translations = {
             _disqus.reload(sguid, term);
         });
     },
-}
+};

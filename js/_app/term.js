@@ -66,4 +66,4 @@ var _term = {
                 message('New term added.');
             });
     },
-}
+};

@@ -71,4 +71,4 @@ var _suggestions = {
             .listview('refresh')
             .trigger('updatelayout');
     },
-}
+};
