@@ -20,7 +20,7 @@ var _disqus = {
             DISQUS.reset({
                 reload: true,
                 config: function () {
-                    this.page.identifier = 'translations/sq/' + sguid;
+                    this.page.identifier = 'translations/' + $lng + '/' + sguid;
                     this.page.url = 'http://fjalori.fs.al/#' + term;
                     this.page.title = term;
                 }

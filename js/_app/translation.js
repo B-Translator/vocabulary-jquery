@@ -127,7 +127,7 @@ var _translation = {
             type: 'POST',
             data: {
                 sguid: $('#new-translation').data('sguid'),
-                lng: 'sq',
+                lng: $lng,
                 translation: new_translation,
             },
             headers: {

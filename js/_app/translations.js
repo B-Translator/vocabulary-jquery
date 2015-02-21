@@ -14,7 +14,7 @@ var _translations = {
         _suggestions.hide();
         $('#add-new-term').hide();
 
-        var url = '/public/btr/translations/' + sguid + '?lng=sq';
+        var url = '/public/btr/translations/' + sguid + '?lng=' + $lng;
         http_request(url).then(function (result) {
             //console.log(result.string);  return;  //debug
 

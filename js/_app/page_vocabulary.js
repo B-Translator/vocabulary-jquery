@@ -40,7 +40,7 @@ var menu_setup = function () {
     var menu_tmpl = $('#tmpl-menu').html();
     var data = {
         base_url: $base_url,
-        lng: 'sq',
+        lng: $lng,
         vocabulary: $vocabulary,
     };
     $("#popupMenu")

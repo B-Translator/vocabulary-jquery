@@ -1,10 +1,9 @@
 /** Used for the local storage, etc. */
 var $app_id = 'vocabulary';
 
-/** Vocabulary that will be used. */
+/** Vocabulary settings. */
 var $vocabulary = 'ICT_sq';
-
-/** Base URL of the server that offers the API. */
+var $lng = 'sq';
 var $base_url = 'https://btranslator.org';
 
 /** Settings for oauth2 authentication. */
