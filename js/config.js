@@ -1,6 +1,9 @@
 /** Used for the local storage, etc. */
 var $app_id = 'vocabulary';
 
+/** Vocabulary that will be used. */
+var $vocabulary = 'ICT_sq';
+
 /** Base URL of the server that offers the API. */
 var $base_url = 'https://btranslator.org';
 

@@ -27,9 +27,14 @@ var $user = new (function () {
     var _getPassword = function (callback) {
         // Wait 1 sec so that any other popups are closed.
         setTimeout(function () {
-            // Display the login template.
-            var popup_html = $('#tmpl-login').html();
-            $(popup_html)
+            // Display the login popup.
+            var login_tmpl = $('#tmpl-login').html();
+            var login_html = Mustache.render(login_tmpl, {
+                base_url: $base_url,
+                lng: 'sq',
+                vocabulary: $vocabulary,
+            });
+            $(login_html)
                 .appendTo($.mobile.activePage)
                 .toolbar();
             $("#popup-login")

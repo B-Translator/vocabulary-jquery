@@ -36,10 +36,16 @@ $(document).on('pagecreate', '#vocabulary', function() {
  * Setup menu items.
  */
 var menu_setup = function () {
-    // Close the menu when an item is clicked.
-    $('#popupMenu li').on('click', function() {
-        $('#popupMenu').popup('close');
-    });
+    // Render the menu template.
+    var menu_tmpl = $('#tmpl-menu').html();
+    var data = {
+        base_url: $base_url,
+        lng: 'sq',
+        vocabulary: $vocabulary,
+    };
+    $("#popupMenu")
+        .html(Mustache.render(menu_tmpl, data))
+        .enhanceWithin().popup();
 
     $('#menuButton').on('click', function() {
         if ($user.isLoged()) {
@@ -59,4 +65,10 @@ var menu_setup = function () {
     $('#logout').on('click', function () {
         $user.logout();
     });
+
+    // Close the menu when an item is clicked.
+    $('#popupMenu li').on('click', function() {
+        $('#popupMenu').popup('close');
+    });
+
 };

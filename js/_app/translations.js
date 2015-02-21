@@ -23,7 +23,7 @@ var _translations = {
             $('#search-term')[0].value = term;
 
             // Set the link for the details.
-            var url = 'https://l10n.org.al/vocabulary/ICT_sq/' + term;
+            var url = 'https://l10n.org.al/vocabulary/' + $vocabulary + '/' + term;
             $('#details').attr('href', url);
 
             // Get the data for the list of translations.
