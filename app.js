@@ -43,10 +43,16 @@ $(document).on('pagecreate', '#vocabulary', function() {
  * Setup menu items.
  */
 var menu_setup = function () {
-    // Close the menu when an item is clicked.
-    $('#popupMenu li').on('click', function() {
-        $('#popupMenu').popup('close');
-    });
+    // Render the menu template.
+    var menu_tmpl = $('#tmpl-menu').html();
+    var data = {
+        base_url: $base_url,
+        lng: 'sq',
+        vocabulary: $vocabulary,
+    };
+    $("#popupMenu")
+        .html(Mustache.render(menu_tmpl, data))
+        .enhanceWithin().popup();
 
     $('#menuButton').on('click', function() {
         if ($user.isLoged()) {
@@ -66,6 +72,12 @@ var menu_setup = function () {
     $('#logout').on('click', function () {
         $user.logout();
     });
+
+    // Close the menu when an item is clicked.
+    $('#popupMenu li').on('click', function() {
+        $('#popupMenu').popup('close');
+    });
+
 };
 
     
@@ -124,7 +136,7 @@ var _term = {
             type: 'POST',
             data: {
                 target: 'next',
-                scope: 'vocabulary/ICT_sq',
+                scope: 'vocabulary/' + $vocabulary,
             },
         })
             .then(function (result) {
@@ -153,7 +165,7 @@ var _term = {
             type: 'POST',
             data: {
                 origin: 'vocabulary',
-                project: 'ICT_sq',
+                project: $vocabulary,
                 string: term,
                 context: 'vocabulary',
                 notify: true,
@@ -183,8 +195,9 @@ var _suggestions = {
         if (search_term.length < 2) { return; }
 
         // Retrieve a suggestions list from the server and display them.
-        var path = '/translations/autocomplete/string/vocabulary/ICT_sq/';
-        http_request(path + search_term).then(_suggestions.display);
+        var url = '/translations/autocomplete/string/vocabulary'
+	    + '/' + $vocabulary + '/' + search_term;
+        http_request(url).then(_suggestions.display);
     },
 
     /**
@@ -269,7 +282,7 @@ var _translations = {
             $('#search-term')[0].value = term;
 
             // Set the link for the details.
-            var url = 'https://l10n.org.al/vocabulary/ICT_sq/' + term;
+            var url = 'https://l10n.org.al/vocabulary/' + $vocabulary + '/' + term;
             $('#details').attr('href', url);
 
             // Get the data for the list of translations.
