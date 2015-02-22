@@ -26,10 +26,10 @@ var _menu = {
         // Render the menu template.
         var menu_tmpl = $('#tmpl-menu').html();
         var data = {
-            base_url: $base_url,
-            lng: $lng,
-            vocabulary: $vocabulary,
-            webapp_url: $webapp_url,
+            base_url: $config.api_url,
+            lng: $config.lng,
+            vocabulary: $config.vocabulary,
+            webapp_url: $config.webapp_url,
         };
         $("#popupMenu")
             .html(Mustache.render(menu_tmpl, data))
@@ -82,7 +82,9 @@ $(document).on('pagecreate', '#vocabulary', function() {
     term ? _term.display(term) : _term.get_random(true);
 
     // Initialize Disqus.
-    $disqus_shortname && _disqus.init($disqus_shortname);
+    $config.disqus.shortname ?
+	_disqus.init($config.disqus.shortname) :
+	$('#disqus').hide();
 });
 
     
@@ -107,9 +109,17 @@ var _disqus = {
             DISQUS.reset({
                 reload: true,
                 config: function () {
-                    this.page.identifier = 'translations/' + $lng + '/' + sguid;
-                    this.page.url = $app_url + '/#' + term;
+                    this.page.identifier = 'translations/' + $config.lng + '/' + sguid;
                     this.page.title = term;
+                    if ($config.app_url) {
+                        this.page.url = $config.app_url + '/#' + term;
+                    }
+                    else if ($config.webapp_url) {
+                        this.page.url = $config.webapp_url + '/vocabulary/' + $config.vocabulary + '/' + term;
+                    }
+                    else {
+                        this.page.url = 'https://l10n.org.al/vocabulary/' + $config.vocabulary + '/' + term;
+                    }
                 }
             });
         }
@@ -141,7 +151,7 @@ var _term = {
             type: 'POST',
             data: {
                 target: 'next',
-                scope: 'vocabulary/' + $vocabulary,
+                scope: 'vocabulary/' + $config.vocabulary,
             },
         })
             .then(function (result) {
@@ -170,7 +180,7 @@ var _term = {
             type: 'POST',
             data: {
                 origin: 'vocabulary',
-                project: $vocabulary,
+                project: $config.vocabulary,
                 string: term,
                 context: 'vocabulary',
                 notify: true,
@@ -201,7 +211,7 @@ var _suggestions = {
 
         // Retrieve a suggestions list from the server and display them.
         var url = '/translations/autocomplete/string/vocabulary'
-	    + '/' + $vocabulary + '/' + search_term;
+	    + '/' + $config.vocabulary + '/' + search_term;
         http_request(url).then(_suggestions.display);
     },
 
@@ -278,7 +288,7 @@ var _translations = {
         _suggestions.hide();
         $('#add-new-term').hide();
 
-        var url = '/public/btr/translations/' + sguid + '?lng=' + $lng;
+        var url = '/public/btr/translations/' + sguid + '?lng=' + $config.lng;
         http_request(url).then(function (result) {
             //console.log(result.string);  return;  //debug
 
@@ -287,8 +297,8 @@ var _translations = {
             $('#search-term')[0].value = term;
 
             // Set the link for the details.
-            $('#details').attr('href', $webapp_url + 
-                               '/vocabulary/' + $vocabulary + '/' + term);
+            $('#details').attr('href', $config.webapp_url + 
+                               '/vocabulary/' + $config.vocabulary + '/' + term);
 
             // Get the data for the list of translations.
             var data = { translations: [] };
@@ -329,7 +339,7 @@ var _translations = {
             $('#send-new-translation').on('click', _translation.submit);
 
             // Get the disqus comments for this term.
-            $disqus_shortname && _disqus.reload(sguid, term);
+            $config.disqus.shortname ? _disqus.reload(sguid, term) : null;
         });
     },
 };
@@ -463,7 +473,7 @@ var _translation = {
             type: 'POST',
             data: {
                 sguid: $('#new-translation').data('sguid'),
-                lng: $lng,
+                lng: $config.lng,
                 translation: new_translation,
             },
             headers: {
@@ -553,7 +563,7 @@ var http_request = function(url, settings) {
     var settings = settings || {};
 
     // Set some parameters of the ajax request.
-    settings.url = $base_url + url;
+    settings.url = $config.api_url + url;
     settings.dataType = 'json';
     // Before sending the request display a loading icon.
     settings.beforeSend = function() {
