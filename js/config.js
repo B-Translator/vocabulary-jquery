@@ -1,10 +1,12 @@
-/** Used for the local storage, etc. */
+/** App settings. */
 var $app_id = 'vocabulary';
+var $app_url = 'http://fjalori.fs.al';
 
 /** Vocabulary settings. */
 var $vocabulary = 'ICT_sq';
 var $lng = 'sq';
 var $base_url = 'https://btranslator.org';
+var $webapp_url = 'https://l10n.org.al';
 
 /** Settings for oauth2 authentication. */
 var $oauth2_settings = {

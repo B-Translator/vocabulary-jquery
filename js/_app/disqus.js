@@ -21,7 +21,7 @@ var _disqus = {
                 reload: true,
                 config: function () {
                     this.page.identifier = 'translations/' + $lng + '/' + sguid;
-                    this.page.url = 'http://fjalori.fs.al/#' + term;
+                    this.page.url = $app_url + '/#' + term;
                     this.page.title = term;
                 }
             });

@@ -23,8 +23,8 @@ var _translations = {
             $('#search-term')[0].value = term;
 
             // Set the link for the details.
-            var url = 'https://l10n.org.al/vocabulary/' + $vocabulary + '/' + term;
-            $('#details').attr('href', url);
+            $('#details').attr('href', $webapp_url + 
+                               '/vocabulary/' + $vocabulary + '/' + term);
 
             // Get the data for the list of translations.
             var data = { translations: [] };
@@ -65,7 +65,7 @@ var _translations = {
             $('#send-new-translation').on('click', _translation.submit);
 
             // Get the disqus comments for this term.
-            _disqus.reload(sguid, term);
+            $disqus_shortname && _disqus.reload(sguid, term);
         });
     },
 };

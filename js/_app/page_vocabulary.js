@@ -29,7 +29,7 @@ $(document).on('pagecreate', '#vocabulary', function() {
     term ? _term.display(term) : _term.get_random(true);
 
     // Initialize Disqus.
-    _disqus.init($disqus_shortname);
+    $disqus_shortname && _disqus.init($disqus_shortname);
 });
 
 /**
@@ -42,6 +42,7 @@ var menu_setup = function () {
         base_url: $base_url,
         lng: $lng,
         vocabulary: $vocabulary,
+        webapp_url: $webapp_url,
     };
     $("#popupMenu")
         .html(Mustache.render(menu_tmpl, data))

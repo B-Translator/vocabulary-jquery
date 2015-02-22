@@ -31,7 +31,7 @@ var $user = new (function () {
             var login_tmpl = $('#tmpl-login').html();
             var login_html = Mustache.render(login_tmpl, {
                 base_url: $base_url,
-                lng: 'sq',
+                lng: $lng,
                 vocabulary: $vocabulary,
             });
             $(login_html)
