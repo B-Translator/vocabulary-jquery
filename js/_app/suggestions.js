@@ -13,7 +13,7 @@ var _suggestions = {
 
         // Retrieve a suggestions list from the server and display them.
         var url = '/translations/autocomplete/string/vocabulary'
-	    + '/' + $vocabulary + '/' + search_term;
+	    + '/' + $config.vocabulary + '/' + search_term;
         http_request(url).then(_suggestions.display);
     },
 

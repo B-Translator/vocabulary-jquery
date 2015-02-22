@@ -23,7 +23,7 @@ var _term = {
             type: 'POST',
             data: {
                 target: 'next',
-                scope: 'vocabulary/' + $vocabulary,
+                scope: 'vocabulary/' + $config.vocabulary,
             },
         })
             .then(function (result) {
@@ -52,7 +52,7 @@ var _term = {
             type: 'POST',
             data: {
                 origin: 'vocabulary',
-                project: $vocabulary,
+                project: $config.vocabulary,
                 string: term,
                 context: 'vocabulary',
                 notify: true,

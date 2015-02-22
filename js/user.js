@@ -30,9 +30,9 @@ var $user = new (function () {
             // Display the login popup.
             var login_tmpl = $('#tmpl-login').html();
             var login_html = Mustache.render(login_tmpl, {
-                base_url: $base_url,
-                lng: $lng,
-                vocabulary: $vocabulary,
+                base_url: $config.api_url,
+                lng: $config.lng,
+                vocabulary: $config.vocabulary,
             });
             $(login_html)
                 .appendTo($.mobile.activePage)
@@ -53,7 +53,7 @@ var $user = new (function () {
         }, 1000);
     };
 
-    this.token = new OAuth2.Token($oauth2_settings);
+    this.token = new OAuth2.Token($config.oauth2);
     this.token.getPassword(_getPassword);
     //this.token.erase();  //test
     //this.token.expire();  //test
@@ -96,7 +96,7 @@ var $user = new (function () {
         // Check that the given token is valid,
         // then update the user name and user profile.
         var _check_token = function (access_token) {
-            $.ajax($base_url + '/oauth2/tokens/' + access_token)
+            $.ajax($config.api_url + '/oauth2/tokens/' + access_token)
                 .fail(_refresh)
                 .done(function (response) {
                     _setName(response.user_id);
@@ -106,7 +106,7 @@ var $user = new (function () {
 
         // Get the user profile and save his permissions.
         var _get_user_profile = function (access_token) {
-            $.ajax($base_url + '/oauth2/user/profile', {
+            $.ajax($config.api_url + '/oauth2/user/profile', {
                 type: 'POST',
                 headers: {
                     'Authorization': 'Bearer ' + access_token,

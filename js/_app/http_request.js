@@ -7,7 +7,7 @@ var http_request = function(url, settings) {
     var settings = settings || {};
 
     // Set some parameters of the ajax request.
-    settings.url = $base_url + url;
+    settings.url = $config.api_url + url;
     settings.dataType = 'json';
     // Before sending the request display a loading icon.
     settings.beforeSend = function() {

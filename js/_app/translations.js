@@ -14,7 +14,7 @@ var _translations = {
         _suggestions.hide();
         $('#add-new-term').hide();
 
-        var url = '/public/btr/translations/' + sguid + '?lng=' + $lng;
+        var url = '/public/btr/translations/' + sguid + '?lng=' + $config.lng;
         http_request(url).then(function (result) {
             //console.log(result.string);  return;  //debug
 
@@ -23,8 +23,8 @@ var _translations = {
             $('#search-term')[0].value = term;
 
             // Set the link for the details.
-            $('#details').attr('href', $webapp_url + 
-                               '/vocabulary/' + $vocabulary + '/' + term);
+            $('#details').attr('href', $config.webapp_url + 
+                               '/vocabulary/' + $config.vocabulary + '/' + term);
 
             // Get the data for the list of translations.
             var data = { translations: [] };
@@ -65,7 +65,7 @@ var _translations = {
             $('#send-new-translation').on('click', _translation.submit);
 
             // Get the disqus comments for this term.
-            $disqus_shortname && _disqus.reload(sguid, term);
+            $config.disqus.shortname ? _disqus.reload(sguid, term) : null;
         });
     },
 };

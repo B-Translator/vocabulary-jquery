@@ -20,9 +20,17 @@ var _disqus = {
             DISQUS.reset({
                 reload: true,
                 config: function () {
-                    this.page.identifier = 'translations/' + $lng + '/' + sguid;
-                    this.page.url = $app_url + '/#' + term;
+                    this.page.identifier = 'translations/' + $config.lng + '/' + sguid;
                     this.page.title = term;
+                    if ($config.app_url) {
+                        this.page.url = $config.app_url + '/#' + term;
+                    }
+                    else if ($config.webapp_url) {
+                        this.page.url = $config.webapp_url + '/vocabulary/' + $config.vocabulary + '/' + term;
+                    }
+                    else {
+                        this.page.url = 'https://l10n.org.al/vocabulary/' + $config.vocabulary + '/' + term;
+                    }
                 }
             });
         }

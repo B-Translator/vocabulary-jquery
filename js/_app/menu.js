@@ -19,10 +19,10 @@ var _menu = {
         // Render the menu template.
         var menu_tmpl = $('#tmpl-menu').html();
         var data = {
-            base_url: $base_url,
-            lng: $lng,
-            vocabulary: $vocabulary,
-            webapp_url: $webapp_url,
+            base_url: $config.api_url,
+            lng: $config.lng,
+            vocabulary: $config.vocabulary,
+            webapp_url: $config.webapp_url,
         };
         $("#popupMenu")
             .html(Mustache.render(menu_tmpl, data))
