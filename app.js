@@ -36,7 +36,7 @@ $(document).on('pagecreate', '#vocabulary', function() {
     term ? _term.display(term) : _term.get_random(true);
 
     // Initialize Disqus.
-    _disqus.init($disqus_shortname);
+    $disqus_shortname && _disqus.init($disqus_shortname);
 });
 
 /**
@@ -47,8 +47,9 @@ var menu_setup = function () {
     var menu_tmpl = $('#tmpl-menu').html();
     var data = {
         base_url: $base_url,
-        lng: 'sq',
+        lng: $lng,
         vocabulary: $vocabulary,
+        webapp_url: $webapp_url,
     };
     $("#popupMenu")
         .html(Mustache.render(menu_tmpl, data))
@@ -102,8 +103,8 @@ var _disqus = {
             DISQUS.reset({
                 reload: true,
                 config: function () {
-                    this.page.identifier = 'translations/sq/' + sguid;
-                    this.page.url = 'http://fjalori.fs.al/#' + term;
+                    this.page.identifier = 'translations/' + $lng + '/' + sguid;
+                    this.page.url = $app_url + '/#' + term;
                     this.page.title = term;
                 }
             });
@@ -273,7 +274,7 @@ var _translations = {
         _suggestions.hide();
         $('#add-new-term').hide();
 
-        var url = '/public/btr/translations/' + sguid + '?lng=sq';
+        var url = '/public/btr/translations/' + sguid + '?lng=' + $lng;
         http_request(url).then(function (result) {
             //console.log(result.string);  return;  //debug
 
@@ -282,8 +283,8 @@ var _translations = {
             $('#search-term')[0].value = term;
 
             // Set the link for the details.
-            var url = 'https://l10n.org.al/vocabulary/' + $vocabulary + '/' + term;
-            $('#details').attr('href', url);
+            $('#details').attr('href', $webapp_url + 
+                               '/vocabulary/' + $vocabulary + '/' + term);
 
             // Get the data for the list of translations.
             var data = { translations: [] };
@@ -324,7 +325,7 @@ var _translations = {
             $('#send-new-translation').on('click', _translation.submit);
 
             // Get the disqus comments for this term.
-            _disqus.reload(sguid, term);
+            $disqus_shortname && _disqus.reload(sguid, term);
         });
     },
 };
@@ -458,7 +459,7 @@ var _translation = {
             type: 'POST',
             data: {
                 sguid: $('#new-translation').data('sguid'),
-                lng: 'sq',
+                lng: $lng,
                 translation: new_translation,
             },
             headers: {
