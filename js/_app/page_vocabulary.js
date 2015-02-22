@@ -14,7 +14,7 @@ $(document).on('pagecreate', '#vocabulary', function() {
     });
 
     // Setup menu items.
-    menu_setup();
+    _menu.init();
 
     // Add a new term when the button is clicked.
     $('#add-new-term').on('click', _term.add);
@@ -31,45 +31,3 @@ $(document).on('pagecreate', '#vocabulary', function() {
     // Initialize Disqus.
     $disqus_shortname && _disqus.init($disqus_shortname);
 });
-
-/**
- * Setup menu items.
- */
-var menu_setup = function () {
-    // Render the menu template.
-    var menu_tmpl = $('#tmpl-menu').html();
-    var data = {
-        base_url: $base_url,
-        lng: $lng,
-        vocabulary: $vocabulary,
-        webapp_url: $webapp_url,
-    };
-    $("#popupMenu")
-        .html(Mustache.render(menu_tmpl, data))
-        .enhanceWithin().popup();
-
-    $('#menuButton').on('click', function() {
-        if ($user.isLoged()) {
-            $('#login').hide();
-            $('#logout').show();
-        }
-        else {
-            $('#login').show();
-            $('#logout').hide();
-        }
-    });
-
-    $('#login').on('click', function () {
-        $user.login();
-    });
-
-    $('#logout').on('click', function () {
-        $user.logout();
-    });
-
-    // Close the menu when an item is clicked.
-    $('#popupMenu li').on('click', function() {
-        $('#popupMenu').popup('close');
-    });
-
-};

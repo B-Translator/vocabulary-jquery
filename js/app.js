@@ -5,6 +5,7 @@ var $app = (function () {
         $( "body>[data-role='panel']" ).panel();
     });
 
+    {% include _app/menu.js %}
     {% include _app/page_vocabulary.js %}
     {% include _app/disqus.js %}
     {% include _app/term.js %}
