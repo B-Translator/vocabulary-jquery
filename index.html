@@ -132,6 +132,45 @@
       <div id="status-line"></div>
       <img id="picture">
 
+      <div id="settings" data-role="panel" data-display="reveal" data-position-fixed="true">
+  <div class="ui-corner-all custom-corners">
+    <div class="ui-bar ui-bar-a">
+      <h3>Language</h3>
+    </div>
+    <div class="ui-body ui-body-a">
+      <fieldset id="languages" data-role="controlgroup" data-type="horizontal"></fieldset>
+    </div>
+  </div>
+
+  <div class="ui-corner-all custom-corners" style="margin-top: 10px;">
+    <div class="ui-bar ui-bar-a">
+      <h3>Vocabulary</h3>
+    </div>
+    <div class="ui-body ui-body-a">
+      <fieldset id="vocabularies" data-role="controlgroup" data-type="horizontal"></fieldset>
+    </div>
+  </div>
+
+  <a href="#vocabulary" data-rel="close" class="ui-btn ui-corner-all ui-btn-inline" style="margin-top: 20px;">Done</a>
+</div>
+
+<!-- Mustache template for the list of languages. -->
+<script id="tmpl-languages" type="x-tmpl-mustache">
+  {{#languages}}
+  <input type="radio" name="lng" id="lng-{{lng}}" value="{{lng}}" {{selected}} class="lng">
+  <label for="lng-{{lng}}">{{language}}</label>
+  {{/languages}}
+</script>
+
+<!-- Mustache template for the list of vocabularies. -->
+<script id="tmpl-vocabularies" type="x-tmpl-mustache">
+  {{#vocabularies}}
+  <input type="radio" name="vocabulary" id="{{id}}" value="{{id}}" {{selected}} class="vocabulary">
+  <label for="{{id}}">{{name}}</label>
+  {{/vocabularies}}
+</script>
+
+
     </div><!-- /page -->
 
     <!-- template for the menu popup -->
@@ -180,11 +219,6 @@
     </form>
   </div>
 </script>
-
-    <div data-role="panel" id="settings" data-display="reveal" data-position-fixed="true">
-  <h3>Settings</h3>
-  <a href="#vocabulary" data-rel="close" class="ui-btn ui-shadow ui-corner-all ui-btn-a ui-icon-delete ui-btn-icon-left ui-btn-inline">Close</a>
-</div><!-- /panel -->
 
 
   </body>
