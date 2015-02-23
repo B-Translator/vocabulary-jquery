@@ -1,9 +1,143 @@
 
 var $app = (function () {
 
-    $(document).ready(function () {
-        $( "body>[data-role='panel']" ).panel();
-    });
+    
+// The languages and vocabularies available.
+var _options = {
+    sq: {
+        name: 'Shqip',
+        webapp: 'https://l10n.org.al',
+        vocabularies: {
+            ICT_sq: 'Fjalori ICT',
+            huazime_sq: 'Fjalë të Huaja',
+        },
+    },
+    /*
+    en: {
+        name: 'English',
+        webapp: 'https://l10n.org.al',
+        vocabularies: {
+            ICT_sq: 'Fjalori ICT',
+        },
+    },
+    */
+};
+
+    
+var _settings = {
+    save: function () {
+        localStorage.setItem('vocabulary.lng', $config.lng);
+        localStorage.setItem('vocabulary.vocabulary', $config.vocabulary);
+    },
+
+    /** Load language and vocabulary from the local storage */
+    load: function () {
+        // Load lng.
+        var lng = localStorage.getItem('vocabulary.lng');
+        if (lng && lng != 'undefined') {
+            $config.lng = lng;
+        }
+
+        // Load vocabulary.
+        var vocabulary = localStorage.getItem('vocabulary.vocabulary');
+        if (vocabulary && vocabulary != 'undefined') {
+            $config.vocabulary = vocabulary;
+        }
+
+        // Update the panel.
+        this.update_panel();
+    },
+
+    update_panel: function () {
+        // Fill the list of languages.
+        var data = { languages: [] };
+        $.each(_options, function (lng, obj) {
+            data.languages.push({
+                lng: lng,
+                language: obj.name,
+                selected: (lng==$config.lng ? 'checked="checked"' : ''),
+            });
+        });
+        var tmpl = $('#tmpl-languages').html();
+        $('#languages').html(Mustache.render(tmpl, data)).trigger('create');
+
+        // Fill the list of vocabularies.
+        var data = { vocabularies: [] };
+        $.each(_options[$config.lng].vocabularies, function (id, name) {
+            data.vocabularies.push({
+                id: id,
+                name: name,
+                selected: (id==$config.vocabulary ? 'checked="checked"' : ''),
+            });
+        });
+        var tmpl = $('#tmpl-vocabularies').html();
+        $('#vocabularies').html(Mustache.render(tmpl, data)).trigger('create');
+
+        // Update layout of the panel.
+        $('#settings').trigger( "updatelayout" );
+
+        // Update config and settings when a vocabulary is selected.
+        $('.vocabulary').on('click', function () {
+            $config.vocabulary = this.value;
+            _settings.save();
+        });
+
+        // Update config and settings when a language is selected.
+        $('.lng').on('click', function () {
+            $config.lng = this.value;
+            for (var v in _options[$config.lng].vocabularies) break;
+            $config.vocabulary = v;
+            _settings.save();
+            _settings.update_panel();
+        });
+    },
+};
+
+    
+var _menu = {
+    init: function () {
+        _menu.update();
+
+        $('#menuButton').on('click', function() {
+            if ($user.isLoged()) {
+                $('#login').hide();
+                $('#logout').show();
+            }
+            else {
+                $('#login').show();
+                $('#logout').hide();
+            }
+        });
+    },
+
+    update: function () {
+        // Render the menu template.
+        var menu_tmpl = $('#tmpl-menu').html();
+        var data = {
+            base_url: $config.api_url,
+            lng: $config.lng,
+            vocabulary: $config.vocabulary,
+            webapp_url: $config.webapp_url,
+        };
+        $("#popupMenu")
+            .html(Mustache.render(menu_tmpl, data))
+            .enhanceWithin().popup();
+
+
+        $('#login').on('click', function () {
+            $user.login();
+        });
+
+        $('#logout').on('click', function () {
+            $user.logout();
+        });
+
+        // Close the menu when an item is clicked.
+        $('#popupMenu li').on('click', function() {
+            $('#popupMenu').popup('close');
+        });
+    },
+};
 
     
 /**
@@ -11,6 +145,12 @@ var $app = (function () {
  * do the things that are listed in the function.
  */
 $(document).on('pagecreate', '#vocabulary', function() {
+    // Load language and vocabulary from the local storage.
+    _settings.load();
+
+    // Setup menu items.
+    _menu.init();
+
     // Attach the function '_suggestions.list' to the event
     // 'filterablebeforefilter' from the list of suggestions.
     $('#suggestions').on('filterablebeforefilter', _suggestions.list);
@@ -19,9 +159,6 @@ $(document).on('pagecreate', '#vocabulary', function() {
     $('#next').on('click', function (event) {
         _term.get_random();
     });
-
-    // Setup menu items.
-    menu_setup();
 
     // Add a new term when the button is clicked.
     $('#add-new-term').on('click', _term.add);
@@ -36,37 +173,10 @@ $(document).on('pagecreate', '#vocabulary', function() {
     term ? _term.display(term) : _term.get_random(true);
 
     // Initialize Disqus.
-    _disqus.init($disqus_shortname);
+    $config.disqus.shortname ?
+	_disqus.init($config.disqus.shortname) :
+	$('#disqus').hide();
 });
-
-/**
- * Setup menu items.
- */
-var menu_setup = function () {
-    // Close the menu when an item is clicked.
-    $('#popupMenu li').on('click', function() {
-        $('#popupMenu').popup('close');
-    });
-
-    $('#menuButton').on('click', function() {
-        if ($user.isLoged()) {
-            $('#login').hide();
-            $('#logout').show();
-        }
-        else {
-            $('#login').show();
-            $('#logout').hide();
-        }
-    });
-
-    $('#login').on('click', function () {
-        $user.login();
-    });
-
-    $('#logout').on('click', function () {
-        $user.logout();
-    });
-};
 
     
 var _disqus = {
@@ -90,9 +200,17 @@ var _disqus = {
             DISQUS.reset({
                 reload: true,
                 config: function () {
-                    this.page.identifier = 'translations/sq/' + sguid;
-                    this.page.url = 'http://fjalori.fs.al/#' + term;
+                    this.page.identifier = 'translations/' + $config.lng + '/' + sguid;
                     this.page.title = term;
+                    if ($config.app_url) {
+                        this.page.url = $config.app_url + '/#' + term;
+                    }
+                    else if ($config.webapp_url) {
+                        this.page.url = $config.webapp_url + '/vocabulary/' + $config.vocabulary + '/' + term;
+                    }
+                    else {
+                        this.page.url = 'https://l10n.org.al/vocabulary/' + $config.vocabulary + '/' + term;
+                    }
                 }
             });
         }
@@ -124,7 +242,7 @@ var _term = {
             type: 'POST',
             data: {
                 target: 'next',
-                scope: 'vocabulary/ICT_sq',
+                scope: 'vocabulary/' + $config.vocabulary,
             },
         })
             .then(function (result) {
@@ -153,7 +271,7 @@ var _term = {
             type: 'POST',
             data: {
                 origin: 'vocabulary',
-                project: 'ICT_sq',
+                project: $config.vocabulary,
                 string: term,
                 context: 'vocabulary',
                 notify: true,
@@ -183,8 +301,9 @@ var _suggestions = {
         if (search_term.length < 2) { return; }
 
         // Retrieve a suggestions list from the server and display them.
-        var path = '/translations/autocomplete/string/vocabulary/ICT_sq/';
-        http_request(path + search_term).then(_suggestions.display);
+        var url = '/translations/autocomplete/string/vocabulary'
+	    + '/' + $config.vocabulary + '/' + search_term;
+        http_request(url).then(_suggestions.display);
     },
 
     /**
@@ -260,7 +379,7 @@ var _translations = {
         _suggestions.hide();
         $('#add-new-term').hide();
 
-        var url = '/public/btr/translations/' + sguid + '?lng=sq';
+        var url = '/public/btr/translations/' + sguid + '?lng=' + $config.lng;
         http_request(url).then(function (result) {
             //console.log(result.string);  return;  //debug
 
@@ -269,8 +388,8 @@ var _translations = {
             $('#search-term')[0].value = term;
 
             // Set the link for the details.
-            var url = 'https://l10n.org.al/vocabulary/ICT_sq/' + term;
-            $('#details').attr('href', url);
+            $('#details').attr('href', $config.webapp_url + 
+                               '/vocabulary/' + $config.vocabulary + '/' + term);
 
             // Get the data for the list of translations.
             var data = { translations: [] };
@@ -311,7 +430,7 @@ var _translations = {
             $('#send-new-translation').on('click', _translation.submit);
 
             // Get the disqus comments for this term.
-            _disqus.reload(sguid, term);
+            $config.disqus.shortname ? _disqus.reload(sguid, term) : null;
         });
     },
 };
@@ -445,7 +564,7 @@ var _translation = {
             type: 'POST',
             data: {
                 sguid: $('#new-translation').data('sguid'),
-                lng: 'sq',
+                lng: $config.lng,
                 translation: new_translation,
             },
             headers: {
@@ -535,7 +654,7 @@ var http_request = function(url, settings) {
     var settings = settings || {};
 
     // Set some parameters of the ajax request.
-    settings.url = $base_url + url;
+    settings.url = $config.api_url + url;
     settings.dataType = 'json';
     // Before sending the request display a loading icon.
     settings.beforeSend = function() {
@@ -569,5 +688,5 @@ var http_request = function(url, settings) {
     return request;
 };
 
-
+    
 })();

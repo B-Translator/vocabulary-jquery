@@ -12,8 +12,9 @@ var _suggestions = {
         if (search_term.length < 2) { return; }
 
         // Retrieve a suggestions list from the server and display them.
-        var path = '/translations/autocomplete/string/vocabulary/ICT_sq/';
-        http_request(path + search_term).then(_suggestions.display);
+        var url = '/translations/autocomplete/string/vocabulary'
+	    + '/' + $config.vocabulary + '/' + search_term;
+        http_request(url).then(_suggestions.display);
     },
 
     /**
