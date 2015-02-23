@@ -10,7 +10,7 @@ var $config = {
     // Settings for oauth2 authentication.
     oauth2: {
 	app_id: 'vocabulary',
-	auth_flow: 'password',     // password | proxy
+	auth_flow: 'proxy',     // password | proxy
 	proxy_url: 'https://l10n.org.al/user/oauth2_login?proxy=true',
 	token_endpoint: 'https://btranslator.org/oauth2/token',
 	client_id: 'vocabulary-jquery-ict-sq',
