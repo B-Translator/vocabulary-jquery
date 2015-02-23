@@ -1,11 +1,11 @@
 
 var $config = {
     app_url: 'http://fjalori.fs.al',
-    webapp_url: 'https://l10n.org.al',
     api_url: 'https://btranslator.org',
 
     lng: 'sq',
     vocabulary: 'ICT_sq',
+    webapp_url: 'https://l10n.org.al',
 
     // Settings for oauth2 authentication.
     oauth2: {

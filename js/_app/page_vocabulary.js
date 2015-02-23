@@ -4,6 +4,12 @@
  * do the things that are listed in the function.
  */
 $(document).on('pagecreate', '#vocabulary', function() {
+    // Load language and vocabulary from the local storage.
+    _settings.load();
+
+    // Setup menu items.
+    _menu.init();
+
     // Attach the function '_suggestions.list' to the event
     // 'filterablebeforefilter' from the list of suggestions.
     $('#suggestions').on('filterablebeforefilter', _suggestions.list);
@@ -12,9 +18,6 @@ $(document).on('pagecreate', '#vocabulary', function() {
     $('#next').on('click', function (event) {
         _term.get_random();
     });
-
-    // Setup menu items.
-    _menu.init();
 
     // Add a new term when the button is clicked.
     $('#add-new-term').on('click', _term.add);

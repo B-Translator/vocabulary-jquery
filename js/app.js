@@ -1,10 +1,8 @@
 
 var $app = (function () {
 
-    $(document).ready(function () {
-        $( "body>[data-role='panel']" ).panel();
-    });
-
+    {% include options.js %}
+    {% include _app/settings.js %}
     {% include _app/menu.js %}
     {% include _app/page_vocabulary.js %}
     {% include _app/disqus.js %}
@@ -14,5 +12,5 @@ var $app = (function () {
     {% include _app/translation.js %}
     {% include _app/messages.js %}
     {% include _app/http_request.js %}
-
+    
 })();
