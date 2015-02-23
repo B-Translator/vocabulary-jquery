@@ -19,8 +19,15 @@ var _settings = {
             $config.vocabulary = vocabulary;
         }
 
-        // Update the panel.
+        // Update.
+        this.set_title();
         this.update_panel();
+    },
+
+    set_title: function () {
+        var title = _options[$config.lng].vocabularies[$config.vocabulary];
+        document.title = title;
+        $('h1').html(title);
     },
 
     update_panel: function () {
@@ -55,6 +62,7 @@ var _settings = {
         $('.vocabulary').on('click', function () {
             $config.vocabulary = this.value;
             _settings.save();
+            _settings.set_title();
         });
 
         // Update config and settings when a language is selected.
