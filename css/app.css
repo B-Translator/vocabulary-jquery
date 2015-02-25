@@ -74,6 +74,7 @@
     background: #eeeeee;
     text-align: center;
     color: #000099;
+    z-index: 999;
 }
 
 /* Used on the panel. */

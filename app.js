@@ -310,7 +310,7 @@ var _suggestions = {
 
         // Retrieve a suggestions list from the server and display them.
         var url = '/translations/autocomplete/string/vocabulary'
-	    + '/' + $config.vocabulary + '/' + search_term;
+            + '/' + $config.vocabulary + '/' + search_term;
         http_request(url).then(_suggestions.display);
     },
 
@@ -319,6 +319,30 @@ var _suggestions = {
      * When a term is clicked it should be selected.
      */
     display: function(term_list) {
+
+        // Autocomplete the given term, but not more than twice in 10 seconds.
+        // Return true if term autocompleted, otherwise return false.
+        var _autocomplete = function (term) {
+            if (!window.vocabulary.autocomplete) {
+                window.vocabulary.autocomplete = {};
+            }
+            if (!window.vocabulary.autocomplete[term]) {
+                window.vocabulary.autocomplete[term] = 0;
+                setTimeout(function () {
+                    delete window.vocabulary.autocomplete[term];
+                }, 10*1000);
+            }
+
+            if (window.vocabulary.autocomplete[term] >= 2) {
+                return false;
+            }
+            else {
+                window.vocabulary.autocomplete[term] += 1;
+                _term.display(term);
+                return true;
+            }
+        };
+
         // Get the numbers of terms
         var count = Object.keys(term_list).length;
 
@@ -333,10 +357,8 @@ var _suggestions = {
         // If there is only one term in the list
         // just display it, don't build the suggestion list.
         if (count == 1) {
-            for (var term in term_list) {
-                _term.display(term);
-                return;
-            };
+            for (var term in term_list)  break;
+            if (_autocomplete(term)) return;
         }
 
         // Hide translations and the add button.
