@@ -147,7 +147,7 @@ var $user = new (function () {
     this.logout = function () {
         _setName(null);
         this.token.erase();
-        setTimeout(_reload, 100);
+        setTimeout(_reload, 1000);
     };
 
     // User permissions.
