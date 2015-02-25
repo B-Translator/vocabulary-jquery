@@ -323,21 +323,21 @@ var _suggestions = {
         // Autocomplete the given term, but not more than twice in 10 seconds.
         // Return true if term autocompleted, otherwise return false.
         var _autocomplete = function (term) {
-            if (!window.vocabulary.autocomplete) {
-                window.vocabulary.autocomplete = {};
+            if (!_suggestions.autocomplete) {
+                _suggestions.autocomplete = {};
             }
-            if (!window.vocabulary.autocomplete[term]) {
-                window.vocabulary.autocomplete[term] = 0;
+            if (!_suggestions.autocomplete[term]) {
+                _suggestions.autocomplete[term] = 0;
                 setTimeout(function () {
-                    delete window.vocabulary.autocomplete[term];
+                    delete _suggestions.autocomplete[term];
                 }, 10*1000);
             }
 
-            if (window.vocabulary.autocomplete[term] >= 2) {
+            if (_suggestions.autocomplete[term] >= 2) {
                 return false;
             }
             else {
-                window.vocabulary.autocomplete[term] += 1;
+                _suggestions.autocomplete[term] += 1;
                 _term.display(term);
                 return true;
             }
