@@ -43,7 +43,7 @@ var _term = {
         // Get the access_token.
         var access_token = $user.token.access_token();
         if (!access_token) {
-            $user.token.get().done(add_new_term);
+            $user.token.get().done(_term.add);
             return false;
         }
 
