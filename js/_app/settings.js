@@ -63,6 +63,8 @@ var _settings = {
             $config.vocabulary = this.value;
             _settings.save();
             _settings.set_title();
+            _menu.update();
+            _term.get_random();
         });
 
         // Update config and settings when a language is selected.
@@ -72,6 +74,8 @@ var _settings = {
             $config.vocabulary = v;
             _settings.save();
             _settings.update_panel();
+            _menu.update();
+            _term.get_random();
         });
     },
 };
