@@ -8,7 +8,7 @@ var _translation = {
         // Get the data for the list of voters.
         var data = {
             translation: $(this).data('translation'),
-            is_admin: ($.inArray('btranslator-admin', $user.permissions) > -1),
+            is_admin: $user.is_admin,
             nr : 0,
             voters: [],
         };

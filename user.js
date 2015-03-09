@@ -151,7 +151,8 @@ var $user = new (function () {
     };
 
     // User permissions.
-    this.permissions = [];
+    this.is_admin = false;
+    this.is_moderator = false;
 
     // Check the current token and update the user name.
     var _update = function () {
@@ -185,9 +186,9 @@ var $user = new (function () {
                 dataType: 'json',
             })
                 .done(function (response) {
-                    that.permissions = response.permissions;
-                    that.is_admin = (response.admin_projects.indexOf('vocabulary/' + $config.vocabulary) !== -1)
-                    that.is_moderator = (response.moderate_projects.indexOf('vocabulary/' + $config.vocabulary) !== -1)
+                    var project = 'vocabulary/' + $config.vocabulary;
+                    that.is_moderator = ($.inArray(project, response.moderate_projects) > -1);
+                    that.is_admin = ( ($.inArray(project, response.admin_projects) > -1) || ($.inArray('btranslator-admin', $user.permissions) > -1));
                     response.picture ?
                         $('#picture').attr('src', response.picture.url).show() :
                         $('#picture').hide();
