@@ -88,6 +88,8 @@ var _settings = {
             $config.vocabulary = this.value;
             _settings.save();
             _settings.set_title();
+            _menu.update();
+            _term.get_random();
         });
 
         // Update config and settings when a language is selected.
@@ -97,6 +99,8 @@ var _settings = {
             $config.vocabulary = v;
             _settings.save();
             _settings.update_panel();
+            _menu.update();
+            _term.get_random();
         });
     },
 };
@@ -210,10 +214,7 @@ var _disqus = {
                 config: function () {
                     this.page.identifier = 'translations/' + $config.lng + '/' + sguid;
                     this.page.title = term;
-                    if ($config.app_url) {
-                        this.page.url = $config.app_url + '/#' + term;
-                    }
-                    else if ($config.webapp_url) {
+                    if ($config.webapp_url) {
                         this.page.url = $config.webapp_url + '/vocabulary/' + $config.vocabulary + '/' + term;
                     }
                     else {
@@ -270,7 +271,7 @@ var _term = {
         // Get the access_token.
         var access_token = $user.token.access_token();
         if (!access_token) {
-            $user.token.get().done(add_new_term);
+            $user.token.get().done(_term.add);
             return false;
         }
 
