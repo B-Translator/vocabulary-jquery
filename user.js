@@ -186,6 +186,8 @@ var $user = new (function () {
             })
                 .done(function (response) {
                     that.permissions = response.permissions;
+                    that.is_admin = (response.admin_projects.indexOf('vocabulary/' + $config.vocabulary) !== -1)
+                    that.is_moderator = (response.moderate_projects.indexOf('vocabulary/' + $config.vocabulary) !== -1)
                     response.picture ?
                         $('#picture').attr('src', response.picture.url).show() :
                         $('#picture').hide();
