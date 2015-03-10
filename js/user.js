@@ -187,8 +187,8 @@ var $user = new (function () {
             })
                 .done(function (response) {
                     var project = 'vocabulary/' + $config.vocabulary;
-                    that.is_moderator = (($.inArray(project, response.moderate_projects) > -1) || ($.inArray('btranslator-resolve', $user.permissions) > -1));
-                    that.is_admin = (($.inArray(project, response.admin_projects) > -1) || ($.inArray('btranslator-admin', $user.permissions) > -1));
+                    that.is_moderator = (($.inArray(project, response.moderate_projects) > -1) || ($.inArray('btranslator-resolve', response.permissions) > -1));
+                    that.is_admin = (($.inArray(project, response.admin_projects) > -1) || ($.inArray('btranslator-admin', response.permissions) > -1));
                     response.picture ?
                         $('#picture').attr('src', response.picture.url).show() :
                         $('#picture').hide();
