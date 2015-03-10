@@ -7,10 +7,14 @@ var _menu = {
             if ($user.isLoged()) {
                 $('#login').hide();
                 $('#logout').show();
+                $('#profile').show();
+                $user.is_admin ? $('#del-term').show() : $('#del-term').hide();
             }
             else {
                 $('#login').show();
                 $('#logout').hide();
+                $('#profile').hide();
+                $('#del-term').hide()
             }
         });
     },

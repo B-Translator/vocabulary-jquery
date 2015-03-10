@@ -30,7 +30,7 @@ var _translations = {
             var data = { translations: [] };
             $.each(result.string.translations, function (i, trans) {
                 data.translations.push({
-                    id : trans.tguid,
+                    id: trans.tguid,
                     translation: trans.translation,
                     author: trans.author,
                     time: $.timeago(trans.time),
