@@ -152,6 +152,16 @@ var _menu = {
         $('#popupMenu li').on('click', function() {
             $('#popupMenu').popup('close');
         });
+
+        // When the button del-term is clicked.
+        $('#del-term').on('click', function () {
+            var term = $('#search-term')[0].value;
+            var message = 'You are deleting the term "' + term + '", its translations and the votes.'
+            $user.confirm(message, function () {
+                var sguid = Sha1.hash(term + 'vocabulary');
+                _term.del(sguid);
+            });
+        });
     },
 };
 
@@ -296,6 +306,33 @@ var _term = {
             .done(function (result) {
                 _translations.display(result.sguid);
                 message('New term added.');
+            });
+    },
+
+    /** Delete the term with the given id. */
+    del: function (sguid) {
+        var access_token = $user.token.access_token();
+        if (!access_token) {
+            $user.token.get().done(function () {
+                _term.del(sguid);
+            });
+            return;
+        }
+
+        http_request('/btr/project/del_string', {
+            type: 'POST',
+            data: { sguid: sguid },
+            headers: { 'Authorization': 'Bearer ' + access_token }
+        })
+            .done(function (result) {
+                if (result.messages.length) {
+                    display_service_messages(result.messages);
+                }
+                else {
+                    message('Term deleted.');
+                    _translations.hide();
+                    $('#add-new-term').show();
+                }
             });
     },
 };
