@@ -114,10 +114,14 @@ var _menu = {
             if ($user.isLoged()) {
                 $('#login').hide();
                 $('#logout').show();
+                $('#profile').show();
+                $user.is_admin ? $('#del-term').show() : $('#del-term').hide();
             }
             else {
                 $('#login').show();
                 $('#logout').hide();
+                $('#profile').hide();
+                $('#del-term').hide()
             }
         });
     },
@@ -426,7 +430,7 @@ var _translations = {
             var data = { translations: [] };
             $.each(result.string.translations, function (i, trans) {
                 data.translations.push({
-                    id : trans.tguid,
+                    id: trans.tguid,
                     translation: trans.translation,
                     author: trans.author,
                     time: $.timeago(trans.time),
