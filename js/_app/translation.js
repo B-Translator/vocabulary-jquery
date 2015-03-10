@@ -8,7 +8,7 @@ var _translation = {
         // Get the data for the list of voters.
         var data = {
             translation: $(this).data('translation'),
-            is_admin: ($.inArray('btranslator-admin', $user.permissions) > -1),
+            delete: ($user.is_moderator || $user.is_admin),
             nr : 0,
             voters: [],
         };
@@ -95,12 +95,19 @@ var _translation = {
             return;
         }
 
-        http_request('/btr/project/del_string', {
+        http_request('/btr/translations/del', {
             type: 'POST',
             data: { tguid: tguid },
             headers: { 'Authorization': 'Bearer ' + access_token }
         })
             .done(function (result) {
+                if (result.messages.length) {
+                    display_service_messages(result.messages);
+                }
+                else {
+                    message('Translation deleted.');
+                }
+
                 // Refresh the list of translations.
                 var term = $('#search-term')[0].value;
                 _term.display(term);
