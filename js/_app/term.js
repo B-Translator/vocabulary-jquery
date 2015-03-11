@@ -79,7 +79,10 @@ var _term = {
 
         http_request('/btr/project/del_string', {
             type: 'POST',
-            data: { sguid: sguid },
+            data: {
+                sguid: sguid,
+                project: $config.vocabulary,
+            },
             headers: { 'Authorization': 'Bearer ' + access_token }
         })
             .done(function (result) {
