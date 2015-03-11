@@ -683,9 +683,8 @@ var _translation = {
 var display_service_messages = function (arr_messages) {
     if (!arr_messages.length)  return;
     for (var i in arr_messages) {
-        var message = messages[i]
-        var msg = message[0];
-        var type = message[1];
+        var msg = arr_messages[i][0];
+        var type = arr_messages[i][1];
         message(msg, type);
     }
 };
