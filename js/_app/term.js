@@ -66,4 +66,34 @@ var _term = {
                 message('New term added.');
             });
     },
+
+    /** Delete the term with the given id. */
+    del: function (sguid) {
+        var access_token = $user.token.access_token();
+        if (!access_token) {
+            $user.token.get().done(function () {
+                _term.del(sguid);
+            });
+            return;
+        }
+
+        http_request('/btr/project/del_string', {
+            type: 'POST',
+            data: {
+                sguid: sguid,
+                project: $config.vocabulary,
+            },
+            headers: { 'Authorization': 'Bearer ' + access_token }
+        })
+            .done(function (result) {
+                if (result.messages.length) {
+                    display_service_messages(result.messages);
+                }
+                else {
+                    message('Term deleted.');
+                    _translations.hide();
+                    $('#add-new-term').show();
+                }
+            });
+    },
 };

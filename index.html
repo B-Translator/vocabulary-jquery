@@ -184,16 +184,23 @@
 <script id="tmpl-menu" type="x-tmpl-mustache">
   <div data-role="collapsibleset" data-transition="slidedown" data-theme="b" data-content-theme="a" data-collapsed-icon="carat-r" data-expanded-icon="carat-d" class="ui-nodisc-icon">
     <div data-role="collapsible" data-inset="false" data-collapsed="false">
-      <h2>Menu</h2>
+      <h2>User</h2>
       <ul data-role="listview">
-        {{#webapp_url}}
-        <li><a href="{{webapp_url}}/vocabulary/{{vocabulary}}" id="details" target="_blank" class="ui-btn ui-icon-grid ui-btn-icon-left">Details</a></li>
-        {{/webapp_url}}
-        <li><a href="{{base_url}}/translations/search?lng={{lng}}&origin=vocabulary&project={{vocabulary}}" target="_blank" class="ui-btn ui-icon-bullets ui-btn-icon-left">List</a></li>
-        <li><a href="#" id="login" class="ui-btn ui-icon-user ui-btn-icon-left">Login</a></li>
-        <li><a href="#" id="logout" class="ui-btn ui-icon-user ui-btn-icon-left">Logout</a></li>
+        <li><a id="login" href="#" class="ui-btn ui-icon-user ui-btn-icon-left">Login</a></li>
+        <li><a id="logout" href="#" class="ui-btn ui-icon-user ui-btn-icon-left">Logout</a></li>
+        <li><a id="profile" href="{{base_url}}/user" target="_blank" class="ui-btn ui-icon-gear ui-btn-icon-left">Profile</a></li>
         <li><a href="#settings" class="ui-btn ui-icon-gear ui-btn-icon-left">Settings</a></li>
         <li><a href="{{base_url}}/contact/{{vocabulary}}/Hi" target="_blank" class="ui-btn ui-icon-action ui-btn-icon-left">Contact</a></li>
+      </ul>
+    </div><!-- /collapsible -->
+    <div data-role="collapsible" data-inset="false">
+      <h2>Term</h2>
+      <ul data-role="listview">
+        <li><a id="del-term" href="#" class="ui-btn ui-icon-delete ui-btn-icon-left">Delete</a></li>
+        {{#webapp_url}}
+        <li><a id="details" href="{{webapp_url}}/vocabulary/{{vocabulary}}" target="_blank" class="ui-btn ui-icon-grid ui-btn-icon-left">Details</a></li>
+        {{/webapp_url}}
+        <li><a href="{{base_url}}/translations/search?lng={{lng}}&origin=vocabulary&project={{vocabulary}}" target="_blank" class="ui-btn ui-icon-bullets ui-btn-icon-left">List</a></li>
       </ul>
     </div><!-- /collapsible -->
     <div data-role="collapsible" data-inset="false">
@@ -236,6 +243,19 @@
       <div style="text-align: center;">
         <button id="open-proxy-login" type="submit" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-nodisc-icon ui-icon-check">Sign in</button>
         <a href="{{base_url}}/user/register?lng={{sq}}&proj=vocabulary/{{vocabulary}}" target="_blank" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-nodisc-icon ui-icon-user">Sign up</a>
+      </div>
+    </div>
+  </div>
+</script>
+
+    <!-- template for the confirm popup -->
+<script id="tmpl-confirm" type="x-tmpl-mustache">
+  <div data-role="popup" id="popup-confirm" data-theme="a" data-dismissible="false" class="ui-corner-all" class="dynamic-popup">
+    <div style="padding: 10px 20px;">
+      <p>{{message}}</p>
+      <div style="text-align: center;">
+        <a href="#" id="confirm-ok" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-nodisc-icon ui-icon-check">OK</a>
+        <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-nodisc-icon ui-icon-forbidden">Cancel</a>
       </div>
     </div>
   </div>

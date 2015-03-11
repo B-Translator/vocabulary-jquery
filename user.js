@@ -187,8 +187,8 @@ var $user = new (function () {
             })
                 .done(function (response) {
                     var project = 'vocabulary/' + $config.vocabulary;
-                    that.is_moderator = (($.inArray(project, response.moderate_projects) > -1) || ($.inArray('btranslator-resolve', $user.permissions) > -1));
-                    that.is_admin = (($.inArray(project, response.admin_projects) > -1) || ($.inArray('btranslator-admin', $user.permissions) > -1));
+                    that.is_moderator = (($.inArray(project, response.moderate_projects) > -1) || ($.inArray('btranslator-resolve', response.permissions) > -1));
+                    that.is_admin = (($.inArray(project, response.admin_projects) > -1) || ($.inArray('btranslator-admin', response.permissions) > -1));
                     response.picture ?
                         $('#picture').attr('src', response.picture.url).show() :
                         $('#picture').hide();
@@ -208,4 +208,31 @@ var $user = new (function () {
         // Check the current token and update the status every few minutes. 
         _update();  setInterval(_update, 2*60*1000);  // check every 2 minutes
     });
+
+    /**
+     * Get a confirmation (true/false) from the user and pass it
+     * as a parameter to the given callback function.
+     */
+    this.confirm = function (message, callback) {
+        _openPopup(function () {
+            // Display the confirm popup.
+            var confirm_tmpl = $('#tmpl-confirm').html();
+            var confirm_html = Mustache.render(confirm_tmpl, {
+                message: message,
+            });
+            $(confirm_html)
+                .appendTo($.mobile.activePage)
+                .toolbar();
+            $("#popup-confirm")
+                .popup()           // init popup
+                .popup('open');    // open popup
+
+            // When button OK is clicked call the callback
+            // function and close the popup.
+            $('#confirm-ok').on('click', function (event) {
+                callback();
+                $('#popup-confirm').popup('close');
+            });
+        });
+    };
 })();

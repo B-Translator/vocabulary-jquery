@@ -114,10 +114,14 @@ var _menu = {
             if ($user.isLoged()) {
                 $('#login').hide();
                 $('#logout').show();
+                $('#profile').show();
+                $user.is_admin ? $('#del-term').show() : $('#del-term').hide();
             }
             else {
                 $('#login').show();
                 $('#logout').hide();
+                $('#profile').hide();
+                $('#del-term').hide()
             }
         });
     },
@@ -147,6 +151,16 @@ var _menu = {
         // Close the menu when an item is clicked.
         $('#popupMenu li').on('click', function() {
             $('#popupMenu').popup('close');
+        });
+
+        // When the button del-term is clicked.
+        $('#del-term').on('click', function () {
+            var term = $('#search-term')[0].value;
+            var message = 'You are deleting the term "' + term + '", its translations and the votes.'
+            $user.confirm(message, function () {
+                var sguid = Sha1.hash(term + 'vocabulary');
+                _term.del(sguid);
+            });
         });
     },
 };
@@ -294,6 +308,36 @@ var _term = {
                 message('New term added.');
             });
     },
+
+    /** Delete the term with the given id. */
+    del: function (sguid) {
+        var access_token = $user.token.access_token();
+        if (!access_token) {
+            $user.token.get().done(function () {
+                _term.del(sguid);
+            });
+            return;
+        }
+
+        http_request('/btr/project/del_string', {
+            type: 'POST',
+            data: {
+                sguid: sguid,
+                project: $config.vocabulary,
+            },
+            headers: { 'Authorization': 'Bearer ' + access_token }
+        })
+            .done(function (result) {
+                if (result.messages.length) {
+                    display_service_messages(result.messages);
+                }
+                else {
+                    message('Term deleted.');
+                    _translations.hide();
+                    $('#add-new-term').show();
+                }
+            });
+    },
 };
 
     
@@ -426,7 +470,7 @@ var _translations = {
             var data = { translations: [] };
             $.each(result.string.translations, function (i, trans) {
                 data.translations.push({
-                    id : trans.tguid,
+                    id: trans.tguid,
                     translation: trans.translation,
                     author: trans.author,
                     time: $.timeago(trans.time),
@@ -642,9 +686,8 @@ var _translation = {
 var display_service_messages = function (arr_messages) {
     if (!arr_messages.length)  return;
     for (var i in arr_messages) {
-        var message = messages[i]
-        var msg = message[0];
-        var type = message[1];
+        var msg = arr_messages[i][0];
+        var type = arr_messages[i][1];
         message(msg, type);
     }
 };
