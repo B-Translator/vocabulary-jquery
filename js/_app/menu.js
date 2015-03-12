@@ -6,12 +6,14 @@ var _menu = {
         $('#menuButton').on('click', function() {
             if ($user.isLoged()) {
                 $('#login').hide();
+                $('#register').hide();
                 $('#logout').show();
                 $('#profile').show();
                 $user.is_admin ? $('#del-term').show() : $('#del-term').hide();
             }
             else {
                 $('#login').show();
+                $('#register').show();
                 $('#logout').hide();
                 $('#profile').hide();
                 $('#del-term').hide()
