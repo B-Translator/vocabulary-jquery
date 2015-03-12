@@ -103,7 +103,6 @@ var $user = new (function () {
                     base_url: $config.api_url,
                     lng: $config.lng,
                     vocabulary: $config.vocabulary,
-                    login_url: login_url,
                 });
                 $(login_html)
                     .appendTo($.mobile.activePage)
