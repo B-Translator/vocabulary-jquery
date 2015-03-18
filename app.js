@@ -160,7 +160,7 @@ var _menu = {
             var term = $('#search-term')[0].value;
             var message = 'You are deleting the term "' + term + '", its translations and the votes.'
             $user.confirm(message, function () {
-                var sguid = Sha1.hash(term + 'vocabulary');
+                var sguid = Sha1.hash(term + $config.vocabulary);
                 _term.del(sguid);
             });
         });
@@ -250,7 +250,7 @@ var _term = {
         $('#search-term')[0].value = term;
 
         // Get and display the list of translations.
-        var sguid = Sha1.hash(term + 'vocabulary');
+        var sguid = Sha1.hash(term + $config.vocabulary);
         _translations.display(sguid);
     },
 

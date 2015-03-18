@@ -6,7 +6,7 @@ var _term = {
         $('#search-term')[0].value = term;
 
         // Get and display the list of translations.
-        var sguid = Sha1.hash(term + 'vocabulary');
+        var sguid = Sha1.hash(term + $config.vocabulary);
         _translations.display(sguid);
     },
 
