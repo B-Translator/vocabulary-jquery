@@ -24,7 +24,7 @@ var $config = {
     },
 
     // Use an iframe to narrow the window, when the screen is too wide.
-    use_iframe: false,
+    use_iframe: true,
 
     // Links that are displayed on the menu.
     external_links: [
