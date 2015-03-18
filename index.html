@@ -196,6 +196,14 @@
       </ul>
     </div><!-- /collapsible -->
     <div data-role="collapsible" data-inset="false">
+      <h2>Links</h2>
+      <ul data-role="listview">
+        {{#external_links}}
+        <li><a href="{{href}}" class="ui-btn ui-icon-action ui-btn-icon-left" target="_blank">{{title}}</a></li>
+        {{/external_links}}
+      </ul>
+    </div><!-- /collapsible -->
+    <div data-role="collapsible" data-inset="false">
       <h2>Term</h2>
       <ul data-role="listview">
         <li><a id="del-term" href="#" class="ui-btn ui-icon-delete ui-btn-icon-left">Delete</a></li>

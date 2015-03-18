@@ -136,6 +136,7 @@ var _menu = {
             lng: $config.lng,
             vocabulary: $config.vocabulary,
             webapp_url: $config.webapp_url,
+            external_links: $config.external_links,
         };
         $("#popupMenu")
             .html(Mustache.render(menu_tmpl, data))
