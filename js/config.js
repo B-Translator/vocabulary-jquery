@@ -22,4 +22,7 @@ var $config = {
     disqus: {
 	shortname: 'l10n-sq',
     },
+
+    // Use an iframe to narrow the window, when the screen is too wide.
+    use_iframe: false,
 };
