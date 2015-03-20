@@ -1,0 +1,15 @@
+<script type="text/javascript">
+var l = window.location;
+var arr_path = l.pathname.split('/');
+var i = arr_path.length - 1;
+if (arr_path[i] == 'index.html' || arr_path[i] == '')  i -= 1;
+
+var vocabulary = arr_path[i];
+var lng = arr_path[i-1];
+localStorage.setItem('vocabulary.lng', lng);
+localStorage.setItem('vocabulary.vocabulary', vocabulary);
+
+arr_path.splice(i-1, 2);
+var href = l.origin + arr_path.join('/') + l.search + l.hash;
+window.location.href = href;
+</script>
