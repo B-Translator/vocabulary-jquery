@@ -306,8 +306,13 @@ var _term = {
             }
         })
             .done(function (result) {
-                _translations.display(result.sguid);
-                message('New term added.');
+                if (result.messages.length) {
+                    display_service_messages(result.messages);
+                }
+                else {
+                    _translations.display(result.sguid);
+                    message('New term added.');
+                }
             });
     },
 
