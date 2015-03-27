@@ -28,6 +28,11 @@ var _settings = {
     save: function () {
         localStorage.setItem('vocabulary.lng', $config.lng);
         localStorage.setItem('vocabulary.vocabulary', $config.vocabulary);
+        _settings.set_title();
+        _settings.update_panel();
+        _menu.update();
+        var term = $('#search-term')[0].value;
+        term ? _term.display(term) : _term.get_random();
     },
 
     /** Load language and vocabulary from the local storage */
@@ -87,9 +92,6 @@ var _settings = {
         $('.vocabulary').on('click', function () {
             $config.vocabulary = this.value;
             _settings.save();
-            _settings.set_title();
-            _menu.update();
-            _term.get_random();
         });
 
         // Update config and settings when a language is selected.
@@ -98,9 +100,6 @@ var _settings = {
             for (var v in _options[$config.lng].vocabularies) break;
             $config.vocabulary = v;
             _settings.save();
-            _settings.update_panel();
-            _menu.update();
-            _term.get_random();
         });
     },
 };
@@ -460,6 +459,13 @@ var _translations = {
         var url = '/public/btr/translations/' + sguid + '?lng=' + $config.lng;
         http_request(url).then(function (result) {
             //console.log(result.string);  return;  //debug
+
+            // If result.string is null, there is no such string.
+            if (result.string === null) {
+                _translations.hide();
+                $('#add-new-term').show();
+                return;
+            }
 
             // Set the selected term on the search box.
             var term = result.string.string;

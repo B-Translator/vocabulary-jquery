@@ -18,6 +18,13 @@ var _translations = {
         http_request(url).then(function (result) {
             //console.log(result.string);  return;  //debug
 
+            // If result.string is null, there is no such string.
+            if (result.string === null) {
+                _translations.hide();
+                $('#add-new-term').show();
+                return;
+            }
+
             // Set the selected term on the search box.
             var term = result.string.string;
             $('#search-term')[0].value = term;
