@@ -54,7 +54,7 @@ var _term = {
                 origin: 'vocabulary',
                 project: $config.vocabulary,
                 string: term,
-                context: 'vocabulary',
+                context: $config.vocabulary,
                 notify: true,
             },
             headers: {
