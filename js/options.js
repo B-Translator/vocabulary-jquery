@@ -8,6 +8,9 @@ var _options = {
             ICT_sq: 'Fjalori ICT',
             huazime_sq: 'Fjalë të Huaja',
         },
+        keyboard: {
+            layout: 'albanian-qwerty',
+        },
     },
     /*
     en: {
