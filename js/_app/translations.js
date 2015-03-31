@@ -82,6 +82,7 @@ var _translations = {
     /** Attach a custom keyboard to the field of new translations. */
     attach_keyboard: function() {
         if (! _options[$config.lng].keyboard)  return;
+        var kbd = _options[$config.lng].keyboard;
 
         var options = {
             keyBinding : 'mousedown touchstart',
@@ -94,8 +95,12 @@ var _translations = {
                 collision: 'fit',
             }
         };
-        if (_options[$config.lng].keyboard.layout) {
-            options.layout = _options[$config.lng].keyboard.layout;
+        if (kbd.customLayout) {
+            options.layout = 'custom';
+            options.customLayout = kbd.customLayout;
+        }
+        else if (kbd.layout) {
+            options.layout = kbd.layout;
         };
 
         var theme = {
