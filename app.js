@@ -12,7 +12,6 @@ var _options = {
             huazime_sq: 'Fjalë të Huaja',
         },
         keyboard: {
-            //layout: 'albanian-qwerty',
             layout: 'custom',
             customLayout: {
                 'normal' : [
@@ -90,6 +89,7 @@ var _settings = {
     save: function () {
         localStorage.setItem('vocabulary.lng', $config.lng);
         localStorage.setItem('vocabulary.vocabulary', $config.vocabulary);
+        localStorage.setItem('vocabulary.custom_keyboard', $config.custom_keyboard ? 'true' : 'false');
         _settings.set_title();
         _settings.update_panel();
         _menu.update();
@@ -109,6 +109,12 @@ var _settings = {
         var vocabulary = localStorage.getItem('vocabulary.vocabulary');
         if (vocabulary && vocabulary != 'undefined') {
             $config.vocabulary = vocabulary;
+        }
+
+        // Load custom_keyboard
+        var kbd = localStorage.getItem('vocabulary.custom_keyboard');
+        if (kbd && kbd != 'undefined') {
+            $config.custom_keyboard = (kbd == 'true' ? true : false);
         }
 
         // Update.
@@ -150,6 +156,10 @@ var _settings = {
         // Update layout of the panel.
         $('#settings').trigger( "updatelayout" );
 
+        // Set the value of the keyboard checkbox.
+        $('#custom-keyboard').attr('checked', $config.custom_keyboard);
+        $('#custom-keyboard').flipswitch("refresh");
+
         // Update config and settings when a vocabulary is selected.
         $('.vocabulary').on('click', function () {
             $config.vocabulary = this.value;
@@ -162,6 +172,14 @@ var _settings = {
             for (var v in _options[$config.lng].vocabularies) break;
             $config.vocabulary = v;
             _settings.save();
+        });
+
+        // Update custom_keyboard when the switch is flipped.
+        $('#custom-keyboard').change(function () {
+            $config.custom_keyboard = $(this).is(':checked');
+            localStorage.setItem('vocabulary.custom_keyboard', $config.custom_keyboard ? 'true' : 'false');
+            var term = $('#search-term')[0].value;
+            _term.display(term);
         });
     },
 };
@@ -590,6 +608,7 @@ var _translations = {
 
     /** Attach a custom keyboard to the field of new translations. */
     attach_keyboard: function() {
+        if (!$config.custom_keyboard)  return;
         if (! _options[$config.lng].keyboard)  return;
         var kbd = _options[$config.lng].keyboard;
 
