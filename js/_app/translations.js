@@ -81,6 +81,7 @@ var _translations = {
 
     /** Attach a custom keyboard to the field of new translations. */
     attach_keyboard: function() {
+        if (!$config.custom_keyboard)  return;
         if (! _options[$config.lng].keyboard)  return;
         var kbd = _options[$config.lng].keyboard;
 

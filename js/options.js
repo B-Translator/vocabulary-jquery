@@ -9,7 +9,6 @@ var _options = {
             huazime_sq: 'Fjalë të Huaja',
         },
         keyboard: {
-            //layout: 'albanian-qwerty',
             layout: 'custom',
             customLayout: {
                 'normal' : [
