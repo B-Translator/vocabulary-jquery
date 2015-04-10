@@ -5,6 +5,7 @@ var $config = {
 
     lng: 'sq',
     vocabulary: 'ICT_sq',
+    custom_keyboard: false,
     webapp_url: 'https://l10n.org.al',
 
     // Settings for oauth2 authentication.

@@ -51,6 +51,9 @@ var _translations = {
             $('#translations').html(Mustache.render(tmpl, data))
                 .listview('refresh').trigger('create').trigger('updatelayout');
 
+            // Attach a custom keyboard to the field of new translations.
+            _translations.attach_keyboard();
+
             // Store the string id (we need it when submitting
             //a new translation).
             $('#new-translation').data('sguid', result.string.sguid);
@@ -74,5 +77,48 @@ var _translations = {
             // Get the disqus comments for this term.
             $config.disqus.shortname ? _disqus.reload(sguid, term) : null;
         });
+    },
+
+    /** Attach a custom keyboard to the field of new translations. */
+    attach_keyboard: function() {
+        if (!$config.custom_keyboard)  return;
+        if (! _options[$config.lng].keyboard)  return;
+        var kbd = _options[$config.lng].keyboard;
+
+        var options = {
+            keyBinding : 'mousedown touchstart',
+            stayOpen : true,
+            position : {
+                of : null,
+                my : 'left top',
+                at : 'left top',
+                at2: 'left bottom',
+                collision: 'fit',
+            }
+        };
+        if (kbd.customLayout) {
+            options.layout = 'custom';
+            options.customLayout = kbd.customLayout;
+        }
+        else if (kbd.layout) {
+            options.layout = kbd.layout;
+        };
+
+        var theme = {
+            // keyboard wrapper theme
+            container    : { theme:'a' },
+            // theme added to all regular buttons
+            buttonMarkup : { theme:'b', shadow:'false', corners:'true' },
+            // theme added to all buttons when they are being hovered
+            buttonHover  : { theme:'b' },
+            // theme added to action buttons (e.g. tab, shift, accept, cancel);
+            // parameters here will override the settings in the buttonMarkup
+            buttonAction : { theme:'b' },
+            // theme added to button when it is active (e.g. shift is down)
+            // All extra parameters will be ignored
+            buttonActive : { theme:'a' }
+        };
+
+        $('#new-translation').keyboard(options).addMobile(theme);
     },
 };
