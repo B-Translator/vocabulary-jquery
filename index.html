@@ -44,6 +44,11 @@ proj && localStorage.setItem('vocabulary.vocabulary', proj);
     <script src="lib/keyboard/layouts/keyboard-layouts-combined.min.js" charset="utf-8"></script>
     -->
 
+    <!-- translate the interface of the application -->
+    <!-- <script src="lib/locale/icu.js"></script> -->
+    <script src="l10n/translate.js"></script>
+    <script src="l10n/po/sq.js"></script>
+
     <!-- Misc JS functions and libraries -->
     <script src="lib/sha1.js"></script>
     <script src="lib/mustache.min.js"></script>
@@ -64,7 +69,7 @@ proj && localStorage.setItem('vocabulary.vocabulary', proj);
       
       <!-- header -->
       <div data-role="header" data-position="fixed">
-        <h1>Fjalori ICT</h1>
+        <h1>Vocabulary</h1>
 
         <a href="#" id="next" class="ui-btn ui-btn-b ui-nodisc-icon ui-btn-left ui-icon-refresh ui-btn-icon-notext" style="border-radius: 5px;">Next</a>
 
@@ -210,18 +215,18 @@ proj && localStorage.setItem('vocabulary.vocabulary', proj);
 <script id="tmpl-menu" type="x-tmpl-mustache">
   <div data-role="collapsibleset" data-transition="slidedown" data-theme="b" data-content-theme="a" data-collapsed-icon="carat-r" data-expanded-icon="carat-d" class="ui-nodisc-icon">
     <div data-role="collapsible" data-inset="false" data-collapsed="false">
-      <h2>User</h2>
+      <h2>{{User}}</h2>
       <ul data-role="listview">
-        <li><a id="login" href="#" class="ui-btn ui-icon-user ui-btn-icon-left">Sign in</a></li>
-        <li><a id="logout" href="#" class="ui-btn ui-icon-user ui-btn-icon-left">Sign out</a></li>
-        <li><a id="register" href="{{base_url}}/user/register?lng={{lng}}&proj=vocabulary/{{vocabulary}}" target="_blank" class="ui-btn ui-icon-user ui-btn-icon-left">Sign up</a></li>
-        <li><a id="profile" href="{{base_url}}/user" target="_blank" class="ui-btn ui-icon-gear ui-btn-icon-left">Profile</a></li>
-        <li><a href="#settings" class="ui-btn ui-icon-gear ui-btn-icon-left">Settings</a></li>
-        <li><a href="{{base_url}}/contact/{{vocabulary}}/Hi" target="_blank" class="ui-btn ui-icon-action ui-btn-icon-left">Contact</a></li>
+        <li><a id="login" href="#" class="ui-btn ui-icon-user ui-btn-icon-left">{{Sign in}}</a></li>
+        <li><a id="logout" href="#" class="ui-btn ui-icon-user ui-btn-icon-left">{{Sign out}}</a></li>
+        <li><a id="register" href="{{base_url}}/user/register?lng={{lng}}&proj=vocabulary/{{vocabulary}}" target="_blank" class="ui-btn ui-icon-user ui-btn-icon-left">{{Sign up}}</a></li>
+        <li><a id="profile" href="{{base_url}}/user" target="_blank" class="ui-btn ui-icon-gear ui-btn-icon-left">{{Profile}}</a></li>
+        <li><a href="#settings" class="ui-btn ui-icon-gear ui-btn-icon-left">{{Settings}}</a></li>
+        <li><a href="{{base_url}}/contact/{{vocabulary}}/Hi" target="_blank" class="ui-btn ui-icon-action ui-btn-icon-left">{{Contact}}</a></li>
       </ul>
     </div><!-- /collapsible -->
     <div data-role="collapsible" data-inset="false">
-      <h2>Links</h2>
+      <h2>{{Links}}</h2>
       <ul data-role="listview">
         {{#external_links}}
         <li><a href="{{href}}" class="ui-btn ui-icon-action ui-btn-icon-left" target="_blank">{{title}}</a></li>
@@ -229,17 +234,17 @@ proj && localStorage.setItem('vocabulary.vocabulary', proj);
       </ul>
     </div><!-- /collapsible -->
     <div data-role="collapsible" data-inset="false">
-      <h2>Term</h2>
+      <h2>{{Term}}</h2>
       <ul data-role="listview">
-        <li><a id="del-term" href="#" class="ui-btn ui-icon-delete ui-btn-icon-left">Delete</a></li>
+        <li><a id="del-term" href="#" class="ui-btn ui-icon-delete ui-btn-icon-left">{{Delete}}</a></li>
         {{#webapp_url}}
-        <li><a id="details" href="{{webapp_url}}/vocabulary/{{vocabulary}}" target="_blank" class="ui-btn ui-icon-grid ui-btn-icon-left">Details</a></li>
+        <li><a id="details" href="{{webapp_url}}/vocabulary/{{vocabulary}}" target="_blank" class="ui-btn ui-icon-grid ui-btn-icon-left">{{Details}}</a></li>
         {{/webapp_url}}
-        <li><a href="{{base_url}}/translations/search?lng={{lng}}&origin=vocabulary&project={{vocabulary}}" target="_blank" class="ui-btn ui-icon-bullets ui-btn-icon-left">List</a></li>
+        <li><a href="{{base_url}}/translations/search?lng={{lng}}&origin=vocabulary&project={{vocabulary}}" target="_blank" class="ui-btn ui-icon-bullets ui-btn-icon-left">{{List}}</a></li>
       </ul>
     </div><!-- /collapsible -->
     <div data-role="collapsible" data-inset="false">
-      <h2>Download</h2>
+      <h2>{{Download}}</h2>
       <ul data-role="listview">
         <li><a href="{{base_url}}/translations/vocabulary/export/{{vocabulary}}/txt1" class="ui-btn ui-icon-arrow-d ui-btn-icon-left">txt-1</a></li>
         <li><a href="{{base_url}}/translations/vocabulary/export/{{vocabulary}}/txt2" class="ui-btn ui-icon-arrow-d ui-btn-icon-left">txt-2</a></li>

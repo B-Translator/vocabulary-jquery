@@ -120,6 +120,7 @@ var _settings = {
         // Update.
         this.set_title();
         this.update_panel();
+        //$.getScript('l10n/po/sq.js');
     },
 
     set_title: function () {
@@ -216,6 +217,19 @@ var _menu = {
             vocabulary: $config.vocabulary,
             webapp_url: $config.webapp_url,
             external_links: $config.external_links,
+            'User': _('User'),
+            'Sign in': _('Sign in'),
+            'Sign out': _('Sign out'),
+            'Sign up': _('Sign up'),
+            'Profile': _('Profile'),
+            'Settings': _('Settings'),
+            'Contact': _('Contact'),
+            'Links': _('Links'),
+            'Term': _('Term'),
+            'Delete': _('Delete'),
+            'Details': _('Details'),
+            'List': _('List'),
+            'Download': _('Download'),
         };
         $("#popupMenu")
             .html(Mustache.render(menu_tmpl, data))
