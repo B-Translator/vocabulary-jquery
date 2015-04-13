@@ -262,6 +262,21 @@ var _menu = {
 };
 
     
+
+var _l10n = {
+    // Translate some strings.
+    translate: function () {
+	// Seetings.
+        $('#lang').html(_('Language'));
+        $('#vocab').html(_('Vocabulary'));
+        $('label[for="custom-keyboard"').html(_('Use Custom Keyboard:'));
+
+	// Search.
+	$('#search-term').attr('placeholder', _('Search for a word...'));
+    }
+}
+
+    
 /**
  * When the page with id 'vocabulary' is created,
  * do the things that are listed in the function.
@@ -270,6 +285,9 @@ $(document).on('pagecreate', '#vocabulary', function() {
     // Load language and vocabulary from the local storage.
     _settings.load();
 
+    // Tanslate the interface.
+    _l10n.translate();
+    
     // Setup menu items.
     _menu.init();
 
@@ -575,7 +593,10 @@ var _translations = {
                                '/vocabulary/' + $config.vocabulary + '/' + term);
 
             // Get the data for the list of translations.
-            var data = { translations: [] };
+            var data = {
+		translations: [],
+		'New translation': _('New translation'),
+	    };
             $.each(result.string.translations, function (i, trans) {
                 data.translations.push({
                     id: trans.tguid,
@@ -677,6 +698,9 @@ var _translation = {
             delete: ($user.is_moderator || $user.is_admin),
             nr : 0,
             voters: [],
+            'Vote': _('Vote'),
+            'Delete': _('Delete'),
+            'Voters': _('Voters'),
         };
         var votes = $(this).data('votes');
         $.each(votes, function (user, vote) {
