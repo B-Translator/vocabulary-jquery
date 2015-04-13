@@ -34,6 +34,7 @@ var _settings = {
         // Update.
         this.set_title();
         this.update_panel();
+        //$.getScript('l10n/po/sq.js');
     },
 
     set_title: function () {
