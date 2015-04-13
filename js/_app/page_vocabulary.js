@@ -7,6 +7,9 @@ $(document).on('pagecreate', '#vocabulary', function() {
     // Load language and vocabulary from the local storage.
     _settings.load();
 
+    // Tanslate the interface.
+    _l10n.translate();
+    
     // Setup menu items.
     _menu.init();
 
@@ -33,6 +36,6 @@ $(document).on('pagecreate', '#vocabulary', function() {
 
     // Initialize Disqus.
     $config.disqus.shortname ?
-	_disqus.init($config.disqus.shortname) :
-	$('#disqus').hide();
+        _disqus.init($config.disqus.shortname) :
+        $('#disqus').hide();
 });
