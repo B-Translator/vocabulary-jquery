@@ -1,1 +1,1 @@
-_.setTranslation({"Profile": "Profili", "Sign up": "Rregjistrohu", "Sign out": "Dil", "User": "Prdoruesi", "Sign in": "Identifikohu"});
+_.setTranslation({"Username": "Prdoruesi", "Profile": "Profili", "Search for a word...": "Gjej nj\u00eb fjal\u00eb...", "Sign out": "Dil", "User": "Prdoruesi", "Sign in": "Identifikohu", "Sign up": "Rregjistrohu"});

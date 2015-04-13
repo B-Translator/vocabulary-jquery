@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-04-13 18:21+0200\n"
+"POT-Creation-Date: 2015-04-13 23:47+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,21 +17,58 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: ../js/user.js:57 ../js/user.js:111
+msgid "Please sign in"
+msgstr ""
+
+#: ../js/user.js:58
+#, fuzzy
+msgid "Username"
+msgstr "Prdoruesi"
+
+#: ../js/user.js:59
+msgid "Password"
+msgstr ""
+
+#: ../js/user.js:60 ../js/user.js:112 ../js/_app/menu.js:34
+msgid "Sign in"
+msgstr "Identifikohu"
+
+#: ../js/user.js:61 ../js/user.js:113 ../js/_app/menu.js:36
+msgid "Sign up"
+msgstr "Rregjistrohu"
+
+#: ../js/user.js:229
+msgid "OK"
+msgstr ""
+
+#: ../js/user.js:230
+msgid "Cancel"
+msgstr ""
+
+#: ../js/_app/translations.js:39
+msgid "New translation"
+msgstr ""
+
+#: ../js/_app/translation.js:14
+msgid "Vote"
+msgstr ""
+
+#: ../js/_app/translation.js:15 ../js/_app/menu.js:42
+msgid "Delete"
+msgstr ""
+
+#: ../js/_app/translation.js:16
+msgid "Voters"
+msgstr ""
+
 #: ../js/_app/menu.js:33
 msgid "User"
 msgstr "Prdoruesi"
 
-#: ../js/_app/menu.js:34
-msgid "Sign in"
-msgstr "Identifikohu"
-
 #: ../js/_app/menu.js:35
 msgid "Sign out"
 msgstr "Dil"
-
-#: ../js/_app/menu.js:36
-msgid "Sign up"
-msgstr "Rregjistrohu"
 
 #: ../js/_app/menu.js:37
 msgid "Profile"
@@ -53,10 +90,6 @@ msgstr ""
 msgid "Term"
 msgstr ""
 
-#: ../js/_app/menu.js:42
-msgid "Delete"
-msgstr ""
-
 #: ../js/_app/menu.js:43
 msgid "Details"
 msgstr ""
@@ -68,3 +101,19 @@ msgstr ""
 #: ../js/_app/menu.js:45
 msgid "Download"
 msgstr ""
+
+#: ../js/_app/l10n.js:7
+msgid "Language"
+msgstr ""
+
+#: ../js/_app/l10n.js:8
+msgid "Vocabulary"
+msgstr ""
+
+#: ../js/_app/l10n.js:9
+msgid "Use Custom Keyboard:"
+msgstr ""
+
+#: ../js/_app/l10n.js:12
+msgid "Search for a word..."
+msgstr "Gjej një fjalë..."
