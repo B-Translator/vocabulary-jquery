@@ -16,7 +16,7 @@ lng && localStorage.setItem('vocabulary.lng', lng);
 var proj = get_param('proj');
 proj && localStorage.setItem('vocabulary.vocabulary', proj);
 </script>
-        <title>Fjalori</title>
+        <title>Vocabulary</title>
     <link rel="shortcut icon" href="favicon.png" type="image/png" />
 
     <meta charset="utf-8">
@@ -44,6 +44,11 @@ proj && localStorage.setItem('vocabulary.vocabulary', proj);
     <script src="lib/keyboard/layouts/keyboard-layouts-combined.min.js" charset="utf-8"></script>
     -->
 
+    <!-- translate the interface of the application -->
+    <!-- <script src="lib/locale/icu.js"></script> -->
+    <script src="l10n/translate.js"></script>
+    <script src="l10n/po/sq.js"></script>
+
     <!-- Misc JS functions and libraries -->
     <script src="lib/sha1.js"></script>
     <script src="lib/mustache.min.js"></script>
@@ -64,7 +69,7 @@ proj && localStorage.setItem('vocabulary.vocabulary', proj);
       
       <!-- header -->
       <div data-role="header" data-position="fixed">
-        <h1>Fjalori ICT</h1>
+        <h1>Vocabulary</h1>
 
         <a href="#" id="next" class="ui-btn ui-btn-b ui-nodisc-icon ui-btn-left ui-icon-refresh ui-btn-icon-notext" style="border-radius: 5px;">Next</a>
 
@@ -76,7 +81,7 @@ proj && localStorage.setItem('vocabulary.vocabulary', proj);
       <div data-role="main" class="ui-content">
         <!-- search with autocomplete list -->
 <form class="ui-filterable">
-  <input id="search-term" data-type="search" placeholder="Gjej një fjalë...">
+  <input id="search-term" data-type="search" placeholder="Search for a word...">
   <a href="#" id="add-new-term" class="ui-nodisc-icon ui-btn ui-corner-all ui-btn-b ui-icon-plus ui-btn-icon-left ui-btn-inline" style="display: none;">Add New Term</a>
 </form>
 
@@ -109,7 +114,7 @@ proj && localStorage.setItem('vocabulary.vocabulary', proj);
   <li>
     <a href="#" style="padding-top: 5px; padding-bottom: 5px;">
       <form id="new-translation-form">
-        <input type="text" id="new-translation" value="" placeholder="New translation">
+        <input type="text" id="new-translation" value="" placeholder="{{New translation}}">
       </form>
     </a>
     <a href="#" id="send-new-translation" class="ui-btn ui-alt-icon ui-icon-plus ui-nodisc-icon ui-btn-icon-notext">Send</a>
@@ -126,16 +131,16 @@ proj && localStorage.setItem('vocabulary.vocabulary', proj);
 
       <li style="padding: 0px;">
         <div style="text-align: center;">
-          <a href="#" id="vote" class="ui-btn ui-corner-all ui-nodisc-icon ui-btn-b ui-icon-check ui-btn-icon-left">Vote</a>
+          <a href="#" id="vote" class="ui-btn ui-corner-all ui-nodisc-icon ui-btn-b ui-icon-check ui-btn-icon-left">{{Vote}}</a>
           {{#delete}}
-          <a href="#" id="delete" class="ui-btn ui-corner-all ui-nodisc-icon ui-btn-b ui-icon-delete ui-btn-icon-left">Delete</a>
+          <a href="#" id="delete" class="ui-btn ui-corner-all ui-nodisc-icon ui-btn-b ui-icon-delete ui-btn-icon-left">{{Delete}}</a>
           {{/delete}}
         </div>
       </li>
 
       <li>
         <div data-role="collapsible" data-inset="false" class="ui-mini">
-          <h4>Voters ({{nr}})</h4>
+          <h4>{{Voters}} ({{nr}})</h4>
           <ul data-role="listview">
             {{#voters}}
             <li>{{{name}}} <span style="font-weight: normal;">({{time}})</span></li>
@@ -162,7 +167,7 @@ proj && localStorage.setItem('vocabulary.vocabulary', proj);
       <div id="settings" data-role="panel" data-display="reveal" data-position-fixed="true">
   <div class="ui-corner-all custom-corners">
     <div class="ui-bar ui-bar-a">
-      <h3>Language</h3>
+      <h3 id="lang">Language</h3>
     </div>
     <div class="ui-body ui-body-a">
       <fieldset id="languages" data-role="controlgroup" data-type="horizontal"></fieldset>
@@ -171,7 +176,7 @@ proj && localStorage.setItem('vocabulary.vocabulary', proj);
 
   <div class="ui-corner-all custom-corners" style="margin-top: 10px;">
     <div class="ui-bar ui-bar-a">
-      <h3>Vocabulary</h3>
+      <h3 id="vocab">Vocabulary</h3>
     </div>
     <div class="ui-body ui-body-a">
       <fieldset id="vocabularies" data-role="controlgroup" data-type="horizontal"></fieldset>
@@ -184,7 +189,7 @@ proj && localStorage.setItem('vocabulary.vocabulary', proj);
     <input type="checkbox" id="custom-keyboard" data-role="flipswitch">
   </div>
 
-  <a href="#vocabulary" data-rel="close" class="ui-btn ui-corner-all ui-btn-inline" style="margin-top: 20px;">Done</a>
+  <a id="done" href="#vocabulary" data-rel="close" class="ui-btn ui-corner-all ui-btn-inline" style="margin-top: 20px;">Done</a>
 </div>
 
 <!-- Mustache template for the list of languages. -->
@@ -210,18 +215,18 @@ proj && localStorage.setItem('vocabulary.vocabulary', proj);
 <script id="tmpl-menu" type="x-tmpl-mustache">
   <div data-role="collapsibleset" data-transition="slidedown" data-theme="b" data-content-theme="a" data-collapsed-icon="carat-r" data-expanded-icon="carat-d" class="ui-nodisc-icon">
     <div data-role="collapsible" data-inset="false" data-collapsed="false">
-      <h2>User</h2>
+      <h2>{{User}}</h2>
       <ul data-role="listview">
-        <li><a id="login" href="#" class="ui-btn ui-icon-user ui-btn-icon-left">Sign in</a></li>
-        <li><a id="logout" href="#" class="ui-btn ui-icon-user ui-btn-icon-left">Sign out</a></li>
-        <li><a id="register" href="{{base_url}}/user/register?lng={{lng}}&proj=vocabulary/{{vocabulary}}" target="_blank" class="ui-btn ui-icon-user ui-btn-icon-left">Sign up</a></li>
-        <li><a id="profile" href="{{base_url}}/user" target="_blank" class="ui-btn ui-icon-gear ui-btn-icon-left">Profile</a></li>
-        <li><a href="#settings" class="ui-btn ui-icon-gear ui-btn-icon-left">Settings</a></li>
-        <li><a href="{{base_url}}/contact/{{vocabulary}}/Hi" target="_blank" class="ui-btn ui-icon-action ui-btn-icon-left">Contact</a></li>
+        <li><a id="login" href="#" class="ui-btn ui-icon-user ui-btn-icon-left">{{Sign in}}</a></li>
+        <li><a id="logout" href="#" class="ui-btn ui-icon-user ui-btn-icon-left">{{Sign out}}</a></li>
+        <li><a id="register" href="{{base_url}}/user/register?lng={{lng}}&proj=vocabulary/{{vocabulary}}" target="_blank" class="ui-btn ui-icon-user ui-btn-icon-left">{{Sign up}}</a></li>
+        <li><a id="profile" href="{{base_url}}/user" target="_blank" class="ui-btn ui-icon-gear ui-btn-icon-left">{{Profile}}</a></li>
+        <li><a href="#settings" class="ui-btn ui-icon-gear ui-btn-icon-left">{{Settings}}</a></li>
+        <li><a href="{{base_url}}/contact/{{vocabulary}}/Hi" target="_blank" class="ui-btn ui-icon-action ui-btn-icon-left">{{Contact}}</a></li>
       </ul>
     </div><!-- /collapsible -->
     <div data-role="collapsible" data-inset="false">
-      <h2>Links</h2>
+      <h2>{{Links}}</h2>
       <ul data-role="listview">
         {{#external_links}}
         <li><a href="{{href}}" class="ui-btn ui-icon-action ui-btn-icon-left" target="_blank">{{title}}</a></li>
@@ -229,17 +234,17 @@ proj && localStorage.setItem('vocabulary.vocabulary', proj);
       </ul>
     </div><!-- /collapsible -->
     <div data-role="collapsible" data-inset="false">
-      <h2>Term</h2>
+      <h2>{{Term}}</h2>
       <ul data-role="listview">
-        <li><a id="del-term" href="#" class="ui-btn ui-icon-delete ui-btn-icon-left">Delete</a></li>
+        <li><a id="del-term" href="#" class="ui-btn ui-icon-delete ui-btn-icon-left">{{Delete}}</a></li>
         {{#webapp_url}}
-        <li><a id="details" href="{{webapp_url}}/vocabulary/{{vocabulary}}" target="_blank" class="ui-btn ui-icon-grid ui-btn-icon-left">Details</a></li>
+        <li><a id="details" href="{{webapp_url}}/vocabulary/{{vocabulary}}" target="_blank" class="ui-btn ui-icon-grid ui-btn-icon-left">{{Details}}</a></li>
         {{/webapp_url}}
-        <li><a href="{{base_url}}/translations/search?lng={{lng}}&origin=vocabulary&project={{vocabulary}}" target="_blank" class="ui-btn ui-icon-bullets ui-btn-icon-left">List</a></li>
+        <li><a href="{{base_url}}/translations/search?lng={{lng}}&origin=vocabulary&project={{vocabulary}}" target="_blank" class="ui-btn ui-icon-bullets ui-btn-icon-left">{{List}}</a></li>
       </ul>
     </div><!-- /collapsible -->
     <div data-role="collapsible" data-inset="false">
-      <h2>Download</h2>
+      <h2>{{Download}}</h2>
       <ul data-role="listview">
         <li><a href="{{base_url}}/translations/vocabulary/export/{{vocabulary}}/txt1" class="ui-btn ui-icon-arrow-d ui-btn-icon-left">txt-1</a></li>
         <li><a href="{{base_url}}/translations/vocabulary/export/{{vocabulary}}/txt2" class="ui-btn ui-icon-arrow-d ui-btn-icon-left">txt-2</a></li>
@@ -255,14 +260,14 @@ proj && localStorage.setItem('vocabulary.vocabulary', proj);
     <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
     <form id="form-login">
       <div style="padding: 0px 20px 10px 20px;">
-        <h3>Please sign in</h3>
-        <label for="username" class="ui-hidden-accessible">Username:</label>
+        <h3>{{Please sign in}}</h3>
+        <label for="username" class="ui-hidden-accessible">{{Username}}:</label>
         <input type="text" name="user" id="username" value="" placeholder="username" data-theme="a">
-        <label for="password" class="ui-hidden-accessible">Password:</label>
+        <label for="password" class="ui-hidden-accessible">{{Password}}:</label>
         <input type="password" name="pass" id="password" value="" placeholder="password" data-theme="a">
         <div style="text-align: center;">
-          <button type="submit" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-nodisc-icon ui-icon-check">Sign in</button>
-          <a href="{{base_url}}/user/register?lng={{sq}}&proj=vocabulary/{{vocabulary}}" target="_blank" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-nodisc-icon ui-icon-user">Sign up</a>
+          <button type="submit" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-nodisc-icon ui-icon-check">{{Sign in}}</button>
+          <a href="{{base_url}}/user/register?lng={{sq}}&proj=vocabulary/{{vocabulary}}" target="_blank" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-nodisc-icon ui-icon-user">{{Sign up}}</a>
         </div>
       </div>
     </form>
@@ -274,10 +279,10 @@ proj && localStorage.setItem('vocabulary.vocabulary', proj);
   <div data-role="popup" id="popup-proxylogin" data-theme="a" data-dismissible="false" class="ui-corner-all" class="dynamic-popup">
     <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
     <div style="padding: 0px 20px 10px 20px;">
-      <h3>Please sign in</h3>
+      <h3>{{Please sign in}}</h3>
       <div style="text-align: center;">
-        <button id="open-proxy-login" type="submit" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-nodisc-icon ui-icon-check">Sign in</button>
-        <a href="{{base_url}}/user/register?lng={{sq}}&proj=vocabulary/{{vocabulary}}" target="_blank" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-nodisc-icon ui-icon-user">Sign up</a>
+        <button id="open-proxy-login" type="submit" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-nodisc-icon ui-icon-check">{{Sign in}}</button>
+        <a href="{{base_url}}/user/register?lng={{sq}}&proj=vocabulary/{{vocabulary}}" target="_blank" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-nodisc-icon ui-icon-user">{{Sign up}}</a>
       </div>
     </div>
   </div>
@@ -289,8 +294,8 @@ proj && localStorage.setItem('vocabulary.vocabulary', proj);
     <div style="padding: 10px 20px;">
       <p>{{message}}</p>
       <div style="text-align: center;">
-        <a href="#" id="confirm-ok" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-nodisc-icon ui-icon-check">OK</a>
-        <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-nodisc-icon ui-icon-forbidden">Cancel</a>
+        <a href="#" id="confirm-ok" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-nodisc-icon ui-icon-check">{{OK}}</a>
+        <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-nodisc-icon ui-icon-forbidden">{{Cancel}}</a>
       </div>
     </div>
   </div>

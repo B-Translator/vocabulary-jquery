@@ -103,6 +103,9 @@ var _settings = {
         var lng = localStorage.getItem('vocabulary.lng');
         if (lng && lng != 'undefined') {
             $config.lng = lng;
+            if ($config.update_app_language) {
+                _l10n.set_language($config.lng);
+            }
         }
 
         // Load vocabulary.
@@ -153,12 +156,11 @@ var _settings = {
         var tmpl = $('#tmpl-vocabularies').html();
         $('#vocabularies').html(Mustache.render(tmpl, data)).trigger('create');
 
-        // Update layout of the panel.
-        $('#settings').trigger( "updatelayout" );
-
         // Set the value of the keyboard checkbox.
         $('#custom-keyboard').attr('checked', $config.custom_keyboard);
-        $('#custom-keyboard').flipswitch("refresh");
+
+        // Update layout of the panel.
+        $('#settings').trigger('updatelayout');
 
         // Update config and settings when a vocabulary is selected.
         $('.vocabulary').on('click', function () {
@@ -172,6 +174,9 @@ var _settings = {
             for (var v in _options[$config.lng].vocabularies) break;
             $config.vocabulary = v;
             _settings.save();
+            if ($config.update_app_language) {
+                _l10n.set_language($config.lng);
+            }
         });
 
         // Update custom_keyboard when the switch is flipped.
@@ -216,6 +221,19 @@ var _menu = {
             vocabulary: $config.vocabulary,
             webapp_url: $config.webapp_url,
             external_links: $config.external_links,
+            'User': _('User'),
+            'Sign in': _('Sign in'),
+            'Sign out': _('Sign out'),
+            'Sign up': _('Sign up'),
+            'Profile': _('Profile'),
+            'Settings': _('Settings'),
+            'Contact': _('Contact'),
+            'Links': _('Links'),
+            'Term': _('Term'),
+            'Delete': _('Delete'),
+            'Details': _('Details'),
+            'List': _('List'),
+            'Download': _('Download'),
         };
         $("#popupMenu")
             .html(Mustache.render(menu_tmpl, data))
@@ -248,6 +266,29 @@ var _menu = {
 };
 
     
+var _l10n = {
+    /** Translate the application interface. */
+    translate: function () {
+        // Translate seetings.
+        $('#lang').html(_('Language'));
+        $('#vocab').html(_('Vocabulary'));
+        $('label[for="custom-keyboard"').html(_('Use Custom Keyboard:'));
+        $('#done').html(_('Done'));
+
+        // Translate search.
+        $('#search-term').attr('placeholder', _('Search for a word...'));
+
+        // Translate menu.
+        _menu.update();
+    },
+
+    /** Load the translations for the given language. */
+    set_language: function (lng) {
+        $.getScript('l10n/po/' + lng + '.js').done(this.translate);
+    },
+}
+
+    
 /**
  * When the page with id 'vocabulary' is created,
  * do the things that are listed in the function.
@@ -255,6 +296,9 @@ var _menu = {
 $(document).on('pagecreate', '#vocabulary', function() {
     // Load language and vocabulary from the local storage.
     _settings.load();
+
+    // Translate the app interface.
+    _l10n.translate();
 
     // Setup menu items.
     _menu.init();
@@ -282,8 +326,8 @@ $(document).on('pagecreate', '#vocabulary', function() {
 
     // Initialize Disqus.
     $config.disqus.shortname ?
-	_disqus.init($config.disqus.shortname) :
-	$('#disqus').hide();
+        _disqus.init($config.disqus.shortname) :
+        $('#disqus').hide();
 });
 
     
@@ -561,7 +605,10 @@ var _translations = {
                                '/vocabulary/' + $config.vocabulary + '/' + term);
 
             // Get the data for the list of translations.
-            var data = { translations: [] };
+            var data = {
+		translations: [],
+		'New translation': _('New translation'),
+	    };
             $.each(result.string.translations, function (i, trans) {
                 data.translations.push({
                     id: trans.tguid,
@@ -663,6 +710,9 @@ var _translation = {
             delete: ($user.is_moderator || $user.is_admin),
             nr : 0,
             voters: [],
+            'Vote': _('Vote'),
+            'Delete': _('Delete'),
+            'Voters': _('Voters'),
         };
         var votes = $(this).data('votes');
         $.each(votes, function (user, vote) {
