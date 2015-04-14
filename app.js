@@ -284,7 +284,11 @@ var _l10n = {
 
     /** Load the translations for the given language. */
     set_language: function (lng) {
-        $.getScript('l10n/po/' + lng + '.js').done(this.translate);
+        $.getScript('l10n/po/' + lng + '.js')
+            .done(_l10n.translate)
+            .fail(function () {
+                _l10n.set_language('en');
+            });
     },
 }
 

@@ -5,6 +5,8 @@ cd $(dirname $0)
 find ../js/ -name '*.js' | xargs \
 xgettext -o app.pot -L JavaScript --from-code=utf-8
 
+cp app.pot po/en.po
+
 #languages="sq de fr"
 languages="sq"
 for lng in $languages
