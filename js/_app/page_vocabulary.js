@@ -7,9 +7,9 @@ $(document).on('pagecreate', '#vocabulary', function() {
     // Load language and vocabulary from the local storage.
     _settings.load();
 
-    // Tanslate the interface.
+    // Translate the app interface.
     _l10n.translate();
-    
+
     // Setup menu items.
     _menu.init();
 

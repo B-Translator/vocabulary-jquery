@@ -17,6 +17,9 @@ var _settings = {
         var lng = localStorage.getItem('vocabulary.lng');
         if (lng && lng != 'undefined') {
             $config.lng = lng;
+            if ($config.update_app_language) {
+                _l10n.set_language($config.lng);
+            }
         }
 
         // Load vocabulary.
@@ -34,7 +37,6 @@ var _settings = {
         // Update.
         this.set_title();
         this.update_panel();
-        //$.getScript('l10n/po/sq.js');
     },
 
     set_title: function () {
@@ -68,12 +70,11 @@ var _settings = {
         var tmpl = $('#tmpl-vocabularies').html();
         $('#vocabularies').html(Mustache.render(tmpl, data)).trigger('create');
 
-        // Update layout of the panel.
-        $('#settings').trigger( "updatelayout" );
-
         // Set the value of the keyboard checkbox.
         $('#custom-keyboard').attr('checked', $config.custom_keyboard);
-        $('#custom-keyboard').flipswitch("refresh");
+
+        // Update layout of the panel.
+        $('#settings').trigger('updatelayout');
 
         // Update config and settings when a vocabulary is selected.
         $('.vocabulary').on('click', function () {
@@ -87,6 +88,9 @@ var _settings = {
             for (var v in _options[$config.lng].vocabularies) break;
             $config.vocabulary = v;
             _settings.save();
+            if ($config.update_app_language) {
+                _l10n.set_language($config.lng);
+            }
         });
 
         // Update custom_keyboard when the switch is flipped.

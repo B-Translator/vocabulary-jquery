@@ -8,27 +8,27 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-04-13 23:47+0200\n"
+"POT-Creation-Date: 2015-04-14 18:19+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: ../js/user.js:57 ../js/user.js:111
 msgid "Please sign in"
-msgstr ""
+msgstr "Të lutem identifikohu"
 
 #: ../js/user.js:58
 #, fuzzy
 msgid "Username"
-msgstr "Prdoruesi"
+msgstr "Përdoruesi"
 
 #: ../js/user.js:59
 msgid "Password"
-msgstr ""
+msgstr "Fjalëkalimi"
 
 #: ../js/user.js:60 ../js/user.js:112 ../js/_app/menu.js:34
 msgid "Sign in"
@@ -40,31 +40,31 @@ msgstr "Rregjistrohu"
 
 #: ../js/user.js:229
 msgid "OK"
-msgstr ""
+msgstr "Në rregull"
 
 #: ../js/user.js:230
 msgid "Cancel"
-msgstr ""
+msgstr "Ndërprit"
 
 #: ../js/_app/translations.js:39
 msgid "New translation"
-msgstr ""
+msgstr "Përkthim tjetër"
 
 #: ../js/_app/translation.js:14
 msgid "Vote"
-msgstr ""
+msgstr "Pëlqeje"
 
 #: ../js/_app/translation.js:15 ../js/_app/menu.js:42
 msgid "Delete"
-msgstr ""
+msgstr "Fshije"
 
 #: ../js/_app/translation.js:16
 msgid "Voters"
-msgstr ""
+msgstr "Përkrahësit"
 
 #: ../js/_app/menu.js:33
 msgid "User"
-msgstr "Prdoruesi"
+msgstr "Përdoruesi"
 
 #: ../js/_app/menu.js:35
 msgid "Sign out"
@@ -76,43 +76,47 @@ msgstr "Profili"
 
 #: ../js/_app/menu.js:38
 msgid "Settings"
-msgstr ""
+msgstr "Përcaktimet"
 
 #: ../js/_app/menu.js:39
 msgid "Contact"
-msgstr ""
+msgstr "Lidhu"
 
 #: ../js/_app/menu.js:40
 msgid "Links"
-msgstr ""
+msgstr "Faqe"
 
 #: ../js/_app/menu.js:41
 msgid "Term"
-msgstr ""
+msgstr "Fjalët"
 
 #: ../js/_app/menu.js:43
 msgid "Details"
-msgstr ""
+msgstr "Hollësi"
 
 #: ../js/_app/menu.js:44
 msgid "List"
-msgstr ""
+msgstr "Listë"
 
 #: ../js/_app/menu.js:45
 msgid "Download"
-msgstr ""
+msgstr "Shkarko"
+
+#: ../js/_app/l10n.js:6
+msgid "Language"
+msgstr "Gjuha"
 
 #: ../js/_app/l10n.js:7
-msgid "Language"
-msgstr ""
+msgid "Vocabulary"
+msgstr "Fjalori"
 
 #: ../js/_app/l10n.js:8
-msgid "Vocabulary"
-msgstr ""
+msgid "Use Custom Keyboard:"
+msgstr "Tastierë e Përshtatur"
 
 #: ../js/_app/l10n.js:9
-msgid "Use Custom Keyboard:"
-msgstr ""
+msgid "Done"
+msgstr "U bë"
 
 #: ../js/_app/l10n.js:12
 msgid "Search for a word..."
