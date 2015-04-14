@@ -54,6 +54,11 @@ var $user = new (function () {
                 base_url: $config.api_url,
                 lng: $config.lng,
                 vocabulary: $config.vocabulary,
+                'Please sign in': _('Please sign in'),
+                'Username': _('Username'),
+                'Password': _('Password'),
+                'Sign in': _('Sign in'),
+                'Sign up': _('Sign up'),
             });
             $(login_html)
                 .appendTo($.mobile.activePage)
@@ -103,6 +108,9 @@ var $user = new (function () {
                     base_url: $config.api_url,
                     lng: $config.lng,
                     vocabulary: $config.vocabulary,
+                    'Please sign in': _('Please sign in'),
+                    'Sign in': _('Sign in'),
+                    'Sign up': _('Sign up'),
                 });
                 $(login_html)
                     .appendTo($.mobile.activePage)
@@ -218,6 +226,8 @@ var $user = new (function () {
             var confirm_tmpl = $('#tmpl-confirm').html();
             var confirm_html = Mustache.render(confirm_tmpl, {
                 message: message,
+                'OK': _('OK'),
+                'Cancel': _('Cancel'),
             });
             $(confirm_html)
                 .appendTo($.mobile.activePage)

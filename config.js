@@ -27,6 +27,10 @@ var $config = {
     // Use an iframe to narrow the window, when the screen is too wide.
     use_iframe: false,
 
+    // When the user changes the language of translations,
+    // the language of the application interface is changed as well.
+    update_app_language: false,
+
     // Links that are displayed on the menu.
     external_links: [
         { title: 'G-Translate',

@@ -11,6 +11,9 @@ var _translation = {
             delete: ($user.is_moderator || $user.is_admin),
             nr : 0,
             voters: [],
+            'Vote': _('Vote'),
+            'Delete': _('Delete'),
+            'Voters': _('Voters'),
         };
         var votes = $(this).data('votes');
         $.each(votes, function (user, vote) {

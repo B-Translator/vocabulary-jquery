@@ -34,7 +34,10 @@ var _translations = {
                                '/vocabulary/' + $config.vocabulary + '/' + term);
 
             // Get the data for the list of translations.
-            var data = { translations: [] };
+            var data = {
+		translations: [],
+		'New translation': _('New translation'),
+	    };
             $.each(result.string.translations, function (i, trans) {
                 data.translations.push({
                     id: trans.tguid,
