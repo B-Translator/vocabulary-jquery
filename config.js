@@ -32,7 +32,7 @@ var $config = {
     update_app_language: false,
 
     // Google Analytics ID (something like: 'UA-XXXX-Y')
-    ga_id: null,
+    ga_id: 'UA-57417723-3',
 
     // Links that are displayed on the menu.
     external_links: [
