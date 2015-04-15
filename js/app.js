@@ -3,6 +3,7 @@ var $app = (function () {
 
     {% include options.js %}
     {% include _app/settings.js %}
+    {% include _app/google_analytics.js %}
     {% include _app/menu.js %}
     {% include _app/l10n.js %}
     {% include _app/page_vocabulary.js %}

@@ -8,6 +8,10 @@ var _term = {
         // Get and display the list of translations.
         var sguid = Sha1.hash(term + $config.vocabulary);
         _translations.display(sguid);
+
+        // Track with Google Analytics.
+        ga('set', 'page', term);
+        ga('send', 'pageview');
     },
 
     /**
