@@ -13,10 +13,12 @@ var $user = new (function () {
         that.name = name;
         if (name) {
             $('#status-line').html('<strong>' + name + '</strong>').show();
+            ga('create', $config.ga_id, 'auto', { 'userId': name });
         }
         else {
             $('#status-line').hide().html('');
             $('#picture').hide().attr('src', '');
+            ga('create', $config.ga_id, 'auto');
         }
     };
 

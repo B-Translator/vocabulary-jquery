@@ -31,6 +31,9 @@ var $config = {
     // the language of the application interface is changed as well.
     update_app_language: false,
 
+    // Google Analytics ID (something like: 'UA-XXXX-Y')
+    ga_id: null,
+
     // Links that are displayed on the menu.
     external_links: [
         { title: 'G-Translate',
