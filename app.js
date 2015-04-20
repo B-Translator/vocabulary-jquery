@@ -356,6 +356,47 @@ $(document).on('pagecreate', '#vocabulary', function() {
 });
 
     
+var _social_share = {
+    /** Update the social share buttons. */
+    update: function(term, translations) {
+        var title = $('h1').html() + ': ' + term;
+        var summary = term + ' <==> ' + translations.join(' / ');
+        var mobile_url = $config.app_url 
+            + '/?lng=' + $config.lng + '&proj=' + $config.vocabulary
+            + '#' + term;
+        var url = $config.api_url
+            + '/vocabulary/' + $config.vocabulary + '/' + term
+            + '/?url=' + encodeURIComponent(mobile_url);
+
+        $('#share-facebook').click(function() {
+            window.open('https://www.facebook.com/sharer/sharer.php'
+                        + '?u=' + encodeURIComponent(url));
+        });
+
+        $('#share-googleplus').click(function() {
+            window.open('https://plus.google.com/share'
+                        + '?url=' + encodeURIComponent(url)
+                        + '&hl=' + $config.lng);
+        });
+
+        $('#share-twitter').click(function() {
+            window.open("https://twitter.com/intent/tweet"
+                        + '?text=' + encodeURIComponent(summary)
+                        + '&url=' + encodeURIComponent(mobile_url)
+                        + '&hashtags=' + $config.vocabulary);
+        });
+
+        $('#share-linkedin').click(function() {
+            window.open("https://www.linkedin.com/shareArticle?mini=true"
+                        + '&url=' + encodeURIComponent(mobile_url)
+                        + '&title=' + encodeURIComponent(title)
+                        + '&summary=' + encodeURIComponent(summary)
+                        + '&source=' + encodeURIComponent($('h1').html()));
+        });
+    },
+};
+
+    
 var _disqus = {
     //  Initialize Disqus.
     init: function (shortname) {
@@ -635,9 +676,9 @@ var _translations = {
 
             // Get the data for the list of translations.
             var data = {
-		translations: [],
-		'New translation': _('New translation'),
-	    };
+                translations: [],
+                'New translation': _('New translation'),
+            };
             $.each(result.string.translations, function (i, trans) {
                 data.translations.push({
                     id: trans.tguid,
@@ -676,6 +717,14 @@ var _translations = {
             // Sending a new translation to the server.
             $('#new-translation-form').on('submit', _translation.submit);
             $('#send-new-translation').on('click', _translation.submit);
+
+            // Update the social share buttons.
+            var term = result.string.string;
+            var translations = [];
+            $.each(result.string.translations, function (i, trans) {
+                translations.push(trans.translation);
+            });
+            _social_share.update(term, translations);
 
             // Get the disqus comments for this term.
             $config.disqus.shortname ? _disqus.reload(sguid, term) : null;
