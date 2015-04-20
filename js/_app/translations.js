@@ -35,9 +35,9 @@ var _translations = {
 
             // Get the data for the list of translations.
             var data = {
-		translations: [],
-		'New translation': _('New translation'),
-	    };
+                translations: [],
+                'New translation': _('New translation'),
+            };
             $.each(result.string.translations, function (i, trans) {
                 data.translations.push({
                     id: trans.tguid,
@@ -76,6 +76,14 @@ var _translations = {
             // Sending a new translation to the server.
             $('#new-translation-form').on('submit', _translation.submit);
             $('#send-new-translation').on('click', _translation.submit);
+
+            // Update the social share buttons.
+            var term = result.string.string;
+            var translations = [];
+            $.each(result.string.translations, function (i, trans) {
+                translations.push(trans.translation);
+            });
+            _social_share.update(term, translations);
 
             // Get the disqus comments for this term.
             $config.disqus.shortname ? _disqus.reload(sguid, term) : null;
