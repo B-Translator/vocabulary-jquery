@@ -20,6 +20,7 @@ var _l10n = {
         $.getScript('l10n/po/' + lng + '.js')
             .done(_l10n.translate)
             .fail(function () {
+                if (lng=='en') return;
                 _l10n.set_language('en');
             });
     },
