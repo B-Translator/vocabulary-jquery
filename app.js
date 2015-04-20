@@ -308,6 +308,7 @@ var _l10n = {
         $.getScript('l10n/po/' + lng + '.js')
             .done(_l10n.translate)
             .fail(function () {
+                if (lng=='en') return;
                 _l10n.set_language('en');
             });
     },
@@ -368,25 +369,25 @@ var _social_share = {
             + '/vocabulary/' + $config.vocabulary + '/' + term
             + '/?url=' + encodeURIComponent(mobile_url);
 
-        $('#share-facebook').click(function() {
+        $('#share-facebook').off().on('click', function() {
             window.open('https://www.facebook.com/sharer/sharer.php'
                         + '?u=' + encodeURIComponent(url));
         });
 
-        $('#share-googleplus').click(function() {
+        $('#share-googleplus').off().on('click', function() {
             window.open('https://plus.google.com/share'
                         + '?url=' + encodeURIComponent(url)
                         + '&hl=' + $config.lng);
         });
 
-        $('#share-twitter').click(function() {
+        $('#share-twitter').off().on('click', function() {
             window.open("https://twitter.com/intent/tweet"
                         + '?text=' + encodeURIComponent(summary)
                         + '&url=' + encodeURIComponent(mobile_url)
                         + '&hashtags=' + $config.vocabulary);
         });
 
-        $('#share-linkedin').click(function() {
+        $('#share-linkedin').off().on('click', function() {
             window.open("https://www.linkedin.com/shareArticle?mini=true"
                         + '&url=' + encodeURIComponent(mobile_url)
                         + '&title=' + encodeURIComponent(title)
