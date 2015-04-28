@@ -9,11 +9,12 @@ var $user = new (function () {
     this.name = null;
 
     /** Set the name of the user and display it on the status. */
-    var _setName = function (name) {
+    var _setName = function (name, uid) {
+        if (typeof(uid)==='undefined') uid = null;
         that.name = name;
         if (name) {
             $('#status-line').html('<strong>' + name + '</strong>').show();
-            ga('create', $config.ga_id, 'auto', { 'userId': name });
+            ga('create', $config.ga_id, 'auto', { 'userId': uid });
         }
         else {
             $('#status-line').hide().html('');
@@ -74,7 +75,6 @@ var $user = new (function () {
             $('#form-login').on('submit', function (event) {
                 var username = $('#username')[0].value;
                 var password = $('#password')[0].value;
-                _setName(username);
                 callback(username, password);
                 $('#popup-login').popup('close');
             });
@@ -180,7 +180,6 @@ var $user = new (function () {
             $.ajax($config.api_url + '/oauth2/tokens/' + access_token)
                 .fail(_refresh)
                 .done(function (response) {
-                    _setName(response.user_id);
                     _get_user_profile(access_token);
                 });
         }
@@ -195,6 +194,7 @@ var $user = new (function () {
                 dataType: 'json',
             })
                 .done(function (response) {
+                    _setName(response.name, response.uid);
                     var project = 'vocabulary/' + $config.vocabulary;
                     that.is_moderator = (($.inArray(project, response.moderate_projects) > -1) || ($.inArray('btranslator-resolve', response.permissions) > -1));
                     that.is_admin = (($.inArray(project, response.admin_projects) > -1) || ($.inArray('btranslator-admin', response.permissions) > -1));
