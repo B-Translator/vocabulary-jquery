@@ -1,7 +1,7 @@
 {
   "version": "0.8",
   "name": "Vocabulary",
-  "description": "App to make a note of to-do tasks",
+  "description": "A vocabulary by the community for the community.",
   "launch_path": "/index.html",
   "developer": {
     "name": "Dashamir Hoxha",
