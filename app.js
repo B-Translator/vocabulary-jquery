@@ -293,7 +293,7 @@ var _l10n = {
         // Translate seetings.
         $('#lang').html(_('Language'));
         $('#vocab').html(_('Vocabulary'));
-        $('label[for="custom-keyboard"').html(_('Use Custom Keyboard:'));
+        $('label[for="custom-keyboard"]').html(_('Use Custom Keyboard:'));
         $('#done').html(_('Done'));
 
         // Translate search.
