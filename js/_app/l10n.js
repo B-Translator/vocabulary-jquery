@@ -10,6 +10,7 @@ var _l10n = {
 
         // Translate search.
         $('#search-term').attr('placeholder', _('Search for a word...'));
+        $('#add-new-term').html( _('Add New Term'));
 
         // Translate menu.
         _menu.update();
