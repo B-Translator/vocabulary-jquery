@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-04-14 18:19+0200\n"
+"POT-Creation-Date: 2015-05-26 12:37+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,32 +17,32 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../js/user.js:57 ../js/user.js:111
+#: ../js/user.js:60 ../js/user.js:113
 msgid "Please sign in"
 msgstr "Të lutem identifikohu"
 
-#: ../js/user.js:58
+#: ../js/user.js:61
 #, fuzzy
 msgid "Username"
 msgstr "Përdoruesi"
 
-#: ../js/user.js:59
+#: ../js/user.js:62
 msgid "Password"
 msgstr "Fjalëkalimi"
 
-#: ../js/user.js:60 ../js/user.js:112 ../js/_app/menu.js:34
+#: ../js/user.js:63 ../js/user.js:114 ../js/_app/menu.js:34
 msgid "Sign in"
 msgstr "Identifikohu"
 
-#: ../js/user.js:61 ../js/user.js:113 ../js/_app/menu.js:36
+#: ../js/user.js:64 ../js/user.js:115 ../js/_app/menu.js:36
 msgid "Sign up"
 msgstr "Rregjistrohu"
 
-#: ../js/user.js:229
+#: ../js/user.js:231
 msgid "OK"
 msgstr "Në rregull"
 
-#: ../js/user.js:230
+#: ../js/user.js:232
 msgid "Cancel"
 msgstr "Ndërprit"
 
@@ -121,3 +121,7 @@ msgstr "U bë"
 #: ../js/_app/l10n.js:12
 msgid "Search for a word..."
 msgstr "Gjej një fjalë..."
+
+#: ../js/_app/l10n.js:13
+msgid "Add New Term"
+msgstr "Shto Fjalë të Re"
