@@ -1,0 +1,70 @@
+
+This is a single page application (SPA) and is composed of several
+parts or modules. Each part/module has some HTML code for the view
+and/or some JavaScript code for the logic (making it dynamic and
+interactive). Here is a list of these parts and the corresponding HTML
+and JS files.
+
+* Main page
+  - html/index.html
+  - html/_html/head.html
+  - html/_html/params.js
+  - js/app.js
+  - js/_app/page_vocabulary.js
+
+* Configuration
+  - js/config.js
+  - js/options.js
+
+* User
+  - js/user.js
+  - html/_html/login.html
+  - html/_html/proxylogin.html
+  - html/_html/confirm.html
+
+* Search term
+  - html/_html/search.html
+  - js/_app/term.js
+
+* Suggestions
+  - html/_html/suggestions.html
+  - js/_app/suggestions.js
+
+* Translations
+  - html/_html/translations.html
+  - js/_app/translations.js
+
+* Translation details
+  - html/_html/translation_details.html
+  - js/_app/translation.js
+
+* Settings
+  - html/_html/settings.html
+  - js/_app/settings.js
+
+* Menu
+  - html/_html/menu.html
+  - js/_app/menu.js
+
+* Disqus comments
+  - html/_html/disqus.html
+  - js/_app/disqus.js
+
+* Frame
+  - html/_html/frame.html
+  - js/frame.js
+
+* Share
+  - html/_html/share.html
+  - js/_app/social_share.js
+
+* REST Client
+  - js/_app/http_request.js
+  - js/_app/messages.js
+
+* Tracking (Usage Statistics)
+  - js/_app/google_analytics.js
+
+* Localization (translation)
+  - js/_app/l10n.js
+  - l10n/
