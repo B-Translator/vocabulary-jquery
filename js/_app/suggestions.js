@@ -6,6 +6,12 @@ var _suggestions = {
      * autocomplete suggestions and displays them under the search box.
      */
     list: function (event, data) {
+        // Hide the rest of the page, except search.
+        _translations.hide();
+        $('#add-new-term').hide();
+        $('#social-share-buttons').hide();
+        $('#disqus').hide();
+
         // Get the search term typed so far.
         var search_term = $(data.input).val();
         if (!search_term) { return; }
@@ -23,28 +29,11 @@ var _suggestions = {
      */
     display: function(term_list) {
 
-        // Autocomplete the given term, but not more than twice in 10 seconds.
-        // Return true if term autocompleted, otherwise return false.
-        var _autocomplete = function (term) {
-            if (!_suggestions.autocomplete) {
-                _suggestions.autocomplete = {};
-            }
-            if (!_suggestions.autocomplete[term]) {
-                _suggestions.autocomplete[term] = 0;
-                setTimeout(function () {
-                    delete _suggestions.autocomplete[term];
-                }, 10*1000);
-            }
-
-            if (_suggestions.autocomplete[term] >= 2) {
-                return false;
-            }
-            else {
-                _suggestions.autocomplete[term] += 1;
-                _term.display(term);
-                return true;
-            }
-        };
+        // If there is an autoselect timeout, clear it.
+        if (_suggestions.autoselect) {
+            clearTimeout(_suggestions.autoselect);
+            _suggestions.autoselect = null;
+        }
 
         // Get the numbers of terms
         var count = Object.keys(term_list).length;
@@ -52,21 +41,18 @@ var _suggestions = {
         // If the list is empty, add the current term as a new term.
         if (count == 0) {
             _suggestions.hide();
-            _translations.hide();
             $('#add-new-term').show();
             return;
         }
 
-        // If there is only one term in the list
-        // just display it, don't build the suggestion list.
+        // If there is only one term in the list,
+        // autoselect it (after 2 seconds of inactivity).
         if (count == 1) {
             for (var term in term_list)  break;
-            if (_autocomplete(term)) return;
+            _suggestions.autoselect = setTimeout(function () {
+                _term.display(term);
+            }, 2*1000);
         }
-
-        // Hide translations and the add button.
-        _translations.hide();
-        $('#add-new-term').hide();
 
         // Get the data for the list of suggestions.
         var data = { terms: [] };

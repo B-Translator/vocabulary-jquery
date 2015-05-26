@@ -84,9 +84,13 @@ var _translations = {
                 translations.push(trans.translation);
             });
             _social_share.update(term, translations);
+            $('#social-share-buttons').show();
 
             // Get the disqus comments for this term.
-            $config.disqus.shortname ? _disqus.reload(sguid, term) : null;
+            if ($config.disqus.shortname) {
+               _disqus.reload(sguid, term);
+               $('#disqus').show();
+           }
         });
     },
 
