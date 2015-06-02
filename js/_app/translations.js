@@ -87,7 +87,7 @@ var _translations = {
             $('#social-share-buttons').show();
 
             // Get the disqus comments for this term.
-            if ($config.disqus.shortname) {
+            if (_options[$config.lng].disqus) {
                _disqus.reload(sguid, term);
                $('#disqus').show();
            }
