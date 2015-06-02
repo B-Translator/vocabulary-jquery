@@ -35,7 +35,7 @@ $(document).on('pagecreate', '#vocabulary', function() {
     term ? _term.display(term) : _term.get_random(true);
 
     // Initialize Disqus.
-    $config.disqus.shortname ?
-        _disqus.init($config.disqus.shortname) :
+    _options[$config.lng].disqus ?
+        _disqus.init(_options[$config.lng].disqus) :
         $('#disqus').hide();
 });

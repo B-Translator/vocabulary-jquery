@@ -8,6 +8,7 @@ var _options = {
             ICT_sq: 'Fjalori ICT',
             huazime_sq: 'Fjalë të Huaja',
         },
+        disqus: 'l10n-sq',   // disqus shortname
         keyboard: {
             layout: 'custom',
             customLayout: {
