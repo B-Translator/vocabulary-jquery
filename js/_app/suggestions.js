@@ -8,7 +8,7 @@ var _suggestions = {
     list: function (event, data) {
         // Hide the rest of the page, except search.
         _translations.hide();
-        $('#add-new-term').hide();
+        $('#add-new-term').show();
         $('#social-share-buttons').hide();
         $('#disqus').hide();
 
