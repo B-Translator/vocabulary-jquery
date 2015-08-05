@@ -22,6 +22,13 @@ $(document).on('pagecreate', '#vocabulary', function() {
         _term.get_random();
     });
 
+    // When the search button is clicked, go and fetch the translations
+    // of the term that is entered on the search textbox.
+    $('#search-button').on('click', function (event) {
+        var term = $('#search-term')[0].value;
+        _term.display(term);
+    });
+
     // Add a new term when the button is clicked.
     $('#add-new-term').on('click', _term.add);
 
