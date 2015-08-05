@@ -340,6 +340,13 @@ $(document).on('pagecreate', '#vocabulary', function() {
         _term.get_random();
     });
 
+    // When the search button is clicked, go and fetch the translations
+    // of the term that is entered on the search textbox.
+    $('#search-button').on('click', function (event) {
+        var term = $('#search-term')[0].value;
+        _term.display(term);
+    });
+
     // Add a new term when the button is clicked.
     $('#add-new-term').on('click', _term.add);
 
@@ -439,6 +446,12 @@ var _disqus = {
 var _term = {
     /** Display the given term. */
     display: function (term) {
+        // If there is an suggestion autoselect timeout, clear it.
+        if (_suggestions.autoselect) {
+            clearTimeout(_suggestions.autoselect);
+            _suggestions.autoselect = null;
+        }
+
         // Update the search input box.
         $('#search-term')[0].value = term;
 
@@ -554,7 +567,7 @@ var _suggestions = {
     list: function (event, data) {
         // Hide the rest of the page, except search.
         _translations.hide();
-        $('#add-new-term').show();
+        $('#add-new-term').hide();
         $('#social-share-buttons').hide();
         $('#disqus').hide();
 

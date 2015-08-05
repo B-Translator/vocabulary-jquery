@@ -2,6 +2,12 @@
 var _term = {
     /** Display the given term. */
     display: function (term) {
+        // If there is an suggestion autoselect timeout, clear it.
+        if (_suggestions.autoselect) {
+            clearTimeout(_suggestions.autoselect);
+            _suggestions.autoselect = null;
+        }
+
         // Update the search input box.
         $('#search-term')[0].value = term;
 

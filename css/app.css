@@ -1,4 +1,15 @@
 
+#search-button {
+    float: right;
+    padding: 2px;
+    margin-top: 1px;
+    border-radius: 5px;
+}
+
+#search-form div {
+    margin-right: 40px;
+}
+
 #frame {
     width: 450px;
     border: 1px solid #aaaaaa;
