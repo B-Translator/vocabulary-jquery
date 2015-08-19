@@ -32,7 +32,7 @@ var _term = {
         http_request('/public/btr/translations/get_random_sguid', {
             type: 'POST',
             data: {
-                target: 'next',
+                target: 'random',
                 scope: 'vocabulary/' + $config.vocabulary,
             },
         })
