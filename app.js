@@ -335,8 +335,8 @@ $(document).on('pagecreate', '#vocabulary', function() {
     // 'filterablebeforefilter' from the list of suggestions.
     $('#suggestions').on('filterablebeforefilter', _suggestions.list);
 
-    // When the button 'Next' is clicked, get and display a random term.
-    $('#next').on('click', function (event) {
+    // When the button 'Random' is clicked, get and display a random term.
+    $('#random').on('click', function (event) {
         _term.get_random();
     });
 
@@ -476,7 +476,7 @@ var _term = {
         http_request('/public/btr/translations/get_random_sguid', {
             type: 'POST',
             data: {
-                target: 'next',
+                target: 'random',
                 scope: 'vocabulary/' + $config.vocabulary,
             },
         })

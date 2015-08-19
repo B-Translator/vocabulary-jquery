@@ -17,8 +17,8 @@ $(document).on('pagecreate', '#vocabulary', function() {
     // 'filterablebeforefilter' from the list of suggestions.
     $('#suggestions').on('filterablebeforefilter', _suggestions.list);
 
-    // When the button 'Next' is clicked, get and display a random term.
-    $('#next').on('click', function (event) {
+    // When the button 'Random' is clicked, get and display a random term.
+    $('#random').on('click', function (event) {
         _term.get_random();
     });
 
