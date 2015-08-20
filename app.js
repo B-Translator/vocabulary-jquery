@@ -473,7 +473,7 @@ var _term = {
      */
     get_random: function (check) {
         var check = check || false;
-        http_request('/public/btr/translations/get_random_sguid', {
+        http_request('/btr/translations/get_random_sguid', {
             type: 'POST',
             data: {
                 target: 'random',
@@ -657,7 +657,7 @@ var _translations = {
         _suggestions.hide();
         $('#add-new-term').hide();
 
-        var url = '/public/btr/translations/' + sguid + '?lng=' + $config.lng;
+        var url = '/btr/translations/' + sguid + '?lng=' + $config.lng;
         http_request(url).then(function (result) {
             //console.log(result.string);  return;  //debug
 
