@@ -29,7 +29,7 @@ var _term = {
      */
     get_random: function (check) {
         var check = check || false;
-        http_request('/btr/translations/get_random_sguid', {
+        http_request('/api/translations/get_random_sguid', {
             type: 'POST',
             data: {
                 target: 'random',
@@ -58,7 +58,7 @@ var _term = {
         }
 
         // Add the new term.
-        http_request('/btr/project/add_string', {
+        http_request('/api/project/add_string', {
             type: 'POST',
             data: {
                 origin: 'vocabulary',
@@ -92,7 +92,7 @@ var _term = {
             return;
         }
 
-        http_request('/btr/project/del_string', {
+        http_request('/api/project/del_string', {
             type: 'POST',
             data: {
                 sguid: sguid,

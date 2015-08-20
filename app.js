@@ -473,7 +473,7 @@ var _term = {
      */
     get_random: function (check) {
         var check = check || false;
-        http_request('/btr/translations/get_random_sguid', {
+        http_request('/api/translations/get_random_sguid', {
             type: 'POST',
             data: {
                 target: 'random',
@@ -502,7 +502,7 @@ var _term = {
         }
 
         // Add the new term.
-        http_request('/btr/project/add_string', {
+        http_request('/api/project/add_string', {
             type: 'POST',
             data: {
                 origin: 'vocabulary',
@@ -536,7 +536,7 @@ var _term = {
             return;
         }
 
-        http_request('/btr/project/del_string', {
+        http_request('/api/project/del_string', {
             type: 'POST',
             data: {
                 sguid: sguid,
@@ -657,7 +657,7 @@ var _translations = {
         _suggestions.hide();
         $('#add-new-term').hide();
 
-        var url = '/btr/translations/' + sguid + '?lng=' + $config.lng;
+        var url = '/api/translations/' + sguid + '?lng=' + $config.lng;
         http_request(url).then(function (result) {
             //console.log(result.string);  return;  //debug
 
@@ -852,7 +852,7 @@ var _translation = {
             return;
         }
 
-        http_request('/btr/translations/vote', {
+        http_request('/api/translations/vote', {
             type: 'POST',
             data: { tguid: tguid },
             headers: { 'Authorization': 'Bearer ' + access_token }
@@ -881,7 +881,7 @@ var _translation = {
             return;
         }
 
-        http_request('/btr/translations/del', {
+        http_request('/api/translations/del', {
             type: 'POST',
             data: { tguid: tguid },
             headers: { 'Authorization': 'Bearer ' + access_token }
@@ -916,7 +916,7 @@ var _translation = {
         }
 
         // Submit the translation.
-        http_request('/btr/translations/add', {
+        http_request('/api/translations/add', {
             type: 'POST',
             data: {
                 sguid: $('#new-translation').data('sguid'),
