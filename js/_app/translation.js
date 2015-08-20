@@ -69,7 +69,7 @@ var _translation = {
             return;
         }
 
-        http_request('/btr/translations/vote', {
+        http_request('/api/translations/vote', {
             type: 'POST',
             data: { tguid: tguid },
             headers: { 'Authorization': 'Bearer ' + access_token }
@@ -98,7 +98,7 @@ var _translation = {
             return;
         }
 
-        http_request('/btr/translations/del', {
+        http_request('/api/translations/del', {
             type: 'POST',
             data: { tguid: tguid },
             headers: { 'Authorization': 'Bearer ' + access_token }
@@ -133,7 +133,7 @@ var _translation = {
         }
 
         // Submit the translation.
-        http_request('/btr/translations/add', {
+        http_request('/api/translations/add', {
             type: 'POST',
             data: {
                 sguid: $('#new-translation').data('sguid'),
