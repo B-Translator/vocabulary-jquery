@@ -29,7 +29,7 @@ var _term = {
      */
     get_random: function (check) {
         var check = check || false;
-        http_request('/public/btr/translations/get_random_sguid', {
+        http_request('/btr/translations/get_random_sguid', {
             type: 'POST',
             data: {
                 target: 'random',
