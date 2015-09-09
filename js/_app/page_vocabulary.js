@@ -42,7 +42,7 @@ $(document).on('pagecreate', '#vocabulary', function() {
     term ? _term.display(term) : _term.get_random(true);
 
     // Initialize Disqus.
-    _options[$config.lng].disqus ?
+    (_options[$config.lng] && _options[$config.lng].disqus) ?
         _disqus.init(_options[$config.lng].disqus) :
         $('#disqus').hide();
 });

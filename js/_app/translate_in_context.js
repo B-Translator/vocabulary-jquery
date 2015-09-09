@@ -35,7 +35,9 @@ var _translate_in_context = {
      */
     get_url: function (el) {
         var url = 'https://btranslator.org/translations/';
-        if (_options[$config.lng].translate_in_context_url) {
+        if ( _options[$config.lng]
+             && _options[$config.lng].translate_in_context_url )
+        {
             url = _options[$config.lng].translate_in_context_url;
         }
         var sguid = $(el).attr('sguid');
