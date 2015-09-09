@@ -21,12 +21,12 @@ var _translate_in_context = {
      * properly). The ID of the string is included as an attribute.
      */
     decorate: function (text) {
-	var sguid = Sha1.hash(text);
-	var decorated_translation = 
-	    '<span class="gettext" sguid="' + sguid + '">'
-	    + _t(text)
-	    + '</span>';
-	return decorated_translation;
+        var sguid = Sha1.hash(text);
+        var decorated_translation = 
+            '<span class="gettext" sguid="' + sguid + '">'
+            + _t(text)
+            + '</span>';
+        return decorated_translation;
     },
     
     /**
@@ -34,10 +34,12 @@ var _translate_in_context = {
      * server.
      */
     get_url: function (el) {
-	var sguid = $(el).attr('sguid');
-	//var url = 'https://btranslator.org/translations/' + $config.lng + '/' + sguid;
-	var url = 'https://btranslator.org/btr/project/dashohoxha/v.btranslator.org/' + $config.lng + '/' + sguid;
-        return url;
+        var url = 'https://btranslator.org/translations/';
+        if (_options[$config.lng].translate_in_context_url) {
+            url = _options[$config.lng].translate_in_context_url;
+        }
+        var sguid = $(el).attr('sguid');
+        return url + $config.lng + '/' + sguid;
     },
 
     /**
@@ -48,7 +50,7 @@ var _translate_in_context = {
         if (event.ctrlKey) {
             var url = _translate_in_context.get_url(this);
             try {
-	        var w = window.open(url, 'translate');
+                var w = window.open(url, 'translate');
                 w.href= url;
             } catch (e) {}
             finally {
@@ -62,10 +64,10 @@ var _translate_in_context = {
      * 'gettext'.
      */
     enable: function () {
-	if ($config.translate_in_context) {
-	    $('.gettext').off('click', _translate_in_context.handle_ctrl_click);
-	    $('.gettext').on('click', _translate_in_context.handle_ctrl_click);	
-	}
+        if ($config.translate_in_context) {
+            $('.gettext').off('click', _translate_in_context.handle_ctrl_click);
+            $('.gettext').on('click', _translate_in_context.handle_ctrl_click); 
+        }
     },
 };
 
@@ -79,6 +81,6 @@ if ($config.translate_in_context) {
     // Assign the event handler function to the elements with class
     // 'gettext'.
     $(document).ready(function() {
-	_translate_in_context.enable();
+        _translate_in_context.enable();
     });
 }
