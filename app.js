@@ -190,6 +190,91 @@ var _settings = {
     },
 };
 
+    
+/**
+ * Implement "translation in context".
+ *
+ * It works like this: when the user makes a Ctrl+Click on a
+ * string/translation anywhere on the UI, a browser tab/window is
+ * opened automatically with the correct url in the translation server
+ * (web application), where he can give a translation or a new
+ * suggestion for the selected string. (Of course, for a normal Click
+ * the UI works as normally it should.)
+ *
+ * Hopefully this can help to improve the quality of translations,
+ * since the user knows the context where the string is being used. It
+ * can also facilitate giving feedback and suggestions to the
+ * translator(s) of a program.
+ */
+
+var _translate_in_context = {
+    /**
+     * Return a "decorated" translation (which can handle Ctrl+Click
+     * properly). The ID of the string is included as an attribute.
+     */
+    decorate: function (text) {
+	var sguid = Sha1.hash(text);
+	var decorated_translation = 
+	    '<span class="gettext" sguid="' + sguid + '">'
+	    + _t(text)
+	    + '</span>';
+	return decorated_translation;
+    },
+    
+    /**
+     * Return the URL of the selected string on the translation
+     * server.
+     */
+    get_url: function (el) {
+	var sguid = $(el).attr('sguid');
+	//var url = 'https://btranslator.org/translations/' + $config.lng + '/' + sguid;
+	var url = 'https://btranslator.org/btr/project/dashohoxha/v.btranslator.org/' + $config.lng + '/' + sguid;
+        return url;
+    },
+
+    /**
+     * Handle the Ctrl+Click event by opening a browser tab with the
+     * correct URL. Return 'false' so that the click event fails.
+     */
+    handle_ctrl_click: function(event) {
+        if (event.ctrlKey) {
+            var url = _translate_in_context.get_url(this);
+            try {
+	        var w = window.open(url, 'translate');
+                w.href= url;
+            } catch (e) {}
+            finally {
+                return false;
+            }
+        }
+    },
+
+    /**
+     * Assign the event handler function to the elements with class
+     * 'gettext'.
+     */
+    enable: function () {
+	if ($config.translate_in_context) {
+	    $('.gettext').off('click', _translate_in_context.handle_ctrl_click);
+	    $('.gettext').on('click', _translate_in_context.handle_ctrl_click);	
+	}
+    },
+};
+
+window._t = window._;
+if ($config.translate_in_context) {
+    // Override the gettext function "_()", so that instead of the
+    // translation it returns a "decorated" translation (which can
+    // handle Ctrl+Click properly).
+    window._ = _translate_in_context.decorate;
+
+    // Assign the event handler function to the elements with class
+    // 'gettext'.
+    $(document).ready(function() {
+	_translate_in_context.enable();
+    });
+}
+
     // Google Analytics
 if ($config.ga_id) {
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -261,6 +346,7 @@ var _menu = {
             .html(Mustache.render(menu_tmpl, data))
             .enhanceWithin().popup();
 
+	_translate_in_context.enable();
 
         $('#login').on('click', function () {
             $user.login();
@@ -298,7 +384,7 @@ var _l10n = {
         $('#done').html(_('Done'));
 
         // Translate search.
-        $('#search-term').attr('placeholder', _('Search for a word...'));
+        $('#search-term').attr('placeholder', _t('Search for a word...'));
         $('#add-new-term').html( _('Add New Term'));
 
         // Translate menu.
@@ -679,7 +765,7 @@ var _translations = {
             // Get the data for the list of translations.
             var data = {
                 translations: [],
-                'New translation': _('New translation'),
+                'New translation': _t('New translation'),
             };
             $.each(result.string.translations, function (i, trans) {
                 data.translations.push({
@@ -821,6 +907,7 @@ var _translation = {
         $("#translation-details")
             .popup()           // init popup
             .popup('open');    // open popup
+	_translate_in_context.enable();
 
         // Get the id of the translation.
         var tguid = $(this).data('tguid');

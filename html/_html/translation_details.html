@@ -8,16 +8,16 @@
 
       <li style="padding: 0px;">
         <div style="text-align: center;">
-          <a href="#" id="vote" class="ui-btn ui-corner-all ui-nodisc-icon ui-btn-b ui-icon-check ui-btn-icon-left">{{Vote}}</a>
+          <a href="#" id="vote" class="ui-btn ui-corner-all ui-nodisc-icon ui-btn-b ui-icon-check ui-btn-icon-left">{{&Vote}}</a>
           {{#delete}}
-          <a href="#" id="delete" class="ui-btn ui-corner-all ui-nodisc-icon ui-btn-b ui-icon-delete ui-btn-icon-left">{{Delete}}</a>
+          <a href="#" id="delete" class="ui-btn ui-corner-all ui-nodisc-icon ui-btn-b ui-icon-delete ui-btn-icon-left">{{&Delete}}</a>
           {{/delete}}
         </div>
       </li>
 
       <li>
         <div data-role="collapsible" data-inset="false" class="ui-mini">
-          <h4>{{Voters}} ({{nr}})</h4>
+          <h4>{{&Voters}} ({{nr}})</h4>
           <ul data-role="listview">
             {{#voters}}
             <li>{{{name}}} <span style="font-weight: normal;">({{time}})</span></li>

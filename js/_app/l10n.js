@@ -9,7 +9,7 @@ var _l10n = {
         $('#done').html(_('Done'));
 
         // Translate search.
-        $('#search-term').attr('placeholder', _('Search for a word...'));
+        $('#search-term').attr('placeholder', _t('Search for a word...'));
         $('#add-new-term').html( _('Add New Term'));
 
         // Translate menu.
