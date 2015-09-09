@@ -48,6 +48,7 @@ var _menu = {
             .html(Mustache.render(menu_tmpl, data))
             .enhanceWithin().popup();
 
+	_translate_in_context.enable();
 
         $('#login').on('click', function () {
             $user.login();

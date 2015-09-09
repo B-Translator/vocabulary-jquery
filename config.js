@@ -26,6 +26,9 @@ var $config = {
     // the language of the application interface is changed as well.
     update_app_language: false,
 
+    // Enable translation in context for the UI of this application.
+    translate_in_context: true,
+
     // Google Analytics ID (something like: 'UA-XXXX-Y')
     ga_id: 'UA-57417723-3',
 

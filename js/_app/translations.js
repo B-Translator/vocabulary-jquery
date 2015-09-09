@@ -36,7 +36,7 @@ var _translations = {
             // Get the data for the list of translations.
             var data = {
                 translations: [],
-                'New translation': _('New translation'),
+                'New translation': _t('New translation'),
             };
             $.each(result.string.translations, function (i, trans) {
                 data.translations.push({
