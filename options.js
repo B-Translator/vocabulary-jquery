@@ -9,6 +9,7 @@ var _options = {
             huazime_sq: 'Fjalë të Huaja',
         },
         disqus: 'l10n-sq',   // disqus shortname
+        translate_in_context_url: 'https://l10n.org.al/btr/project/dashohoxha/v.btranslator.org/',
         keyboard: {
             layout: 'custom',
             customLayout: {
