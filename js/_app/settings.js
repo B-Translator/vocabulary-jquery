@@ -40,6 +40,7 @@ var _settings = {
     },
 
     set_title: function () {
+        if (!_options[$config.lng]) return;
         var title = _options[$config.lng].vocabularies[$config.vocabulary];
         document.title = title;
         $('h1').html(title);
@@ -60,13 +61,15 @@ var _settings = {
 
         // Fill the list of vocabularies.
         var data = { vocabularies: [] };
-        $.each(_options[$config.lng].vocabularies, function (id, name) {
-            data.vocabularies.push({
-                id: id,
-                name: name,
-                selected: (id==$config.vocabulary ? 'checked="checked"' : ''),
+        if (_options[$config.lng]) {
+            $.each(_options[$config.lng].vocabularies, function (id, name) {
+                data.vocabularies.push({
+                    id: id,
+                    name: name,
+                    selected: (id==$config.vocabulary ? 'checked="checked"' : ''),
+                });
             });
-        });
+        }
         var tmpl = $('#tmpl-vocabularies').html();
         $('#vocabularies').html(Mustache.render(tmpl, data)).trigger('create');
 

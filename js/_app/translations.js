@@ -87,7 +87,7 @@ var _translations = {
             $('#social-share-buttons').show();
 
             // Get the disqus comments for this term.
-            if (_options[$config.lng].disqus) {
+            if (_options[$config.lng] && _options[$config.lng].disqus) {
                _disqus.reload(sguid, term);
                $('#disqus').show();
            }
@@ -97,7 +97,8 @@ var _translations = {
     /** Attach a custom keyboard to the field of new translations. */
     attach_keyboard: function() {
         if (!$config.custom_keyboard)  return;
-        if (! _options[$config.lng].keyboard)  return;
+        if (!_options[$config.lng])  return;
+        if (!_options[$config.lng].keyboard)  return;
         var kbd = _options[$config.lng].keyboard;
 
         var options = {
