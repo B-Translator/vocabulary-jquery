@@ -69,7 +69,7 @@ var $user = new (function () {
             $("#popup-login")
                 .popup()           // init popup
                 .popup('open');    // open popup
-            _translate_in_context.enable();
+            _translate_in_context.apply();
 
             // When the form is submitted, pass the username
             // and password to the callback function.
@@ -121,7 +121,7 @@ var $user = new (function () {
                 $("#popup-proxylogin")
                     .popup()           // init popup
                     .popup('open');    // open popup
-                _translate_in_context.enable();
+                _translate_in_context.apply();
 
                 $('#open-proxy-login').on('click', function () {
                     $("#popup-proxylogin").popup('close');
@@ -239,7 +239,7 @@ var $user = new (function () {
             $("#popup-confirm")
                 .popup()           // init popup
                 .popup('open');    // open popup
-            _translate_in_context.enable();
+            _translate_in_context.apply();
 
             // When button OK is clicked call the callback
             // function and close the popup.

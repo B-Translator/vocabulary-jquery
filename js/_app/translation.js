@@ -38,7 +38,7 @@ var _translation = {
         $("#translation-details")
             .popup()           // init popup
             .popup('open');    // open popup
-        _translate_in_context.enable();
+        _translate_in_context.apply();
 
         // Get the id of the translation.
         var tguid = $(this).data('tguid');
