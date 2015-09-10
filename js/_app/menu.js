@@ -48,7 +48,7 @@ var _menu = {
             .html(Mustache.render(menu_tmpl, data))
             .enhanceWithin().popup();
 
-        _translate_in_context.enable();
+        _translate_in_context.apply();
 
         $('#login').on('click', function () {
             $user.login();

@@ -194,8 +194,7 @@ var _settings = {
     },
 };
 
-    
-/**
+    /**
  * Implement "translation in context".
  *
  * It works like this: when the user makes a Ctrl+Click on a
@@ -213,10 +212,35 @@ var _settings = {
 
 var _translate_in_context = {
     /**
+     * Override the gettext function "_()", so that instead of the
+     * translation it returns a "decorated" translation (which can
+     * handle Ctrl+Click properly). The function "_t()" will always
+     * return the original undecorated translation.
+     */
+    init: function () {
+        // The function "_t()" will always return the original
+        // undecorated translation.
+        window._t = window._;
+
+        // Override the gettext function "_()", so that instead of the
+        // translation it returns a "decorated" translation (which can
+        // handle Ctrl+Click properly).
+        if ($config.translate_in_context) {
+            window._t = window._;
+            window._ = _translate_in_context.get_decorated_translation;
+            for (var property in window._t)
+                window._[property] = window._t[property];
+
+            // Assign event handler to elements of class 'gettext'.
+            $(document).ready(_translate_in_context.apply);
+        }
+    },
+
+    /**
      * Return a "decorated" translation (which can handle Ctrl+Click
      * properly). The ID of the string is included as an attribute.
      */
-    decorate: function (text) {
+    get_decorated_translation: function (text) {
         var sguid = Sha1.hash(text);
         var decorated_translation = 
             '<span class="gettext" sguid="' + sguid + '">'
@@ -241,6 +265,17 @@ var _translate_in_context = {
     },
 
     /**
+     * Assign the event handler function to the elements with class
+     * 'gettext'.
+     */
+    apply: function () {
+        if ($config.translate_in_context) {
+            $('.gettext').off('click', _translate_in_context.handle_ctrl_click);
+            $('.gettext').on('click', _translate_in_context.handle_ctrl_click); 
+        }
+    },
+
+    /**
      * Handle the Ctrl+Click event by opening a browser tab with the
      * correct URL. Return 'false' so that the click event fails.
      */
@@ -256,32 +291,11 @@ var _translate_in_context = {
             }
         }
     },
-
-    /**
-     * Assign the event handler function to the elements with class
-     * 'gettext'.
-     */
-    enable: function () {
-        if ($config.translate_in_context) {
-            $('.gettext').off('click', _translate_in_context.handle_ctrl_click);
-            $('.gettext').on('click', _translate_in_context.handle_ctrl_click); 
-        }
-    },
 };
 
-window._t = window._;
-if ($config.translate_in_context) {
-    // Override the gettext function "_()", so that instead of the
-    // translation it returns a "decorated" translation (which can
-    // handle Ctrl+Click properly).
-    window._ = _translate_in_context.decorate;
+// Initialize translation in context.
+_translate_in_context.init();
 
-    // Assign the event handler function to the elements with class
-    // 'gettext'.
-    $(document).ready(function() {
-        _translate_in_context.enable();
-    });
-}
 
     // Google Analytics
 if ($config.ga_id) {
@@ -354,7 +368,7 @@ var _menu = {
             .html(Mustache.render(menu_tmpl, data))
             .enhanceWithin().popup();
 
-        _translate_in_context.enable();
+        _translate_in_context.apply();
 
         $('#login').on('click', function () {
             $user.login();
@@ -916,7 +930,7 @@ var _translation = {
         $("#translation-details")
             .popup()           // init popup
             .popup('open');    // open popup
-        _translate_in_context.enable();
+        _translate_in_context.apply();
 
         // Get the id of the translation.
         var tguid = $(this).data('tguid');
