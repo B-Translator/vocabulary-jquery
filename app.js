@@ -329,14 +329,26 @@ var _menu = {
                 $('#register').hide();
                 $('#logout').show();
                 $('#profile').show();
+
                 $user.is_admin ? $('#del-term').show() : $('#del-term').hide();
+
+                if ($user.is_subscribed) {
+                    $('#subscribe').hide();
+                    $('#unsubscribe').show();
+                }
+                else {
+                    $('#subscribe').show();
+                    $('#unsubscribe').hide();
+                }
             }
             else {
                 $('#login').show();
                 $('#register').show();
                 $('#logout').hide();
                 $('#profile').hide();
-                $('#del-term').hide()
+                $('#del-term').hide();
+                $('#subscribe').hide();
+                $('#unsubscribe').hide();
             }
         });
     },
@@ -354,13 +366,16 @@ var _menu = {
             'Sign in': _('Sign in'),
             'Sign out': _('Sign out'),
             'Sign up': _('Sign up'),
+            'Subscribe': _('Subscribe'),
+            'Unsubscribe': _('Unsubscribe'),
             'Profile': _('Profile'),
             'Settings': _('Settings'),
             'Contact': _('Contact'),
             'Links': _('Links'),
-            'Term': _('Term'),
+            'Project': _('Project'),
             'Delete': _('Delete'),
             'Details': _('Details'),
+            'Dashboard': _('Dashboard'),
             'List': _('List'),
             'Download': _('Download'),
         };
@@ -373,9 +388,15 @@ var _menu = {
         $('#login').on('click', function () {
             $user.login();
         });
-
         $('#logout').on('click', function () {
             $user.logout();
+        });
+
+        $('#subscribe').on('click', function () {
+            $user.subscribe();
+        });
+        $('#unsubscribe').on('click', function () {
+            $user.subscribe('unsubscribe');
         });
 
         // Close the menu when an item is clicked.
