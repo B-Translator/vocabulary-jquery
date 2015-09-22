@@ -248,7 +248,7 @@ proj && localStorage.setItem('vocabulary.vocabulary', proj);
         {{#webapp_url}}
         <li><a id="details" href="{{webapp_url}}/vocabulary/{{vocabulary}}" target="_blank" class="ui-btn ui-icon-grid ui-btn-icon-left">{{&Details}}</a></li>
         {{/webapp_url}}
-        <li><a href="{{base_url}}/translations/search?lng={{lng}}&origin=vocabulary&project={{vocabulary}}" target="_blank" class="ui-btn ui-icon-bullets ui-btn-icon-left">{{&List}}</a></li>
+        <li><a href="{{base_url}}/btr/project/vocabulary/{{vocabulary}}/{{lng}}/list" target="_blank" class="ui-btn ui-icon-bullets ui-btn-icon-left">{{&List}}</a></li>
       </ul>
     </div><!-- /collapsible -->
     <div data-role="collapsible" data-inset="false">
