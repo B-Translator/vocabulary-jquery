@@ -161,7 +161,30 @@ var $user = new (function () {
         setTimeout(_reload, 1000);
     };
 
+    this.subscribe = function (subs) {
+        if (!subs)  subs = 'subscribe';
+
+        var access_token = this.token.access_token();
+        if (!access_token) {
+            $user.token.get().done(function () {
+                $user.subscribe(subs);
+            });
+            return;
+        }
+
+        $.ajax($config.api_url + '/api/project/' + subs, {
+            type: 'POST',
+            data: {
+                origin: 'vocabulary',
+                project: $config.vocabulary,
+            },
+            headers: { 'Authorization': 'Bearer ' + access_token },
+        })
+            .then(_reload);
+    };
+
     // User permissions.
+    this.is_subscribed = false;
     this.is_admin = false;
     this.is_moderator = false;
 
@@ -198,6 +221,7 @@ var $user = new (function () {
                 .done(function (response) {
                     _setName(response.name, response.uid);
                     var project = 'vocabulary/' + $config.vocabulary;
+                    that.is_subscribed = ($.inArray(project, response.projects) > -1);
                     that.is_moderator = (($.inArray(project, response.moderate_projects) > -1) || ($.inArray('btranslator-resolve', response.permissions) > -1));
                     that.is_admin = (($.inArray(project, response.admin_projects) > -1) || ($.inArray('btranslator-admin', response.permissions) > -1));
                     response.picture ?
