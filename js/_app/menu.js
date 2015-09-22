@@ -38,9 +38,10 @@ var _menu = {
             'Settings': _('Settings'),
             'Contact': _('Contact'),
             'Links': _('Links'),
-            'Term': _('Term'),
+            'Project': _('Project'),
             'Delete': _('Delete'),
             'Details': _('Details'),
+            'Dashboard': _('Dashboard'),
             'List': _('List'),
             'Download': _('Download'),
         };
