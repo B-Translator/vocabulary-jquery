@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-04-14 18:19+0200\n"
+"POT-Creation-Date: 2015-09-22 18:18+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,90 +14,6 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
-
-#: ../js/user.js:57 ../js/user.js:111
-msgid "Please sign in"
-msgstr "Bitte einloggen"
-
-#: ../js/user.js:58
-msgid "Username"
-msgstr "Benutzername"
-
-#: ../js/user.js:59
-msgid "Password"
-msgstr "Passwort"
-
-#: ../js/user.js:60 ../js/user.js:112 ../js/_app/menu.js:34
-msgid "Sign in"
-msgstr "Anmelden"
-
-#: ../js/user.js:61 ../js/user.js:113 ../js/_app/menu.js:36
-msgid "Sign up"
-msgstr "Registrieren"
-
-#: ../js/user.js:229
-msgid "OK"
-msgstr ""
-
-#: ../js/user.js:230
-msgid "Cancel"
-msgstr "Abbrechen"
-
-#: ../js/_app/translations.js:39
-msgid "New translation"
-msgstr "neue Übersetzung"
-
-#: ../js/_app/translation.js:14
-msgid "Vote"
-msgstr "auswählen"
-
-#: ../js/_app/translation.js:15 ../js/_app/menu.js:42
-msgid "Delete"
-msgstr "Löschen"
-
-#: ../js/_app/translation.js:16
-msgid "Voters"
-msgstr "Wähler"
-
-#: ../js/_app/menu.js:33
-msgid "User"
-msgstr "Benutzer"
-
-#: ../js/_app/menu.js:35
-msgid "Sign out"
-msgstr "Ausloggen"
-
-#: ../js/_app/menu.js:37
-msgid "Profile"
-msgstr "Profil"
-
-#: ../js/_app/menu.js:38
-msgid "Settings"
-msgstr "Einstellungen"
-
-#: ../js/_app/menu.js:39
-msgid "Contact"
-msgstr "Kontakt"
-
-#: ../js/_app/menu.js:40
-msgid "Links"
-msgstr "Veweise"
-
-#: ../js/_app/menu.js:41
-msgid "Term"
-msgstr ""
-
-#: ../js/_app/menu.js:43
-msgid "Details"
-msgstr ""
-
-#: ../js/_app/menu.js:44
-msgid "List"
-msgstr ""
-
-#: ../js/_app/menu.js:45
-msgid "Download"
-msgstr "Herunterladen"
 
 #: ../js/_app/l10n.js:6
 msgid "Language"
@@ -118,3 +34,103 @@ msgstr "Fertig"
 #: ../js/_app/l10n.js:12
 msgid "Search for a word..."
 msgstr "wortsuche..."
+
+#: ../js/_app/l10n.js:13
+msgid "Add New Term"
+msgstr ""
+
+#: ../js/_app/menu.js:45
+msgid "User"
+msgstr "Benutzer"
+
+#: ../js/_app/menu.js:46 ../js/user.js:63 ../js/user.js:115
+msgid "Sign in"
+msgstr "Anmelden"
+
+#: ../js/_app/menu.js:47
+msgid "Sign out"
+msgstr "Ausloggen"
+
+#: ../js/_app/menu.js:48 ../js/user.js:64 ../js/user.js:116
+msgid "Sign up"
+msgstr "Registrieren"
+
+#: ../js/_app/menu.js:49
+msgid "Subscribe"
+msgstr "Abonnieren"
+
+#: ../js/_app/menu.js:50
+msgid "Unsubscribe"
+msgstr "Abonnement kündigen"
+
+#: ../js/_app/menu.js:51
+msgid "Profile"
+msgstr "Profil"
+
+#: ../js/_app/menu.js:52
+msgid "Settings"
+msgstr "Einstellungen"
+
+#: ../js/_app/menu.js:53
+msgid "Contact"
+msgstr "Kontakt"
+
+#: ../js/_app/menu.js:54
+msgid "Links"
+msgstr "Veweise"
+
+#: ../js/_app/menu.js:55
+msgid "Project"
+msgstr "Projekt"
+
+#: ../js/_app/menu.js:56 ../js/_app/translation.js:15
+msgid "Delete"
+msgstr "Löschen"
+
+#: ../js/_app/menu.js:57
+msgid "Details"
+msgstr "Details"
+
+#: ../js/_app/menu.js:58
+msgid "Dashboard"
+msgstr "Instrumententafel"
+
+#: ../js/_app/menu.js:59
+msgid "List"
+msgstr "Liste"
+
+#: ../js/_app/menu.js:60
+msgid "Download"
+msgstr "Herunterladen"
+
+#: ../js/_app/translations.js:39
+msgid "New translation"
+msgstr "neue Übersetzung"
+
+#: ../js/_app/translation.js:14
+msgid "Vote"
+msgstr "auswählen"
+
+#: ../js/_app/translation.js:16
+msgid "Voters"
+msgstr "Wähler"
+
+#: ../js/user.js:60 ../js/user.js:114
+msgid "Please sign in"
+msgstr "Bitte einloggen"
+
+#: ../js/user.js:61
+msgid "Username"
+msgstr "Benutzername"
+
+#: ../js/user.js:62
+msgid "Password"
+msgstr "Passwort"
+
+#: ../js/user.js:257
+msgid "OK"
+msgstr "OK"
+
+#: ../js/user.js:258
+msgid "Cancel"
+msgstr "Abbrechen"
