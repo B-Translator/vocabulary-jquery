@@ -57,11 +57,11 @@ msgstr "Registrieren"
 
 #: ../js/_app/menu.js:49
 msgid "Subscribe"
-msgstr ""
+msgstr "Abonnieren"
 
 #: ../js/_app/menu.js:50
 msgid "Unsubscribe"
-msgstr ""
+msgstr "Abonnement kündigen"
 
 #: ../js/_app/menu.js:51
 msgid "Profile"
@@ -81,23 +81,23 @@ msgstr "Veweise"
 
 #: ../js/_app/menu.js:55
 msgid "Project"
-msgstr ""
+msgstr "Projekt"
 
 #: ../js/_app/menu.js:56 ../js/_app/translation.js:15
 msgid "Delete"
-msgstr "Lschen"
+msgstr "Löschen"
 
 #: ../js/_app/menu.js:57
 msgid "Details"
-msgstr ""
+msgstr "Details"
 
 #: ../js/_app/menu.js:58
 msgid "Dashboard"
-msgstr ""
+msgstr "Instrumententafel"
 
 #: ../js/_app/menu.js:59
 msgid "List"
-msgstr ""
+msgstr "Liste"
 
 #: ../js/_app/menu.js:60
 msgid "Download"
@@ -105,15 +105,15 @@ msgstr "Herunterladen"
 
 #: ../js/_app/translations.js:39
 msgid "New translation"
-msgstr "neue bersetzung"
+msgstr "neue Übersetzung"
 
 #: ../js/_app/translation.js:14
 msgid "Vote"
-msgstr "auswhlen"
+msgstr "auswählen"
 
 #: ../js/_app/translation.js:16
 msgid "Voters"
-msgstr "Whler"
+msgstr "Wähler"
 
 #: ../js/user.js:60 ../js/user.js:114
 msgid "Please sign in"
@@ -129,7 +129,7 @@ msgstr "Passwort"
 
 #: ../js/user.js:257
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #: ../js/user.js:258
 msgid "Cancel"
