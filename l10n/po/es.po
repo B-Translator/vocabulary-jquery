@@ -1,0 +1,136 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-22 18:18+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../js/_app/l10n.js:6
+msgid "Language"
+msgstr "Idioma"
+
+#: ../js/_app/l10n.js:7
+msgid "Vocabulary"
+msgstr "Vocabulario"
+
+#: ../js/_app/l10n.js:8
+msgid "Use Custom Keyboard:"
+msgstr "Utilice el Teclado Personalizado:"
+
+#: ../js/_app/l10n.js:9
+msgid "Done"
+msgstr "Hecho"
+
+#: ../js/_app/l10n.js:12
+msgid "Search for a word..."
+msgstr "Buscar una palabra..."
+
+#: ../js/_app/l10n.js:13
+msgid "Add New Term"
+msgstr "Añadir Nuevo Término"
+
+#: ../js/_app/menu.js:45
+msgid "User"
+msgstr "_Usuario"
+
+#: ../js/_app/menu.js:46 ../js/user.js:63 ../js/user.js:115
+msgid "Sign in"
+msgstr "Entra"
+
+#: ../js/_app/menu.js:47
+msgid "Sign out"
+msgstr "Salir"
+
+#: ../js/_app/menu.js:48 ../js/user.js:64 ../js/user.js:116
+msgid "Sign up"
+msgstr "Regístrate"
+
+#: ../js/_app/menu.js:49
+msgid "Subscribe"
+msgstr "Suscribirse"
+
+#: ../js/_app/menu.js:50
+msgid "Unsubscribe"
+msgstr "Darse de baja"
+
+#: ../js/_app/menu.js:51
+msgid "Profile"
+msgstr "Perfil"
+
+#: ../js/_app/menu.js:52
+msgid "Settings"
+msgstr "Configuración"
+
+#: ../js/_app/menu.js:53
+msgid "Contact"
+msgstr "Contacto"
+
+#: ../js/_app/menu.js:54
+msgid "Links"
+msgstr "Enlaces"
+
+#: ../js/_app/menu.js:55
+msgid "Project"
+msgstr "Proyecto"
+
+#: ../js/_app/menu.js:56 ../js/_app/translation.js:15
+msgid "Delete"
+msgstr "Eliminar"
+
+#: ../js/_app/menu.js:57
+msgid "Details"
+msgstr "Detalles"
+
+#: ../js/_app/menu.js:58
+msgid "Dashboard"
+msgstr "Panel de Control"
+
+#: ../js/_app/menu.js:59
+msgid "List"
+msgstr "Lista"
+
+#: ../js/_app/menu.js:60
+msgid "Download"
+msgstr "Descargar"
+
+#: ../js/_app/translations.js:39
+msgid "New translation"
+msgstr "Nueva traducción"
+
+#: ../js/_app/translation.js:14
+msgid "Vote"
+msgstr "Vota"
+
+#: ../js/_app/translation.js:16
+msgid "Voters"
+msgstr "Votantes"
+
+#: ../js/user.js:60 ../js/user.js:114
+msgid "Please sign in"
+msgstr "Por favor regístrate"
+
+#: ../js/user.js:61
+msgid "Username"
+msgstr "Usuario"
+
+#: ../js/user.js:62
+msgid "Password"
+msgstr "Contraseña"
+
+#: ../js/user.js:257
+msgid "OK"
+msgstr "Aceptar"
+
+#: ../js/user.js:258
+msgid "Cancel"
+msgstr "Cancelar"
