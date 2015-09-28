@@ -41,7 +41,7 @@ msgstr "Añadir Nuevo Término"
 
 #: ../js/_app/menu.js:45
 msgid "User"
-msgstr "_Usuario"
+msgstr "Usuario"
 
 #: ../js/_app/menu.js:46 ../js/user.js:63 ../js/user.js:115
 msgid "Sign in"
