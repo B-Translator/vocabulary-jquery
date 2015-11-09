@@ -58,13 +58,14 @@ var _term = {
         }
 
         // Add the new term.
-        http_request('/api/project/add_string', {
+        var arr = $config.vocabulary.split('_');
+        var name = arr[0], lng = arr[1];
+        http_request('/api/vocabulary/add_string', {
             type: 'POST',
             data: {
-                origin: 'vocabulary',
-                project: $config.vocabulary,
+                name: name,
+                lng: lng,
                 string: term,
-                context: $config.vocabulary,
                 notify: true,
             },
             headers: {
@@ -92,11 +93,14 @@ var _term = {
             return;
         }
 
-        http_request('/api/project/del_string', {
+        var arr = $config.vocabulary.split('_');
+        var name = arr[0], lng = arr[1];
+        http_request('/api/vocabulary/del_string', {
             type: 'POST',
             data: {
+		name: name,
+		lng: lng,
                 sguid: sguid,
-                project: $config.vocabulary,
             },
             headers: { 'Authorization': 'Bearer ' + access_token }
         })
