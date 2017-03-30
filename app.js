@@ -357,7 +357,7 @@ var _menu = {
         // Render the menu template.
         var menu_tmpl = $('#tmpl-menu').html();
         var data = {
-            base_url: $config.api_url,
+            base_url: $config.base_url,
             lng: $config.lng,
             vocabulary: $config.vocabulary,
             webapp_url: $config.webapp_url,

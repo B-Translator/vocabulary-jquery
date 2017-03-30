@@ -2,6 +2,7 @@
 var $config = {
     app_url: 'http://fjalori.fs.al',
     api_url: 'https://btranslator.org',
+    base_url: 'https://btranslator.net',
 
     lng: 'sq',
     vocabulary: 'ICT_sq',
